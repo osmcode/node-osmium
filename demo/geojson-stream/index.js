@@ -34,7 +34,7 @@ if (argv.output === 'stdout') {
     geojsonOut.pipe(fileOut);
 }
 
-var handler = new osmium.Handler(); 
+var handler = new osmium.Handler();
 handler.on('node',function(node) {
     geojsonOut.write({
         type: 'Feature',
@@ -42,9 +42,9 @@ handler.on('node',function(node) {
         properties: {}
     });
 });
- 
+
 handler.on('done',function() {
     geojsonOut.end();
 });
- 
+
 osmium.apply(reader, handler);

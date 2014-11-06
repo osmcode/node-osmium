@@ -13,7 +13,7 @@ describe('reader', function() {
     it('should not hang when apply() is called twice on reader', function() {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.Reader(file);
-        var handler = new osmium.Handler(); 
+        var handler = new osmium.Handler();
         osmium.apply(reader, handler);
 
         assert.throws(function() {

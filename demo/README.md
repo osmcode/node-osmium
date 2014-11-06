@@ -10,4 +10,3 @@ Then run the `index.js` for usage help:
 
     ./index.js
 
-    

@@ -20,14 +20,14 @@ handler.options({ "tagged_nodes_only": true });
 
 handler.on('node', function(node) {
     if (node.tags('amenity') == 'school') {
-        stream.write('n' + node.id + ' ' + (node.tags('name') || '') + ' ' +  node.wkt() + "\n"); 
+        stream.write('n' + node.id + ' ' + (node.tags('name') || '') + ' ' +  node.wkt() + "\n");
     }
 });
 
 handler.on('way', function(way) {
     if (way.tags('highway')) {
         if (way.wkt) {
-            stream.write('w' + way.id + ' '  + way.tags('highway') + ' ' + way.wkt() + "\n"); 
+            stream.write('w' + way.id + ' '  + way.tags('highway') + ' ' + way.wkt() + "\n");
         }
     }
 });

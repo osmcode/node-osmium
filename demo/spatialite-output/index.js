@@ -51,7 +51,7 @@ child.on('exit', function(code, signal) {
 
     handler.on('node', function(node) {
         if (node.tags('amenity') == 'school') {
-            add_amenity.run(node.id, node.tags('name'), node.wkb()); 
+            add_amenity.run(node.id, node.tags('name'), node.wkb());
         }
     });
 
