@@ -4,7 +4,8 @@ Convert OSM file into spatialite database.
 
 ## Install
 
-    npm install
+    Install npm module `spatialite` somewhere, where
+    the osmium module can find it.
 
 ## Usage
 

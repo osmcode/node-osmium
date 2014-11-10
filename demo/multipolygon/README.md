@@ -8,5 +8,5 @@ Reads OSM file and outputs some data for landuse areas.
 
 ## Usage
 
-    ./index.js ../../test/data/winthrop.osm winthrop.csv
+    ./index.js OSMFILE OUT.csv
 
