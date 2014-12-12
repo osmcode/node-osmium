@@ -42,6 +42,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> OSMChangesetWrap::tags(const v8::Arguments& args) {
+        INSTANCE_CHECK(OSMChangesetWrap, "Changeset", "tags");
         return OSMEntityWrap::tags_impl<osmium::Changeset>(args);
     }
 

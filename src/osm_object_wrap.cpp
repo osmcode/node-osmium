@@ -35,6 +35,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> OSMObjectWrap::tags(const v8::Arguments& args) {
+        INSTANCE_CHECK(OSMObjectWrap, "Object", "tags");
         return OSMEntityWrap::tags_impl<osmium::OSMObject>(args);
     }
 

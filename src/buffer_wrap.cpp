@@ -48,6 +48,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> BufferWrap::clear(const v8::Arguments& args) {
+        INSTANCE_CHECK(BufferWrap, "Buffer", "clear");
         BufferWrap* buffer_wrap = node::ObjectWrap::Unwrap<BufferWrap>(args.This());
         buffer_wrap->m_this = std::move(osmium::memory::Buffer());
         buffer_wrap->m_iterator = buffer_wrap->m_this.end();
@@ -55,6 +56,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> BufferWrap::next(const v8::Arguments& args) {
+        INSTANCE_CHECK(BufferWrap, "Buffer", "next");
         BufferWrap* buffer_wrap = node::ObjectWrap::Unwrap<BufferWrap>(args.This());
         v8::HandleScope scope;
         if (buffer_wrap->m_iterator == buffer_wrap->m_this.end()) {
@@ -85,6 +87,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> BufferWrap::filter_point_in_time(const v8::Arguments& args) {
+        INSTANCE_CHECK(BufferWrap, "Buffer", "filter_point_in_time");
         v8::HandleScope scope;
         if (args.Length() != 1) {
             return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a point in time as first and only argument")));

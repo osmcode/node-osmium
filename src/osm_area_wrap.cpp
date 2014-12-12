@@ -42,6 +42,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> OSMAreaWrap::wkb(const v8::Arguments& args) {
+        INSTANCE_CHECK(OSMAreaWrap, "Area", "wkb");
         v8::HandleScope scope;
 
         try {
@@ -57,6 +58,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> OSMAreaWrap::wkt(const v8::Arguments& args) {
+        INSTANCE_CHECK(OSMAreaWrap, "Area", "wkt");
         v8::HandleScope scope;
 
         try {

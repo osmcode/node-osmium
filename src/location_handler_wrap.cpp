@@ -45,12 +45,14 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> LocationHandlerWrap::ignoreErrors(const v8::Arguments& args) {
+        INSTANCE_CHECK(LocationHandlerWrap, "location_handler", "ignoreErrors");
         v8::HandleScope scope;
         unwrap<LocationHandlerWrap>(args.This()).ignore_errors();
         return scope.Close(v8::Undefined());
     }
 
     v8::Handle<v8::Value> LocationHandlerWrap::clear(const v8::Arguments& args) {
+        INSTANCE_CHECK(LocationHandlerWrap, "clear", "clear");
         v8::HandleScope scope;
         unwrap<LocationHandlerWrap>(args.This()).clear();
         return scope.Close(v8::Undefined());

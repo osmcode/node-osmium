@@ -92,7 +92,20 @@ describe('buffer', function() {
 
         osmium.apply(buffer, handler);
 
-        buffer.clear();
+        assert.equal(buffer.clear(), undefined);
+    });
+
+    it('should complain when calling Buffer methods on something else', function() {
+        var data = fs.readFileSync(__dirname + "/data/winthrop.osm.ser");
+        var buffer = new osmium.Buffer(data);
+
+        assert.throws(function() {
+            buffer.clear.apply(undefined);
+        }, TypeError);
+
+        assert.throws(function() {
+            buffer.clear.apply(data);
+        }, TypeError);
     });
 
 });

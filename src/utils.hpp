@@ -13,6 +13,17 @@ namespace osmium {
     class Box;
 }
 
+// This is a check for the extra paranoid: In Javascript it is possible to call
+// any method of any object with "this" of a totally different type of object
+// using the apply() function:
+//   some_object.some_method.apply(different_object);
+// This will crash any C++ function that expects a certain type of object. With
+// this macro we can check whether we have the right kind of object.
+#define INSTANCE_CHECK(cpp_class, js_class, method) \
+if (!cpp_class::constructor->HasInstance(args.This())) { \
+    return ThrowException(v8::Exception::TypeError(v8::String::New("You can only call " method "() on an osmium." js_class ))); \
+}
+
 namespace node_osmium {
 
     template<class T>

@@ -93,6 +93,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> ReaderWrap::header(const v8::Arguments& args) {
+        INSTANCE_CHECK(ReaderWrap, "Reader", "header");
         v8::HandleScope scope;
         v8::Local<v8::Object> obj = v8::Object::New();
         const osmium::io::Header& header = unwrap<ReaderWrap>(args.This()).header();
@@ -110,6 +111,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> ReaderWrap::close(const v8::Arguments& args) {
+        INSTANCE_CHECK(ReaderWrap, "Reader", "close");
         v8::HandleScope scope;
         try {
             unwrap<ReaderWrap>(args.This()).close();
@@ -122,6 +124,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> ReaderWrap::read(const v8::Arguments& args) {
+        INSTANCE_CHECK(ReaderWrap, "Reader", "read");
         v8::HandleScope scope;
         try {
             osmium::memory::Buffer buffer = unwrap<ReaderWrap>(args.This()).read();
@@ -137,6 +140,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> ReaderWrap::read_all(const v8::Arguments& args) {
+        INSTANCE_CHECK(ReaderWrap, "Reader", "read_all");
         osmium::memory::Buffer buffer(1024*1024, osmium::memory::Buffer::auto_grow::yes);
         v8::HandleScope scope;
         try {

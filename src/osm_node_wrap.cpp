@@ -81,6 +81,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> OSMNodeWrap::wkb(const v8::Arguments& args) {
+        INSTANCE_CHECK(OSMNodeWrap, "Node", "wkb");
         v8::HandleScope scope;
 
         try {
@@ -96,6 +97,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> OSMNodeWrap::wkt(const v8::Arguments& args) {
+        INSTANCE_CHECK(OSMNodeWrap, "Node", "wkt");
         v8::HandleScope scope;
 
         try {

@@ -49,6 +49,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> MultipolygonCollectorWrap::read_relations(const v8::Arguments& args) {
+        INSTANCE_CHECK(MultipolygonCollectorWrap, "MultipolygonCollector", "read_relations");
         v8::HandleScope scope;
         if (args.Length() != 1 || !args[0]->IsObject()) {
             return ThrowException(v8::Exception::Error(v8::String::New("call MultipolygonCollector.read_relation() with Reader or Buffer object")));
@@ -72,6 +73,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> MultipolygonCollectorWrap::handler(const v8::Arguments& args) {
+        INSTANCE_CHECK(MultipolygonCollectorWrap, "MultipolygonCollector", "handler");
         v8::HandleScope scope;
         if (args.Length() != 1 || !args[0]->IsObject() || !JSHandler::constructor->HasInstance(args[0]->ToObject())) {
             return ThrowException(v8::Exception::Error(v8::String::New("call MultipolygonCollector.handler() with Handler object")));

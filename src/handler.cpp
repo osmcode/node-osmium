@@ -85,6 +85,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> JSHandler::options(const v8::Arguments& args) {
+        INSTANCE_CHECK(JSHandler, "handler", "options");
         v8::HandleScope scope;
         if (args.Length() != 1 || !args[0]->IsObject()) {
             return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a single object as parameter")));
@@ -99,6 +100,7 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> JSHandler::on(const v8::Arguments& args) {
+        INSTANCE_CHECK(JSHandler, "handler", "on");
         v8::HandleScope scope;
         if (args.Length() != 2 || !args[0]->IsString() || !args[1]->IsFunction()) {
             return ThrowException(v8::Exception::TypeError(v8::String::New("please provide an event name and callback function")));
