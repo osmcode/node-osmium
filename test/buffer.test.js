@@ -91,6 +91,8 @@ describe('buffer', function() {
         var buffer = new osmium.Buffer(data);
 
         osmium.apply(buffer, handler);
+
+        buffer.clear();
     });
 
 });

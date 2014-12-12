@@ -47,6 +47,13 @@ namespace node_osmium {
         return ThrowException(v8::Exception::TypeError(v8::String::New("osmium.Buffer takes a single argument, a node::Buffer")));
     }
 
+    v8::Handle<v8::Value> BufferWrap::clear(const v8::Arguments& args) {
+        BufferWrap* buffer_wrap = node::ObjectWrap::Unwrap<BufferWrap>(args.This());
+        buffer_wrap->m_this = std::move(osmium::memory::Buffer());
+        buffer_wrap->m_iterator = buffer_wrap->m_this.end();
+        return v8::Undefined();
+    }
+
     v8::Handle<v8::Value> BufferWrap::next(const v8::Arguments& args) {
         BufferWrap* buffer_wrap = node::ObjectWrap::Unwrap<BufferWrap>(args.This());
         v8::HandleScope scope;
