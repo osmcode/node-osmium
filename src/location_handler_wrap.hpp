@@ -10,23 +10,19 @@
 #include <node_object_wrap.h>
 
 // osmium
+#include <osmium/index/map/all.hpp>
 #include <osmium/handler/node_locations_for_ways.hpp>
-#include <osmium/index/map/dummy.hpp>
-#include <osmium/index/map/stl_map.hpp>
-#include <osmium/index/map/sparse_table.hpp>
-#include <osmium/index/map/mmap_vector_anon.hpp>
-#include <osmium/index/map/mmap_vector_file.hpp>
 
 namespace node_osmium {
 
     typedef osmium::index::map::Dummy<osmium::unsigned_object_id_type, osmium::Location> index_neg_type;
     typedef osmium::index::map::Map<osmium::unsigned_object_id_type, osmium::Location> index_pos_type;
-    typedef osmium::index::map::SparseTable<osmium::unsigned_object_id_type, osmium::Location> index_sparsetable_type;
-    typedef osmium::index::map::StlMap<osmium::unsigned_object_id_type, osmium::Location> index_stlmap_type;
-    typedef osmium::index::map::DenseMapFile<osmium::unsigned_object_id_type, osmium::Location> index_disk_type;
+    typedef osmium::index::map::SparseMemTable<osmium::unsigned_object_id_type, osmium::Location> index_sparsetable_type;
+    typedef osmium::index::map::SparseMemMap<osmium::unsigned_object_id_type, osmium::Location> index_stlmap_type;
+    typedef osmium::index::map::DenseFileArray<osmium::unsigned_object_id_type, osmium::Location> index_disk_type;
 
 #ifdef __linux__
-    typedef osmium::index::map::DenseMapMmap<osmium::unsigned_object_id_type, osmium::Location> index_array_type;
+    typedef osmium::index::map::DenseMmapArray<osmium::unsigned_object_id_type, osmium::Location> index_array_type;
 #endif
 
     typedef osmium::handler::NodeLocationsForWays<index_pos_type, index_neg_type> location_handler_type;
