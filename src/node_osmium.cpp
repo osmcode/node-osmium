@@ -23,6 +23,7 @@
 #include "osm_relation_wrap.hpp"
 #include "osm_way_wrap.hpp"
 #include "reader_wrap.hpp"
+#include "flex_reader_wrap.hpp"
 
 namespace node_osmium {
 
@@ -64,6 +65,7 @@ namespace node_osmium {
     v8::Persistent<v8::String> symbol_MultipolygonCollector;
     v8::Persistent<v8::String> symbol_MultipolygonHandler;
     v8::Persistent<v8::String> symbol_Reader;
+    v8::Persistent<v8::String> symbol_FlexReader;
 
     extern "C" {
         static void start(v8::Handle<v8::Object> target) {
@@ -99,6 +101,7 @@ namespace node_osmium {
             symbol_MultipolygonCollector = NODE_PSYMBOL("MultipolygonCollector");
             symbol_MultipolygonHandler   = NODE_PSYMBOL("MultipolygonHandler");
             symbol_Reader                = NODE_PSYMBOL("Reader");
+            symbol_FlexReader            = NODE_PSYMBOL("FlexReader");
 
             node_osmium::OSMEntityWrap::Initialize(target);
             node_osmium::OSMObjectWrap::Initialize(target);
@@ -113,6 +116,7 @@ namespace node_osmium {
             node_osmium::JSHandler::Initialize(target);
             node_osmium::FileWrap::Initialize(target);
             node_osmium::ReaderWrap::Initialize(target);
+            node_osmium::FlexReaderWrap::Initialize(target);
             node_osmium::BufferWrap::Initialize(target);
         }
     }

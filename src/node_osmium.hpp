@@ -39,6 +39,7 @@ namespace node_osmium {
     extern v8::Persistent<v8::String> symbol_MultipolygonCollector;
     extern v8::Persistent<v8::String> symbol_MultipolygonHandler;
     extern v8::Persistent<v8::String> symbol_Reader;
+    extern v8::Persistent<v8::String> symbol_FlexReader;
 
 } // namespace node_osmium
 

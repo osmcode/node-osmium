@@ -28,14 +28,8 @@ handler.on('done', function() {
     stream.close();
 });
 
-var mp = new osmium.MultipolygonCollector();
-
-var reader = new osmium.Reader(input_filename);
-mp.read_relations(reader);
-reader.close();
-
-reader = new osmium.Reader(input_filename);
 var location_handler = new osmium.LocationHandler();
-osmium.apply(reader, location_handler, handler, mp.handler(handler));
+var reader = new osmium.FlexReader(input_filename, location_handler);
+osmium.apply(reader, handler);
 reader.close();
 

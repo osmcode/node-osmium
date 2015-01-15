@@ -19,6 +19,7 @@
 #include "multipolygon_collector_wrap.hpp"
 #include "multipolygon_handler_wrap.hpp"
 #include "reader_wrap.hpp"
+#include "flex_reader_wrap.hpp"
 #include "utils.hpp"
 
 namespace node_osmium {
@@ -188,6 +189,16 @@ namespace node_osmium {
                 }
 
                 typedef osmium::io::InputIterator<osmium::io::Reader, osmium::OSMEntity> input_iterator;
+
+                return scope.Close(apply_iterator(input_iterator{reader}, input_iterator{}, handlers));
+            } else if (FlexReaderWrap::constructor->HasInstance(source)) {
+                flex_reader_type& reader = unwrap<FlexReaderWrap>(source);
+
+                if (reader.eof()) {
+                    return ThrowException(v8::Exception::Error(v8::String::New("apply() called on a reader that has reached EOF")));
+                }
+
+                typedef osmium::io::InputIterator<flex_reader_type, osmium::OSMEntity> input_iterator;
 
                 return scope.Close(apply_iterator(input_iterator{reader}, input_iterator{}, handlers));
             } else if (BufferWrap::constructor->HasInstance(source)) {

@@ -23,6 +23,7 @@
         "src/osm_object_wrap.cpp",
         "src/osm_relation_wrap.cpp",
         "src/osm_way_wrap.cpp",
+        "src/flex_reader_wrap.cpp",
         "src/reader_wrap.cpp",
         "src/utils.cpp"
       ],
