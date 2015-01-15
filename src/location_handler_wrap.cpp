@@ -27,7 +27,7 @@ namespace node_osmium {
         try {
             LocationHandlerWrap* location_handler_wrap;
             if (args.Length() == 0) {
-                location_handler_wrap = new LocationHandlerWrap("sparsetable");
+                location_handler_wrap = new LocationHandlerWrap("sparse_mem_array");
             } else {
                 if (args.Length() != 1) {
                     return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a node cache type as string when creating a LocationHandler")));

@@ -17,14 +17,14 @@ function get_handler() {
 
 describe('location handler', function() {
 
-    it('should be able to use the sparsetable location handler', function() {
+    it('should be able to use the sparse_mem_table location handler', function() {
         var reader = new osmium.Reader(__dirname + "/data/winthrop.osm", { 'node': true, 'way': true });
-        osmium.apply(reader, new osmium.LocationHandler("sparsetable"), get_handler());
+        osmium.apply(reader, new osmium.LocationHandler("sparse_mem_table"), get_handler());
     });
 
-    it('should be able to use the stlmap location handler', function() {
+    it('should be able to use the sparse_mem_map location handler', function() {
         var reader = new osmium.Reader(__dirname + "/data/winthrop.osm", { 'node': true, 'way': true });
-        osmium.apply(reader, new osmium.LocationHandler("stlmap"), get_handler());
+        osmium.apply(reader, new osmium.LocationHandler("sparse_mem_map"), get_handler());
     });
 
     it('should throw on missing location if ignoreErrors is not set', function() {

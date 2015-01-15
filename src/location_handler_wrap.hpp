@@ -15,48 +15,12 @@
 
 namespace node_osmium {
 
-    typedef osmium::index::map::Dummy<osmium::unsigned_object_id_type, osmium::Location> index_neg_type;
-    typedef osmium::index::map::Map<osmium::unsigned_object_id_type, osmium::Location> index_pos_type;
-    typedef osmium::index::map::SparseMemTable<osmium::unsigned_object_id_type, osmium::Location> index_sparsetable_type;
-    typedef osmium::index::map::SparseMemMap<osmium::unsigned_object_id_type, osmium::Location> index_stlmap_type;
-    typedef osmium::index::map::DenseFileArray<osmium::unsigned_object_id_type, osmium::Location> index_disk_type;
-
-#ifdef __linux__
-    typedef osmium::index::map::DenseMmapArray<osmium::unsigned_object_id_type, osmium::Location> index_array_type;
-#endif
-
-    typedef osmium::handler::NodeLocationsForWays<index_pos_type, index_neg_type> location_handler_type;
-
-    inline index_pos_type* node_cache_factory(const std::string& cache_options) {
-        size_t comma = cache_options.find_first_of(',');
-        std::string cache_type = comma == std::string::npos ? cache_options : cache_options.substr(0, comma);
-        if (cache_type == "sparsetable") {
-            return new index_sparsetable_type;
-        } else if (cache_type == "stlmap") {
-            return new index_stlmap_type;
-#ifdef __linux__
-        } else if (cache_type == "array") {
-            return new index_array_type;
-#endif
-        } else if (cache_type == "disk") {
-            if (comma != std::string::npos) {
-                std::string filename = cache_options.substr(comma + 1);
-                int fd = ::open(filename.c_str(), O_RDWR);
-                if (fd == -1) {
-                    throw std::runtime_error(std::string("can't open file '") + filename + "': " + strerror(errno));
-                }
-                return new index_disk_type(fd);
-            } else {
-                return new index_disk_type;
-            }
-        }
-        return nullptr;
-    }
+    typedef osmium::index::map::Map<osmium::unsigned_object_id_type, osmium::Location> index_type;
+    typedef osmium::handler::NodeLocationsForWays<index_type> location_handler_type;
 
     class LocationHandlerWrap : public node::ObjectWrap {
 
-        std::unique_ptr<index_pos_type> m_index_pos;
-        std::unique_ptr<index_neg_type> m_index_neg;
+        std::unique_ptr<index_type> m_index;
 
         std::unique_ptr<location_handler_type> m_this;
 
@@ -71,12 +35,8 @@ namespace node_osmium {
 
         LocationHandlerWrap(const std::string& cache_type) :
             ObjectWrap(),
-            m_index_pos(node_cache_factory(cache_type)),
-            m_index_neg(new index_neg_type),
-            m_this(new location_handler_type(*m_index_pos, *m_index_neg)) {
-            if (!m_index_pos) {
-                throw std::runtime_error("unknown node cache type");
-            }
+            m_index(osmium::index::MapFactory<osmium::unsigned_object_id_type, osmium::Location>::instance().create_map(cache_type)),
+            m_this(new location_handler_type(*m_index)) {
         }
 
         location_handler_type& get() {
