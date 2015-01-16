@@ -18,17 +18,17 @@ function get_handler() {
 describe('location handler', function() {
 
     it('should be able to use the sparse_mem_table location handler', function() {
-        var reader = new osmium.Reader(__dirname + "/data/winthrop.osm", { 'node': true, 'way': true });
+        var reader = new osmium.BasicReader(__dirname + "/data/winthrop.osm", { 'node': true, 'way': true });
         osmium.apply(reader, new osmium.LocationHandler("sparse_mem_table"), get_handler());
     });
 
     it('should be able to use the sparse_mem_map location handler', function() {
-        var reader = new osmium.Reader(__dirname + "/data/winthrop.osm", { 'node': true, 'way': true });
+        var reader = new osmium.BasicReader(__dirname + "/data/winthrop.osm", { 'node': true, 'way': true });
         osmium.apply(reader, new osmium.LocationHandler("sparse_mem_map"), get_handler());
     });
 
     it('should throw on missing location if ignoreErrors is not set', function() {
-        var reader = new osmium.Reader(__dirname + "/data/missing-node.osm", { 'node': true, 'way': true });
+        var reader = new osmium.BasicReader(__dirname + "/data/missing-node.osm", { 'node': true, 'way': true });
         var location_handler = new osmium.LocationHandler();
         var handler = new osmium.Handler();
 
@@ -38,7 +38,7 @@ describe('location handler', function() {
     });
 
     it('should throw in wkb/wkt/node_coordinates function if ignoreErrors is set', function(done) {
-        var reader = new osmium.Reader(__dirname + "/data/missing-node.osm", { 'node': true, 'way': true });
+        var reader = new osmium.BasicReader(__dirname + "/data/missing-node.osm", { 'node': true, 'way': true });
         var location_handler = new osmium.LocationHandler();
         location_handler.ignoreErrors();
 
@@ -62,7 +62,7 @@ describe('location handler', function() {
     });
 
     it('should return undefined for node_coordinates(n) function if ignoreErrors is set', function(done) {
-        var reader = new osmium.Reader(__dirname + "/data/missing-node.osm", { 'node': true, 'way': true });
+        var reader = new osmium.BasicReader(__dirname + "/data/missing-node.osm", { 'node': true, 'way': true });
         var location_handler = new osmium.LocationHandler();
         location_handler.ignoreErrors();
 

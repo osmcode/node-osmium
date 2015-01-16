@@ -1,5 +1,5 @@
-#ifndef READER_WRAP_HPP
-#define READER_WRAP_HPP
+#ifndef BASIC_READER_WRAP_HPP
+#define BASIC_READER_WRAP_HPP
 
 // v8/node
 #include "include_v8.hpp"
@@ -14,7 +14,7 @@
 
 namespace node_osmium {
 
-    class ReaderWrap : public node::ObjectWrap {
+    class BasicReaderWrap : public node::ObjectWrap {
 
         static v8::Handle<v8::Value> header(const v8::Arguments& args);
         static v8::Handle<v8::Value> close(const v8::Arguments& args);
@@ -29,7 +29,7 @@ namespace node_osmium {
         static void Initialize(v8::Handle<v8::Object> target);
         static v8::Handle<v8::Value> New(const v8::Arguments& args);
 
-        ReaderWrap(const osmium::io::File& file, osmium::osm_entity_bits::type entities) :
+        BasicReaderWrap(const osmium::io::File& file, osmium::osm_entity_bits::type entities) :
             ObjectWrap(),
             m_this(file, entities) {
         }
@@ -40,10 +40,10 @@ namespace node_osmium {
 
     private:
 
-        ~ReaderWrap() = default;
+        ~BasicReaderWrap() = default;
 
-    }; // class ReaderWrap
+    }; // class BasicReaderWrap
 
 } // namespace node_osmium
 
-#endif // READER_WRAP_HPP
+#endif // BASIC_READER_WRAP_HPP

@@ -16,7 +16,7 @@ describe('geojson', function() {
             }
         });
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.Reader(file, {node: true});
+        var reader = new osmium.BasicReader(file, {node: true});
         osmium.apply(reader, handler);
     });
 
@@ -35,7 +35,7 @@ describe('geojson', function() {
             }
         });
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.Reader(file);
+        var reader = new osmium.BasicReader(file);
         osmium.apply(reader, new osmium.LocationHandler("sparse_mem_array"), handler);
     });
 

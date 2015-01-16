@@ -4,15 +4,15 @@ var assert = require('assert');
 
 describe('reader', function() {
 
-    it('should throw when Reader called as function', function() {
+    it('should throw when BasicReader called as function', function() {
         assert.throws(function() {
-            var reader = osmium.Reader("foo");
+            var reader = osmium.BasicReader("foo");
         }, Error);
     });
 
     it('should not hang when apply() is called twice on reader', function() {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.Reader(file);
+        var reader = new osmium.BasicReader(file);
         var handler = new osmium.Handler();
         osmium.apply(reader, handler);
 
@@ -21,9 +21,9 @@ describe('reader', function() {
         }, Error);
     });
 
-    it('should be able to create an osmium.Reader and access header', function() {
+    it('should be able to create an osmium.BasicReader and access header', function() {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.Reader(file, {});
+        var reader = new osmium.BasicReader(file, {});
         var header = reader.header();
         assert.equal(header.generator, 'CGImap 0.2.0');
 
@@ -35,8 +35,8 @@ describe('reader', function() {
         reader.close();
     });
 
-    it('should be able to call apply() with an osmium.Reader and a handler', function() {
-        var reader = new osmium.Reader(__dirname + "/data/winthrop.osm");
+    it('should be able to call apply() with an osmium.BasicReader and a handler', function() {
+        var reader = new osmium.BasicReader(__dirname + "/data/winthrop.osm");
         var handler = new osmium.Handler();
 
         osmium.apply(reader, handler);
@@ -49,7 +49,7 @@ describe('reader', function() {
         var file = new osmium.File(buffer, "osm");
         assert.ok(file);
 
-        var reader = new osmium.Reader(file);
+        var reader = new osmium.BasicReader(file);
         assert.ok(reader);
 
         var handler = new osmium.Handler();
@@ -65,9 +65,9 @@ describe('reader', function() {
         osmium.apply(reader, handler);
     });
 
-    it('should read a whole file with Reader.read_all()', function(done) {
+    it('should read a whole file with BasicReader.read_all()', function(done) {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.Reader(file);
+        var reader = new osmium.BasicReader(file);
         var buffer = reader.read_all();
 
         var handler = new osmium.Handler();

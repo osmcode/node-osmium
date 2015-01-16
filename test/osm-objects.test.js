@@ -28,7 +28,7 @@ describe('basic', function() {
             }
         });
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.Reader(file, {node: true});
+        var reader = new osmium.BasicReader(file, {node: true});
         osmium.apply(reader, handler);
     });
 
@@ -50,7 +50,7 @@ describe('basic', function() {
             }
         });
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.Reader(file, {way: true});
+        var reader = new osmium.BasicReader(file, {way: true});
         osmium.apply(reader, handler);
     });
 
@@ -72,7 +72,7 @@ describe('basic', function() {
             }
         });
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.Reader(file, {relation: true});
+        var reader = new osmium.BasicReader(file, {relation: true});
         osmium.apply(reader, handler);
     });
 
@@ -87,7 +87,7 @@ describe('basic', function() {
             }
         });
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.Reader(file, {node: true});
+        var reader = new osmium.BasicReader(file, {node: true});
         osmium.apply(reader, handler);
     });
 
@@ -110,7 +110,7 @@ describe('basic', function() {
             }
         });
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.Reader(file, {way: true});
+        var reader = new osmium.BasicReader(file, {way: true});
         osmium.apply(reader, handler);
     });
 
@@ -138,7 +138,7 @@ describe('basic', function() {
             }
         });
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.Reader(file, {way: true});
+        var reader = new osmium.BasicReader(file, {way: true});
         osmium.apply(reader, handler);
     });
 
@@ -173,7 +173,7 @@ describe('basic', function() {
             }
         });
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.Reader(file, {relation: true});
+        var reader = new osmium.BasicReader(file, {relation: true});
         osmium.apply(reader, handler);
     });
 
@@ -197,7 +197,7 @@ describe('basic', function() {
             }
         });
         var file = new osmium.File(__dirname + "/data/coordinates-problems.osm");
-        var reader = new osmium.Reader(file, {node: true});
+        var reader = new osmium.BasicReader(file, {node: true});
         osmium.apply(reader, handler);
     });
 

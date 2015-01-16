@@ -26,7 +26,7 @@ describe('changesets', function() {
             }
         });
         var file = new osmium.File(__dirname + "/data/changesets.osm");
-        var reader = new osmium.Reader(file, {changeset: true});
+        var reader = new osmium.BasicReader(file, {changeset: true});
         osmium.apply(reader, handler);
     });
 
@@ -49,7 +49,7 @@ describe('changesets', function() {
             }
         });
         var file = new osmium.File(__dirname + "/data/changesets.osm");
-        var reader = new osmium.Reader(file, {changeset: true});
+        var reader = new osmium.BasicReader(file, {changeset: true});
         osmium.apply(reader, handler);
     });
 
@@ -64,7 +64,7 @@ describe('changesets', function() {
             }
         });
         var file = new osmium.File(__dirname + "/data/changesets.osm");
-        var reader = new osmium.Reader(file, {changeset: true});
+        var reader = new osmium.BasicReader(file, {changeset: true});
         osmium.apply(reader, handler);
     });
 

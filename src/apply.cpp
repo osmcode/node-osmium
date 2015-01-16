@@ -18,7 +18,7 @@
 #include "location_handler_wrap.hpp"
 #include "multipolygon_collector_wrap.hpp"
 #include "multipolygon_handler_wrap.hpp"
-#include "reader_wrap.hpp"
+#include "basic_reader_wrap.hpp"
 #include "flex_reader_wrap.hpp"
 #include "utils.hpp"
 
@@ -181,8 +181,8 @@ namespace node_osmium {
             }
 
             auto source = args[0]->ToObject();
-            if (ReaderWrap::constructor->HasInstance(source)) {
-                osmium::io::Reader& reader = unwrap<ReaderWrap>(source);
+            if (BasicReaderWrap::constructor->HasInstance(source)) {
+                osmium::io::Reader& reader = unwrap<BasicReaderWrap>(source);
 
                 if (reader.eof()) {
                     return ThrowException(v8::Exception::Error(v8::String::New("apply() called on a reader that has reached EOF")));
@@ -211,7 +211,7 @@ namespace node_osmium {
             }
         }
 
-        return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a Reader or Buffer object as first parameter")));
+        return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a BasicReader, FlexReader or Buffer object as first parameter")));
     }
 
 } // namespace node_osmium
