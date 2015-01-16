@@ -40,17 +40,17 @@ namespace node_osmium {
         if (!args.IsConstructCall()) {
             return ThrowException(v8::Exception::Error(v8::String::New("Cannot call constructor as function, you need to use 'new' keyword")));
         }
-        if (args.Length() < 1 || args.Length() > 3) {
+        if (args.Length() < 2 || args.Length() > 3) {
             return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a File object or string for the first argument, a LocationHandler as second argument, and optional options v8::Object when creating a FlexReader")));
         }
         try {
-            osmium::osm_entity_bits::type read_which_entities = osmium::osm_entity_bits::all;
-            if (args.Length() == 3) {
-                if (!args[1]->IsObject()) {
+            osmium::osm_entity_bits::type read_which_entities = osmium::osm_entity_bits::nwr;
+            if (args.Length() == 3 && !args[2]->IsUndefined()) {
+                if (!args[2]->IsObject()) {
                     return ThrowException(v8::Exception::TypeError(v8::String::New("Third argument to FlexReader constructor must be object")));
                 }
                 read_which_entities = osmium::osm_entity_bits::nothing;
-                v8::Local<v8::Object> options = args[1]->ToObject();
+                v8::Local<v8::Object> options = args[2]->ToObject();
 
                 v8::Local<v8::Value> want_nodes = options->Get(symbol_node);
                 if (want_nodes->IsBoolean() && want_nodes->BooleanValue()) {
@@ -70,6 +70,11 @@ namespace node_osmium {
                 v8::Local<v8::Value> want_changesets = options->Get(symbol_changeset);
                 if (want_changesets->IsBoolean() && want_changesets->BooleanValue()) {
                     read_which_entities |= osmium::osm_entity_bits::changeset;
+                }
+
+                v8::Local<v8::Value> want_areas = options->Get(symbol_area);
+                if (want_areas->IsBoolean() && want_areas->BooleanValue()) {
+                    read_which_entities |= osmium::osm_entity_bits::area;
                 }
 
             }
