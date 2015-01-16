@@ -1,3 +1,16 @@
+
+
+/*
+
+ XXXXXXXXXXXXXXXXXXX
+
+ This code doesn't work currently.
+
+ XXXXXXXXXXXXXXXXXXX
+
+*/
+
+
 #!/usr/bin/env node
 
 var osmium = require('../../');
