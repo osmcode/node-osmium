@@ -8,6 +8,7 @@ C++ library.
 [![NPM](https://nodei.co/npm/osmium.png?downloads=true&downloadRank=true)](https://nodei.co/npm/osmium/)
 
 [![Build Status](https://secure.travis-ci.org/osmcode/node-osmium.png)](http://travis-ci.org/osmcode/node-osmium)
+[![Build status](https://ci.appveyor.com/api/projects/status/g0j361782j0h0cge?svg=true)](https://ci.appveyor.com/project/Mapbox/node-osmium)
 
 ## Depends
 
