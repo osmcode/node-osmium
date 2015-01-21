@@ -2,7 +2,8 @@
 
 UNAME=$(uname -s);
 if [ ${UNAME} = 'Darwin' ]; then
-    brew install boost protobuf osm-pbf expat google-sparsehash
+    # note: we use || true here to ignore homebrew's silly "already installed" error
+    brew install boost protobuf osm-pbf expat google-sparsehash || true
 else
     # install packages
     sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
