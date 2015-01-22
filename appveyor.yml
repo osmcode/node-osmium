@@ -1,12 +1,3 @@
-#
-# Configuration for appveyor.com
-#
-
-environment:
-  matrix:
-  - configuration: Dev
-  - configuration: Release
-
 # branches to build
 branches:
   # whitelist
@@ -25,7 +16,6 @@ clone_folder: c:\projects\node-osmium
 platform: x64
 
 install:
-  - cmake -version
   - CALL "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
   - SET LODEPSDIR=c:\projects\node-osmium\libosmium-deps
   - SET PROJ_LIB=%LODEPSDIR%\proj\share
@@ -40,18 +30,17 @@ install:
   - SET PATH=%LODEPSDIR%\libtiff\lib;%PATH%
   #zlibwapi.dll
   - SET PATH=%LODEPSDIR%\zlib\lib;%PATH%
-  #convert backslashes in bzip2 path to forward slashes
-  #cmake cannot find it otherwise
-  - SET LIBBZIP2=%LODEPSDIR%\bzip2\lib\libbz2.lib
-  - SET LIBBZIP2=%LIBBZIP2:\=/%
+  - SET PATH=%CD%;%PATH%;
   - ps: Start-FileDownload https://mapnik.s3.amazonaws.com/dist/dev/libosmium-deps-win-14.0-x64.7z -FileName lodeps.7z
+  - ps: Start-FileDownload "https://mapbox.s3.amazonaws.com/node-cpp11/v0.10.33/x64/node.exe"
   - 7z x lodeps.7z > nul
   - echo %LODEPSDIR%
   - dir %LODEPSDIR%
-  #- tree %LODEPSDIR%
-  - cd c:\projects
-  - git clone https://github.com/osmcode/libosmium.git
+  - git clone https://github.com/osmcode/libosmium.git ../libosmium
 
 build_script:
   - cd c:\projects\node-osmium
+  - node -v
+  - node -e "console.log(process.arch,process.execPath)"
+  - npm install --build-from-source --msvs_version=2013 --dist-url=https://s3.amazonaws.com/mapbox/node-cpp11 --toolset=v140
 

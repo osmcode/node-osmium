@@ -35,6 +35,21 @@
         "_LARGEFILE_SOURCE",
         "_FILE_OFFSET_BITS=64"
       ],
+      "conditions" : [
+        ["OS=='win'",
+          {
+            'include_dirs':[
+              '<!(echo %LODEPSDIR%)/boost',
+              '<!(echo %LODEPSDIR%)/sparsehash/include',
+              '<!(echo %LODEPSDIR%)/bzip2/include',
+              '<!(echo %LODEPSDIR%)/zlib/include',
+              '<!(echo %LODEPSDIR%)/osmpbf/include',
+              '<!(echo %LODEPSDIR%)/protobuf/include',
+              '<!(echo %LODEPSDIR%)/expat/include',
+            ]
+          }
+        ]
+      ],
       "xcode_settings": {
         "GCC_ENABLE_CPP_RTTI": "YES",
         "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
