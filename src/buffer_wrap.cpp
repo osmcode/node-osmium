@@ -41,6 +41,12 @@ namespace node_osmium {
                 osmium::memory::Buffer buffer(reinterpret_cast<unsigned char*>(node::Buffer::Data(obj)), node::Buffer::Length(obj));
                 BufferWrap* buffer_wrap = new BufferWrap(std::move(buffer));
                 buffer_wrap->Wrap(args.This());
+
+                // Store the node::Buffer in the new osmium::Buffer object
+                // so the node::Buffer doesn't go away if it goes out of scope
+                // outside this function.
+                args.This()->Set(NODE_PSYMBOL("_data"), obj);
+
                 return args.This();
             }
         }

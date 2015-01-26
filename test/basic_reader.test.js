@@ -10,17 +10,6 @@ describe('reader', function() {
         }, Error);
     });
 
-    it('should not hang when apply() is called twice on reader', function() {
-        var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.BasicReader(file);
-        var handler = new osmium.Handler();
-        osmium.apply(reader, handler);
-
-        assert.throws(function() {
-            osmium.apply(reader, handler);
-        }, Error);
-    });
-
     it('should be able to create an osmium.BasicReader and access header', function() {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file, {});
@@ -35,13 +24,6 @@ describe('reader', function() {
         reader.close();
     });
 
-    it('should be able to call apply() with an osmium.BasicReader and a handler', function() {
-        var reader = new osmium.BasicReader(__dirname + "/data/winthrop.osm");
-        var handler = new osmium.Handler();
-
-        osmium.apply(reader, handler);
-    });
-
     it('should be able to create osmium.File with node.Buffer and read from it', function(done) {
         var buffer = fs.readFileSync(__dirname + "/data/winthrop.osm");
         assert.equal(buffer.length, 359898);
@@ -52,35 +34,34 @@ describe('reader', function() {
         var reader = new osmium.BasicReader(file);
         assert.ok(reader);
 
-        var handler = new osmium.Handler();
+        var stream = new osmium.Stream(reader);
 
         var count = 0;
-        handler.on('node', function(node) {
+        stream.set_callback('node', function(node) {
             if (count++ == 0) {
                 assert.equal(node.id, 50031066);
                 done();
             }
         });
 
-        osmium.apply(reader, handler);
+        stream.on('data', stream.dispatch);
     });
 
     it('should read a whole file with BasicReader.read_all()', function(done) {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file);
         var buffer = reader.read_all();
-
-        var handler = new osmium.Handler();
+        var stream = new osmium.Stream(buffer);
 
         var count = 0;
-        handler.on('node', function(node) {
+        stream.set_callback('node', function(node) {
             if (count++ == 0) {
                 assert.equal(node.id, 50031066);
                 done();
             }
         });
 
-        osmium.apply(buffer, handler);
+        stream.on('data', stream.dispatch);
     });
 
 });

@@ -7,18 +7,18 @@ describe('buffer', function() {
     it('should allow reading into buffer', function(done) {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file);
+        var buffer = reader.read();
+        var stream = new osmium.Stream(buffer);
 
-        var handler = new osmium.Handler();
         var count = 0;
-        handler.on('node', function(node) {
+        stream.set_callback('node', function(node) {
             if (count++ == 0) {
                 assert.equal(node.id, 50031066);
                 done();
             }
         });
 
-        var buffer = reader.read();
-        osmium.apply(buffer, handler);
+        stream.on('data', stream.dispatch);
     });
 
     it('should allow reading into buffer in a loop', function(done) {
@@ -66,10 +66,13 @@ describe('buffer', function() {
         }
     });
 
-    it('should be able to call apply with a Buffer and a handler', function(done) {
-        var handler = new osmium.Handler();
+    it('should be able to stream buffer created from a file', function(done) {
         var count = 0;
-        handler.on('node', function(node) {
+        var data = fs.readFileSync(__dirname + "/data/winthrop.osm.ser");
+        var buffer = new osmium.Buffer(data);
+        var stream = new osmium.Stream(buffer);
+
+        stream.set_callback('node', function(node) {
             if (count++ == 0) {
                 assert.equal(node.id, 50031066);
                 assert.equal(node.visible, true);
@@ -87,12 +90,7 @@ describe('buffer', function() {
             }
         });
 
-        var data = fs.readFileSync(__dirname + "/data/winthrop.osm.ser");
-        var buffer = new osmium.Buffer(data);
-
-        osmium.apply(buffer, handler);
-
-        assert.equal(buffer.clear(), undefined);
+        stream.on('data', stream.dispatch);
     });
 
     it('should complain when calling Buffer methods on something else', function() {
