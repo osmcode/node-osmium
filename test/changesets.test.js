@@ -4,9 +4,11 @@ var assert = require('assert');
 describe('changesets', function() {
 
    it('should be able to access basic attributes from closed changeset', function(done) {
-        var handler = new osmium.Handler();
+        var file = new osmium.File(__dirname + "/data/changesets.osm");
+        var reader = new osmium.BasicReader(file, {changeset: true});
+        var stream = new osmium.Stream(reader);
         var count = 0;
-        handler.on('changeset', function(changeset) {
+        stream.set_callback('changeset', function(changeset) {
             if (count++ == 0) {
                 assert.equal(changeset.type, "changeset");
                 assert.equal(changeset.id, 15449957);
@@ -25,15 +27,15 @@ describe('changesets', function() {
                 done();
             }
         });
-        var file = new osmium.File(__dirname + "/data/changesets.osm");
-        var reader = new osmium.BasicReader(file, {changeset: true});
-        osmium.apply(reader, handler);
+        stream.on('data', stream.dispatch);
     });
 
    it('should be able to access basic attributes from open changeset', function(done) {
-        var handler = new osmium.Handler();
+        var file = new osmium.File(__dirname + "/data/changesets.osm");
+        var reader = new osmium.BasicReader(file, {changeset: true});
+        var stream = new osmium.Stream(reader);
         var count = 0;
-        handler.on('changeset', function(changeset) {
+        stream.set_callback('changeset', function(changeset) {
             if (count++ == 2) {
                 assert.equal(changeset.id, 15450185);
                 assert.equal(changeset.user, "garl");
@@ -48,24 +50,22 @@ describe('changesets', function() {
                 done();
             }
         });
-        var file = new osmium.File(__dirname + "/data/changesets.osm");
-        var reader = new osmium.BasicReader(file, {changeset: true});
-        osmium.apply(reader, handler);
+        stream.on('data', stream.dispatch);
     });
 
    it('should be able to access tags from changeset', function(done) {
-        var handler = new osmium.Handler();
+        var file = new osmium.File(__dirname + "/data/changesets.osm");
+        var reader = new osmium.BasicReader(file, {changeset: true});
+        var stream = new osmium.Stream(reader);
         var count = 0;
-        handler.on('changeset', function(changeset) {
+        stream.set_callback('changeset', function(changeset) {
             if (count++ == 0) {
                 assert.equal(changeset.tags().created_by, 'JOSM/1.5 (5356 en)');
                 assert.equal(changeset.tags('created_by'), 'JOSM/1.5 (5356 en)');
                 done();
             }
         });
-        var file = new osmium.File(__dirname + "/data/changesets.osm");
-        var reader = new osmium.BasicReader(file, {changeset: true});
-        osmium.apply(reader, handler);
+        stream.on('data', stream.dispatch);
     });
 
 });

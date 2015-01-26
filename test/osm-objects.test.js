@@ -4,9 +4,11 @@ var assert = require('assert');
 describe('basic', function() {
 
    it('should be able to access basic attributes from node', function(done) {
-        var handler = new osmium.Handler();
+        var file = new osmium.File(__dirname + "/data/winthrop.osm");
+        var reader = new osmium.BasicReader(file, {node: true});
+        var stream = new osmium.Stream(reader);
         var count = 0;
-        handler.on('node', function(node) {
+        stream.set_callback('node', function(node) {
             if (count++ == 0) {
                 assert.equal(node.type, "node");
                 assert.equal(node.id, 50031066);
@@ -27,15 +29,15 @@ describe('basic', function() {
                 done();
             }
         });
-        var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.BasicReader(file, {node: true});
-        osmium.apply(reader, handler);
+        stream.on('data', stream.dispatch);
     });
 
    it('should be able to access basic attributes from way', function(done) {
-        var handler = new osmium.Handler();
+        var file = new osmium.File(__dirname + "/data/winthrop.osm");
+        var reader = new osmium.BasicReader(file, {way: true});
+        var stream = new osmium.Stream(reader);
         var count = 0;
-        handler.on('way', function(way) {
+        stream.set_callback('way', function(way) {
             if (count++ == 0) {
                 assert.equal(way.type, "way");
                 assert.equal(way.id, 6091729);
@@ -49,15 +51,15 @@ describe('basic', function() {
                 done();
             }
         });
-        var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.BasicReader(file, {way: true});
-        osmium.apply(reader, handler);
+        stream.on('data', stream.dispatch);
     });
 
    it('should be able to access basic attributes from relation', function(done) {
-        var handler = new osmium.Handler();
+        var file = new osmium.File(__dirname + "/data/winthrop.osm");
+        var reader = new osmium.BasicReader(file, {relation: true});
+        var stream = new osmium.Stream(reader);
         var count = 0;
-        handler.on('relation', function(relation) {
+        stream.set_callback('relation', function(relation) {
             if (count++ == 0) {
                 assert.equal(relation.type, "relation");
                 assert.equal(relation.id, 237891);
@@ -71,30 +73,30 @@ describe('basic', function() {
                 done();
             }
         });
-        var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.BasicReader(file, {relation: true});
-        osmium.apply(reader, handler);
+        stream.on('data', stream.dispatch);
     });
 
    it('should be able to handle object without tags', function(done) {
-        var handler = new osmium.Handler();
+        var file = new osmium.File(__dirname + "/data/winthrop.osm");
+        var reader = new osmium.BasicReader(file, {node: true});
+        var stream = new osmium.Stream(reader);
         var count = 0;
-        handler.on('node', function(node) {
+        stream.set_callback('node', function(node) {
             if (count++ == 0) {
                 assert.deepEqual(node.tags(), {});
                 assert.equal(node.tags("foobar"), undefined);
                 done();
             }
         });
-        var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.BasicReader(file, {node: true});
-        osmium.apply(reader, handler);
+        stream.on('data', stream.dispatch);
     });
 
    it('should be able access tags on object', function(done) {
-        var handler = new osmium.Handler();
+        var file = new osmium.File(__dirname + "/data/winthrop.osm");
+        var reader = new osmium.BasicReader(file, {way: true});
+        var stream = new osmium.Stream(reader);
         var count = 0;
-        handler.on('way', function(way) {
+        stream.set_callback('way', function(way) {
             if (count++ == 0) {
                 assert.equal(way.tags().name, "National Fish Hatchery Entranc");
                 assert.equal(way.tags().foobar, undefined);
@@ -109,15 +111,15 @@ describe('basic', function() {
                 done();
             }
         });
-        var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.BasicReader(file, {way: true});
-        osmium.apply(reader, handler);
+        stream.on('data', stream.dispatch);
     });
 
    it('should be able access nodes on ways', function(done) {
-        var handler = new osmium.Handler();
+        var file = new osmium.File(__dirname + "/data/winthrop.osm");
+        var reader = new osmium.BasicReader(file, {way: true});
+        var stream = new osmium.Stream(reader);
         var count = 0;
-        handler.on('way', function(way) {
+        stream.set_callback('way', function(way) {
             if (count++ == 0) {
                 assert.equal(way.nodes_count, 6);
                 assert.equal(way.node_refs().length, 6);
@@ -137,15 +139,15 @@ describe('basic', function() {
                 done();
             }
         });
-        var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.BasicReader(file, {way: true});
-        osmium.apply(reader, handler);
+        stream.on('data', stream.dispatch);
     });
 
    it('should be able access members on relations', function(done) {
-        var handler = new osmium.Handler();
+        var file = new osmium.File(__dirname + "/data/winthrop.osm");
+        var reader = new osmium.BasicReader(file, {relation: true});
+        var stream = new osmium.Stream(reader);
         var count = 0;
-        handler.on('relation', function(relation) {
+        stream.set_callback('relation', function(relation) {
             if (count++ == 0) {
                 assert.equal(relation.members_count, 5);
                 assert.equal(relation.members().length, 5);
@@ -172,15 +174,15 @@ describe('basic', function() {
                 done();
             }
         });
-        var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.BasicReader(file, {relation: true});
-        osmium.apply(reader, handler);
+        stream.on('data', stream.dispatch);
     });
 
    it('should be able to handle missing and invalid coordinates', function() {
-        var handler = new osmium.Handler();
+        var file = new osmium.File(__dirname + "/data/coordinates-problems.osm");
+        var reader = new osmium.BasicReader(file, {node: true});
+        var stream = new osmium.Stream(reader);
         var count = 0;
-        handler.on('node', function(node) {
+        stream.set_callback('node', function(node) {
             count++;
             if (count == 1) {
                 assert.equal(node.coordinates.lon, 1.02);
@@ -196,9 +198,7 @@ describe('basic', function() {
                 assert.equal(node.coordinates.valid(), false);
             }
         });
-        var file = new osmium.File(__dirname + "/data/coordinates-problems.osm");
-        var reader = new osmium.BasicReader(file, {node: true});
-        osmium.apply(reader, handler);
+        stream.on('data', stream.dispatch);
     });
 
 });
