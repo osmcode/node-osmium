@@ -7,3 +7,4 @@ includes.log
 iwyu.log
 lib/binding
 node_modules
+.ycm_extra_conf.pyc
