@@ -9,6 +9,8 @@
 #include <node_object_wrap.h>
 
 // osmium
+#include <osmium/osm/entity_bits.hpp>
+
 namespace osmium {
     class Box;
 }
@@ -39,6 +41,8 @@ namespace node_osmium {
     }
 
     v8::Handle<v8::Value> create_js_box(const osmium::Box& box);
+
+    osmium::osm_entity_bits::type object_to_entity_bits(v8::Local<v8::Object> options);
 
 } // namespace node_osmium
 

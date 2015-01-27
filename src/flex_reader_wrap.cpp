@@ -49,34 +49,7 @@ namespace node_osmium {
                 if (!args[2]->IsObject()) {
                     return ThrowException(v8::Exception::TypeError(v8::String::New("Third argument to FlexReader constructor must be object")));
                 }
-                read_which_entities = osmium::osm_entity_bits::nothing;
-                v8::Local<v8::Object> options = args[2]->ToObject();
-
-                v8::Local<v8::Value> want_nodes = options->Get(symbol_node);
-                if (want_nodes->IsBoolean() && want_nodes->BooleanValue()) {
-                    read_which_entities |= osmium::osm_entity_bits::node;
-                }
-
-                v8::Local<v8::Value> want_ways = options->Get(symbol_way);
-                if (want_ways->IsBoolean() && want_ways->BooleanValue()) {
-                    read_which_entities |= osmium::osm_entity_bits::way;
-                }
-
-                v8::Local<v8::Value> want_relations = options->Get(symbol_relation);
-                if (want_relations->IsBoolean() && want_relations->BooleanValue()) {
-                    read_which_entities |= osmium::osm_entity_bits::relation;
-                }
-
-                v8::Local<v8::Value> want_changesets = options->Get(symbol_changeset);
-                if (want_changesets->IsBoolean() && want_changesets->BooleanValue()) {
-                    read_which_entities |= osmium::osm_entity_bits::changeset;
-                }
-
-                v8::Local<v8::Value> want_areas = options->Get(symbol_area);
-                if (want_areas->IsBoolean() && want_areas->BooleanValue()) {
-                    read_which_entities |= osmium::osm_entity_bits::area;
-                }
-
+                read_which_entities = object_to_entity_bits(args[2]->ToObject());
             }
 
             if (args[1]->IsObject() && LocationHandlerWrap::constructor->HasInstance(args[1]->ToObject())) {
