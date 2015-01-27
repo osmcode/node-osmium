@@ -4,9 +4,12 @@ var assert = require('assert');
 describe('geojson', function() {
 
    it('should be able to create geojson from a node', function(done) {
-        var handler = new osmium.Handler();
+        var file = new osmium.File(__dirname + "/data/winthrop.osm");
+        var reader = new osmium.BasicReader(file, {node: true});
+        var stream = new osmium.Stream(reader);
+
         var count = 0;
-        handler.on('node', function(node) {
+        stream.set_callback('node', function(node) {
             if (count++ == 0) {
                 assert.deepEqual(node.geojson(), {
                     type: 'Point',
@@ -15,14 +18,17 @@ describe('geojson', function() {
                 done();
             }
         });
-        var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.BasicReader(file, {node: true});
-        osmium.apply(reader, handler);
+
+        stream.on('data', stream.dispatch);
     });
 
    it('should be able to create geojson from a way', function(done) {
-        var handler = new osmium.Handler();
-        handler.on('way', function(way) {
+        var file = new osmium.File(__dirname + "/data/winthrop.osm");
+        var location_handler = new osmium.LocationHandler();
+        var reader = new osmium.Reader(file, location_handler, { node: true, way: true });
+        var stream = new osmium.Stream(reader, { way: true });
+
+        stream.set_callback('way', function(way) {
             if (way.id == 6089456) {
                 assert.deepEqual(way.geojson(), {
                     type: 'LineString',
@@ -34,9 +40,8 @@ describe('geojson', function() {
                 done();
             }
         });
-        var file = new osmium.File(__dirname + "/data/winthrop.osm");
-        var reader = new osmium.BasicReader(file);
-        osmium.apply(reader, new osmium.LocationHandler("sparse_mem_array"), handler);
+
+        stream.on('data', stream.dispatch);
     });
 
 });

@@ -64,31 +64,42 @@ namespace node_osmium {
     v8::Handle<v8::Value> BufferWrap::next(const v8::Arguments& args) {
         INSTANCE_CHECK(BufferWrap, "Buffer", "next");
         BufferWrap* buffer_wrap = node::ObjectWrap::Unwrap<BufferWrap>(args.This());
+
         v8::HandleScope scope;
-        if (buffer_wrap->m_iterator == buffer_wrap->m_this.end()) {
-            return scope.Close(v8::Undefined());
+
+        osmium::osm_entity_bits::type entities = osmium::osm_entity_bits::all;
+        if (args.Length() == 1 && args[0]->IsObject()) {
+            auto filter = args[0]->ToObject();
+            entities = object_to_entity_bits(filter);
         }
-        osmium::OSMEntity& entity = *buffer_wrap->m_iterator;
-        ++buffer_wrap->m_iterator;
-        switch (entity.type()) {
-            case osmium::item_type::node: {
-                return scope.Close(new_external<OSMNodeWrap>(entity));
+
+        while (buffer_wrap->m_iterator != buffer_wrap->m_this.end()) {
+            osmium::OSMEntity& entity = *buffer_wrap->m_iterator;
+            ++buffer_wrap->m_iterator;
+
+            if ((osmium::osm_entity_bits::from_item_type(entity.type()) & entities) != 0) {
+                switch (entity.type()) {
+                    case osmium::item_type::node: {
+                        return scope.Close(new_external<OSMNodeWrap>(entity));
+                    }
+                    case osmium::item_type::way: {
+                        return scope.Close(new_external<OSMWayWrap>(entity));
+                    }
+                    case osmium::item_type::relation: {
+                        return scope.Close(new_external<OSMRelationWrap>(entity));
+                    }
+                    case osmium::item_type::area: {
+                        return scope.Close(new_external<OSMAreaWrap>(entity));
+                    }
+                    case osmium::item_type::changeset: {
+                        return scope.Close(new_external<OSMChangesetWrap>(entity));
+                    }
+                    default:
+                        break;
+                }
             }
-            case osmium::item_type::way: {
-                return scope.Close(new_external<OSMWayWrap>(entity));
-            }
-            case osmium::item_type::relation: {
-                return scope.Close(new_external<OSMRelationWrap>(entity));
-            }
-            case osmium::item_type::area: {
-                return scope.Close(new_external<OSMAreaWrap>(entity));
-            }
-            case osmium::item_type::changeset: {
-                return scope.Close(new_external<OSMChangesetWrap>(entity));
-            }
-            default:
-                break;
         }
+
         return scope.Close(v8::Undefined());
     }
 
