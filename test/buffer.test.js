@@ -25,18 +25,19 @@ describe('buffer', function() {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file);
 
-        var handler = new osmium.Handler();
         var count = 0;
-        handler.on('node', function(node) {
+        function node_callback(node) {
             if (count++ == 0) {
                 assert.equal(node.id, 50031066);
                 done();
             }
-        });
+        }
 
         var buffer;
         while (buffer = reader.read()) {
-            osmium.apply(buffer, handler);
+            var stream = new osmium.Stream(buffer);
+            stream.set_callback('node', node_callback);
+            stream.on('data', stream.dispatch);
         }
     });
 
