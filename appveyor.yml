@@ -1,3 +1,9 @@
+#-----------------------------------------------------------------------------
+#
+#  Configuration for continuous integration service at appveyor.com
+#
+#-----------------------------------------------------------------------------
+
 # branches to build
 branches:
   # whitelist
