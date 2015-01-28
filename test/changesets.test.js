@@ -3,7 +3,7 @@ var assert = require('assert');
 
 describe('changesets', function() {
 
-   it('should be able to access basic attributes from closed changeset', function(done) {
+    it('should be able to access basic attributes from closed changeset', function(done) {
         var file = new osmium.File(__dirname + "/data/changesets.osm");
         var reader = new osmium.BasicReader(file, {changeset: true});
         var stream = new osmium.Stream(reader);
@@ -30,7 +30,7 @@ describe('changesets', function() {
         stream.on('data', stream.dispatch);
     });
 
-   it('should be able to access basic attributes from open changeset', function(done) {
+    it('should be able to access basic attributes from open changeset', function(done) {
         var file = new osmium.File(__dirname + "/data/changesets.osm");
         var reader = new osmium.BasicReader(file, {changeset: true});
         var stream = new osmium.Stream(reader);
@@ -53,7 +53,7 @@ describe('changesets', function() {
         stream.on('data', stream.dispatch);
     });
 
-   it('should be able to access tags from changeset', function(done) {
+    it('should be able to access tags from changeset', function(done) {
         var file = new osmium.File(__dirname + "/data/changesets.osm");
         var reader = new osmium.BasicReader(file, {changeset: true});
         var stream = new osmium.Stream(reader);

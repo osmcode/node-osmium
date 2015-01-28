@@ -3,7 +3,7 @@ var assert = require('assert');
 
 describe('flex_reader', function() {
 
-   it('should be able to access basic attributes from node', function(done) {
+    it('should be able to access basic attributes from node', function(done) {
         var handler = new osmium.Handler();
         var count = 0;
         handler.on('node', function(node) {
@@ -33,7 +33,7 @@ describe('flex_reader', function() {
         osmium.apply(reader, handler);
     });
 
-   it('should be able to access basic attributes from way', function(done) {
+    it('should be able to access basic attributes from way', function(done) {
         var handler = new osmium.Handler();
         var count = 0;
         handler.on('way', function(way) {
@@ -56,7 +56,7 @@ describe('flex_reader', function() {
         osmium.apply(reader, handler);
     });
 
-   it('should be able to access basic attributes from relation', function(done) {
+    it('should be able to access basic attributes from relation', function(done) {
         var handler = new osmium.Handler();
         var count = 0;
         handler.on('relation', function(relation) {
@@ -79,7 +79,7 @@ describe('flex_reader', function() {
         osmium.apply(reader, handler);
     });
 
-   it('should be able to handle object without tags', function(done) {
+    it('should be able to handle object without tags', function(done) {
         var handler = new osmium.Handler();
         var count = 0;
         handler.on('node', function(node) {
@@ -95,7 +95,7 @@ describe('flex_reader', function() {
         osmium.apply(reader, handler);
     });
 
-   it('should be able access tags on object', function(done) {
+    it('should be able access tags on object', function(done) {
         var handler = new osmium.Handler();
         var count = 0;
         handler.on('way', function(way) {
@@ -119,7 +119,7 @@ describe('flex_reader', function() {
         osmium.apply(reader, handler);
     });
 
-   it('should be able access nodes on ways', function(done) {
+    it('should be able access nodes on ways', function(done) {
         var handler = new osmium.Handler();
         var count = 0;
         handler.on('way', function(way) {
@@ -148,7 +148,7 @@ describe('flex_reader', function() {
         osmium.apply(reader, handler);
     });
 
-   it('should be able access members on relations', function(done) {
+    it('should be able access members on relations', function(done) {
         var handler = new osmium.Handler();
         var count = 0;
         handler.on('relation', function(relation) {
@@ -184,7 +184,7 @@ describe('flex_reader', function() {
         osmium.apply(reader, handler);
     });
 
-   it('should be able to handle missing and invalid coordinates', function() {
+    it('should be able to handle missing and invalid coordinates', function() {
         var handler = new osmium.Handler();
         var count = 0;
         handler.on('node', function(node) {

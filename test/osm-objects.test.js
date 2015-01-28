@@ -3,7 +3,7 @@ var assert = require('assert');
 
 describe('basic', function() {
 
-   it('should be able to access basic attributes from node', function(done) {
+    it('should be able to access basic attributes from node', function(done) {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file, {node: true});
         var stream = new osmium.Stream(reader);
@@ -32,7 +32,7 @@ describe('basic', function() {
         stream.on('data', stream.dispatch);
     });
 
-   it('should be able to access basic attributes from way', function(done) {
+    it('should be able to access basic attributes from way', function(done) {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file, {way: true});
         var stream = new osmium.Stream(reader);
@@ -54,7 +54,7 @@ describe('basic', function() {
         stream.on('data', stream.dispatch);
     });
 
-   it('should be able to access basic attributes from relation', function(done) {
+    it('should be able to access basic attributes from relation', function(done) {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file, {relation: true});
         var stream = new osmium.Stream(reader);
@@ -76,7 +76,7 @@ describe('basic', function() {
         stream.on('data', stream.dispatch);
     });
 
-   it('should be able to handle object without tags', function(done) {
+    it('should be able to handle object without tags', function(done) {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file, {node: true});
         var stream = new osmium.Stream(reader);
@@ -91,7 +91,7 @@ describe('basic', function() {
         stream.on('data', stream.dispatch);
     });
 
-   it('should be able access tags on object', function(done) {
+    it('should be able access tags on object', function(done) {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file, {way: true});
         var stream = new osmium.Stream(reader);
@@ -114,7 +114,7 @@ describe('basic', function() {
         stream.on('data', stream.dispatch);
     });
 
-   it('should be able access nodes on ways', function(done) {
+    it('should be able access nodes on ways', function(done) {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file, {way: true});
         var stream = new osmium.Stream(reader);
@@ -142,7 +142,7 @@ describe('basic', function() {
         stream.on('data', stream.dispatch);
     });
 
-   it('should be able access members on relations', function(done) {
+    it('should be able access members on relations', function(done) {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file, {relation: true});
         var stream = new osmium.Stream(reader);
@@ -177,7 +177,7 @@ describe('basic', function() {
         stream.on('data', stream.dispatch);
     });
 
-   it('should be able to handle missing and invalid coordinates', function() {
+    it('should be able to handle missing and invalid coordinates', function() {
         var file = new osmium.File(__dirname + "/data/coordinates-problems.osm");
         var reader = new osmium.BasicReader(file, {node: true});
         var stream = new osmium.Stream(reader);

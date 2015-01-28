@@ -3,7 +3,7 @@ var assert = require('assert');
 
 describe('geojson', function() {
 
-   it('should be able to create geojson from a node', function(done) {
+    it('should be able to create geojson from a node', function(done) {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file, {node: true});
         var stream = new osmium.Stream(reader);
@@ -22,7 +22,7 @@ describe('geojson', function() {
         stream.on('data', stream.dispatch);
     });
 
-   it('should be able to create geojson from a way', function(done) {
+    it('should be able to create geojson from a way', function(done) {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var location_handler = new osmium.LocationHandler();
         var reader = new osmium.Reader(file, location_handler, { node: true, way: true });
