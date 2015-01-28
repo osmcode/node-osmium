@@ -181,9 +181,7 @@ namespace node_osmium {
             return;
         }
 
-        v8::HandleScope scope;
-        v8::Local<v8::Value> argv[0] = { };
-        function->Call(v8::Context::GetCurrent()->Global(), 0, argv);
+        function->Call(v8::Context::GetCurrent()->Global(), 0, nullptr);
     }
 
     void JSHandler::dispatch_entity(const osmium::OSMEntity& entity) const {
