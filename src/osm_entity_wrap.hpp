@@ -43,7 +43,8 @@ namespace node_osmium {
                     if (!args[0]->IsString()) {
                         break;
                     }
-                    const char* value = object.tags().get_value_by_key(*v8::String::Utf8Value(args[0]));
+                    v8::String::Utf8Value key { args[0] };
+                    const char* value = object.tags().get_value_by_key(*key);
                     return scope.Close(value ? v8::String::New(value) : v8::Undefined());
                 }
             }

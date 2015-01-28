@@ -115,7 +115,8 @@ namespace node_osmium {
         if (args[0]->IsInt32()) {
             point_in_time = args[0]->Int32Value();
         } else if (args[0]->IsString()) {
-            point_in_time = osmium::Timestamp(*v8::String::Utf8Value(args[0]->ToString()));
+            v8::String::Utf8Value time_string { args[0] };
+            point_in_time = osmium::Timestamp(*time_string);
         } else if (args[0]->IsDate()) {
             point_in_time = osmium::Timestamp(static_cast<int32_t>(v8::Date::Cast(*args[0])->NumberValue() / 1000));
         }

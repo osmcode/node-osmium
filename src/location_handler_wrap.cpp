@@ -35,7 +35,8 @@ namespace node_osmium {
                 if (!args[0]->IsString()) {
                     return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a node cache type as string when creating a LocationHandler")));
                 }
-                location_handler_wrap = new LocationHandlerWrap(*v8::String::Utf8Value(args[0]));
+                v8::String::Utf8Value index_map_type { args[0] };
+                location_handler_wrap = new LocationHandlerWrap(*index_map_type);
             }
             location_handler_wrap->Wrap(args.This());
             return args.This();

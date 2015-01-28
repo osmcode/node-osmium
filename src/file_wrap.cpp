@@ -37,15 +37,16 @@ namespace node_osmium {
             if (!args[1]->IsString()) {
                 return ThrowException(v8::Exception::TypeError(v8::String::New("second argument to File constructor (format) must be a string")));
             }
-            format = *v8::String::Utf8Value(args[1]);
+            v8::String::Utf8Value format_string { args[1] };
+            format = *format_string;
         }
 
         try {
             osmium::io::File file;
 
             if (args[0]->IsString()) {
-                std::string filename = *v8::String::Utf8Value(args[0]);
-                file = osmium::io::File(filename, format);
+                v8::String::Utf8Value filename { args[0] };
+                file = osmium::io::File(*filename, format);
             } else if (args[0]->IsObject() && node::Buffer::HasInstance(args[0]->ToObject())) {
                 auto source = args[0]->ToObject();
                 file = osmium::io::File(node::Buffer::Data(source), node::Buffer::Length(source), format);

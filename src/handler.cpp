@@ -105,7 +105,8 @@ namespace node_osmium {
         if (args.Length() != 2 || !args[0]->IsString() || !args[1]->IsFunction()) {
             return ThrowException(v8::Exception::TypeError(v8::String::New("please provide an event name and callback function")));
         }
-        std::string callback_name = *v8::String::Utf8Value(args[0]->ToString());
+        v8::String::Utf8Value callback_name_string { args[0] };
+        std::string callback_name = *callback_name_string;
         v8::Local<v8::Function> callback = v8::Local<v8::Function>::Cast(args[1]);
         if (callback->IsNull() || callback->IsUndefined()) {
             return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a valid callback function for second arg")));
