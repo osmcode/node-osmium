@@ -2,10 +2,11 @@ var osmium = require('../');
 var fs = require('fs');
 var assert = require('assert');
 
+var file = new osmium.File(__dirname + "/data/winthrop.osm");
+
 describe('buffer', function() {
 
     it('should allow reading into buffer', function(done) {
-        var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file);
         var buffer = reader.read();
         var stream = new osmium.Stream(buffer);
@@ -22,7 +23,6 @@ describe('buffer', function() {
     });
 
     it('should allow reading into buffer in a loop', function(done) {
-        var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file);
 
         var count = 0;
@@ -42,7 +42,6 @@ describe('buffer', function() {
     });
 
     it('should allow iterating over buffer', function() {
-        var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file);
 
         var buffer;
