@@ -13,6 +13,7 @@
 #include "apply.hpp"
 #include "buffer_wrap.hpp"
 #include "file_wrap.hpp"
+#include "filter.hpp"
 #include "handler.hpp"
 #include "location_handler_wrap.hpp"
 #include "multipolygon_collector_wrap.hpp"
@@ -73,6 +74,7 @@ namespace node_osmium {
             module = v8::Persistent<v8::Object>::New(target);
 
             node::SetMethod(target, "apply", node_osmium::apply);
+            node::SetMethod(target, "register_filter", node_osmium::Filter::register_filter);
 
             symbol_OSMEntity       = NODE_PSYMBOL("OSMEntity");
             symbol_OSMObject       = NODE_PSYMBOL("OSMObject");
@@ -118,6 +120,8 @@ namespace node_osmium {
             node_osmium::BasicReaderWrap::Initialize(target);
             node_osmium::FlexReaderWrap::Initialize(target);
             node_osmium::BufferWrap::Initialize(target);
+
+            Filter::init_filters();
         }
     }
 

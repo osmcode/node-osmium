@@ -26,7 +26,9 @@ describe('geojson', function() {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var location_handler = new osmium.LocationHandler();
         var reader = new osmium.Reader(file, location_handler, { node: true, way: true });
-        var stream = new osmium.Stream(reader, { way: true });
+        var filter = new osmium.Filter();
+        filter.with_ways();
+        var stream = new osmium.Stream(reader, filter);
 
         stream.set_callback('way', function(way) {
             if (way.id == 6089456) {

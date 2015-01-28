@@ -6,6 +6,7 @@
 #include <osmium/diff_iterator.hpp>
 
 // node-osmium
+#include "filter.hpp"
 #include "node_osmium.hpp"
 #include "buffer_wrap.hpp"
 #include "osm_node_wrap.hpp"
@@ -67,17 +68,16 @@ namespace node_osmium {
 
         v8::HandleScope scope;
 
-        osmium::osm_entity_bits::type entities = osmium::osm_entity_bits::all;
-        if (args.Length() == 1 && args[0]->IsObject()) {
-            auto filter = args[0]->ToObject();
-            entities = object_to_entity_bits(filter);
+        int filter_id = 0;
+        if (args.Length() == 1 && args[0]->IsInt32()) {
+            filter_id = args[0]->ToInt32()->Value();
         }
 
         while (buffer_wrap->m_iterator != buffer_wrap->m_this.end()) {
             osmium::OSMEntity& entity = *buffer_wrap->m_iterator;
             ++buffer_wrap->m_iterator;
 
-            if ((osmium::osm_entity_bits::from_item_type(entity.type()) & entities) != 0) {
+            if (Filter::get_filter(filter_id).match(entity)) {
                 switch (entity.type()) {
                     case osmium::item_type::node: {
                         return scope.Close(new_external<OSMNodeWrap>(entity));
@@ -95,6 +95,7 @@ namespace node_osmium {
                         return scope.Close(new_external<OSMChangesetWrap>(entity));
                     }
                     default:
+                        assert(false);
                         break;
                 }
             }
