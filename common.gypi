@@ -28,6 +28,7 @@
                   'RuntimeLibrary': '2', # /MD
                   "AdditionalOptions": [
                     "/MP", # compile across multiple CPUs
+                    "/wd4068", # suppress unrecognized pragma warnings
                   ],
                 }
               }
