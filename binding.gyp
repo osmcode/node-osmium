@@ -34,7 +34,8 @@
       ],
       "defines": [
         "_LARGEFILE_SOURCE",
-        "_FILE_OFFSET_BITS=64"
+        "_FILE_OFFSET_BITS=64",
+        "OSMIUM_WITH_SPARSEHASH"
       ],
       "conditions" : [
         ["OS=='win'",
