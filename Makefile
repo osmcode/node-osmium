@@ -28,7 +28,7 @@ debug: ./node_modules ./build
 	./node_modules/.bin/node-pre-gyp build --debug --clang=1
 
 coverage: ./node_modules ./build
-	./node_modules/.bin/node-pre-gyp build --debug --clang=1 --coverage=true
+	export LDFLAGS="--coverage" && export CXXFLAGS="--coverage" && ./node_modules/.bin/node-pre-gyp build --debug --clang=1
 
 verbose: ./node_modules
 	./node_modules/.bin/node-pre-gyp build --loglevel=verbose --clang=1
