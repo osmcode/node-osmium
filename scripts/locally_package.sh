@@ -4,7 +4,7 @@ set -u
 make clean
 rm -rf node_modules/
 export CXX11=true
-source ~/projects/mapnik-packaging/osx/MacOSX.sh
+source ~/projects/osmium-packaging/osx/MacOSX.sh
 npm install --build-from-source
 make test
 npm install aws-sdk
