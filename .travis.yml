@@ -85,7 +85,7 @@ before_script:
 - npm test
 - node-pre-gyp package
 - node-pre-gyp testpackage
-- if [[ ${COVERAGE} == true ]]; then cpp-coveralls --exclude node_modules --exclude tests --build-root build --gcov-options '\-lp' --exclude doc --exclude build/Release/obj/gen; fi;
+- if [[ ${COVERAGE} == true ]]; then cpp-coveralls --exclude src/node_osmium.hpp --exclude src/apply.hpp --exclude src/include_v8.hpp --exclude node_modules --exclude tests --build-root build --gcov-options '\-lp' --exclude doc --exclude build/Release/obj/gen; fi;
 
 script:
 # now we publish the binary, if needed
