@@ -2,6 +2,7 @@
 #include "filter.hpp"
 
 #include <cassert>
+#include <limits>
 #include <memory>
 #include <vector>
 
@@ -24,7 +25,8 @@ namespace node_osmium {
             auto object = args[0]->ToObject();
             // XXX check that object is of class Filter
             Filter::all_filters.emplace_back(new Filter(object));
-            return scope.Close(v8::Integer::New(Filter::all_filters.size() - 1));
+            assert(Filter::all_filters.size() < std::numeric_limits<int32_t>::max());
+            return scope.Close(v8::Integer::New(static_cast<int32_t>(Filter::all_filters.size() - 1)));
         }
 
         return ThrowException(v8::Exception::Error(v8::String::New("registering filter failed")));
