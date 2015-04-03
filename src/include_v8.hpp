@@ -1,6 +1,8 @@
 #ifndef INCLUDE_V8_HPP
 #define INCLUDE_V8_HPP
 
+#include <node.h>
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wctor-dtor-privacy"
 #pragma GCC diagnostic ignored "-Wunused-parameter"
