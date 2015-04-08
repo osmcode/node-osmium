@@ -21,12 +21,14 @@ namespace node_osmium {
         static v8::Handle<v8::Value> clear(const v8::Arguments& args);
         static v8::Handle<v8::Value> next(const v8::Arguments& args);
         static v8::Handle<v8::Value> filter_point_in_time(const v8::Arguments& args);
+        static v8::Handle<v8::Value> create_node_buffer(const v8::Arguments& args);
 
     public:
 
         static v8::Persistent<v8::FunctionTemplate> constructor;
         static void Initialize(v8::Handle<v8::Object> target);
         static v8::Handle<v8::Value> New(const v8::Arguments& args);
+
         BufferWrap(osmium::memory::Buffer&& buffer) :
             ObjectWrap(),
             m_this(std::move(buffer)),

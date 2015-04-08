@@ -68,8 +68,10 @@ describe('buffer', function() {
 
     it('should be able to stream buffer created from a file', function(done) {
         var count = 0;
-        var data = fs.readFileSync(__dirname + "/data/winthrop.osm.ser");
-        var buffer = new osmium.Buffer(data);
+
+        var file = new osmium.File(__dirname + "/data/winthrop.osm");
+        var reader = new osmium.BasicReader(file);
+        var buffer = reader.read_all();
         var stream = new osmium.Stream(buffer);
 
         stream.set_callback('node', function(node) {
@@ -94,15 +96,11 @@ describe('buffer', function() {
     });
 
     it('should complain when calling Buffer methods on something else', function() {
-        var data = fs.readFileSync(__dirname + "/data/winthrop.osm.ser");
+        var data = new Buffer(0);
         var buffer = new osmium.Buffer(data);
 
         assert.throws(function() {
             buffer.clear.apply(undefined);
-        }, TypeError);
-
-        assert.throws(function() {
-            buffer.clear.apply(data);
         }, TypeError);
     });
 

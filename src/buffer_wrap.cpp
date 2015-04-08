@@ -1,4 +1,6 @@
 
+#include <algorithm>
+
 // node
 #include <node_buffer.h>
 
@@ -28,6 +30,7 @@ namespace node_osmium {
         node::SetPrototypeMethod(constructor, "clear", clear);
         node::SetPrototypeMethod(constructor, "next", next);
         node::SetPrototypeMethod(constructor, "filter_point_in_time", filter_point_in_time);
+        node::SetPrototypeMethod(constructor, "create_node_buffer", create_node_buffer);
         target->Set(symbol_Buffer, constructor->GetFunction());
     }
 
@@ -140,6 +143,35 @@ namespace node_osmium {
 
         return scope.Close(new_external<BufferWrap>(std::move(fbuffer)));
     }
+
+    v8::Handle<v8::Value> BufferWrap::create_node_buffer(const v8::Arguments& args) {
+        INSTANCE_CHECK(BufferWrap, "Buffer", "create_node_buffer");
+        osmium::memory::Buffer& buffer = unwrap<BufferWrap>(args.This());
+
+        if (!buffer) {
+            return v8::Undefined();
+        }
+
+        v8::HandleScope scope;
+
+        int length = buffer.committed();
+        node::Buffer* slow_buffer = node::Buffer::New(length);
+        std::copy_n(buffer.data(), length, node::Buffer::Data(slow_buffer));
+
+        v8::Local<v8::Object> global = v8::Context::GetCurrent()->Global();
+
+        v8::Local<v8::Function> buffer_constructor =
+            v8::Local<v8::Function>::Cast(global->Get(v8::String::New("Buffer")));
+
+        v8::Handle<v8::Value> constructor_args[3] = {
+            slow_buffer->handle_,
+            v8::Integer::New(length),
+            v8::Integer::New(0)
+        };
+
+        return scope.Close(buffer_constructor->NewInstance(3, constructor_args));
+    }
+
 
 } // namespace node_osmium
 
