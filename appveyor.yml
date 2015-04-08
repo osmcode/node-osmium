@@ -49,4 +49,9 @@ build_script:
   - node -v
   - node -e "console.log(process.arch,process.execPath)"
   - npm install --build-from-source --msvs_version=2013 --dist-url=https://s3.amazonaws.com/mapbox/node-cpp11 --toolset=v140
+  - npm test
+
+test: off
+
+deploy: off
 
