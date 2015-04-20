@@ -47,6 +47,12 @@ build like:
     cd node-osmium
     make
 
+Use `make debug` to build with debug information. Use `make coverage` to build
+with code coverage.
+
+Use `make VERBOSE=1` to output compiler calls used etc.
+
+
 ## Testing
 
     npm install mocha

@@ -8,6 +8,12 @@ INCLUDES_REPORT_FILES := $(subst src,check_reports,$(INCLUDE_FILES:.hpp=.compile
 
 DEMOS := $(shell find demo -mindepth 1 -maxdepth 1 -type d)
 
+ifeq ($(VERBOSE),1)
+    LOGLEVEL := verbose
+else
+    LOGLEVEL := error
+endif
+
 all: build-all
 .PHONY: all build-all
 
@@ -19,19 +25,16 @@ all: build-all
 	`node -e "console.log(Object.keys(require('./package.json').devDependencies).join(' '))"` --clang=1
 
 ./build:
-	./node_modules/.bin/node-pre-gyp configure --loglevel=error --clang=1
+	./node_modules/.bin/node-pre-gyp configure --loglevel=$(LOGLEVEL) --clang=1
 
 build-all: ./node_modules ./build
-	./node_modules/.bin/node-pre-gyp build --loglevel=error --clang=1
+	./node_modules/.bin/node-pre-gyp build --loglevel=$(LOGLEVEL) --clang=1
 
 debug: ./node_modules ./build
-	./node_modules/.bin/node-pre-gyp build --debug --clang=1
+	./node_modules/.bin/node-pre-gyp build --loglevel=$(LOGLEVEL) --debug --clang=1
 
 coverage: ./node_modules ./build
-	export LDFLAGS="--coverage" && export CXXFLAGS="--coverage" && ./node_modules/.bin/node-pre-gyp build --debug --clang=1
-
-verbose: ./node_modules
-	./node_modules/.bin/node-pre-gyp build --loglevel=verbose --clang=1
+	export LDFLAGS="--coverage" && export CXXFLAGS="--coverage" && ./node_modules/.bin/node-pre-gyp build --loglevel=$(LOGLEVEL) --debug --clang=1
 
 clean:
 	rm -rf ./build ./check_reports lib/binding ./node_modules/
