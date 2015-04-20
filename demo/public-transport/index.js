@@ -34,7 +34,7 @@ handler.on('relation', function(relation) {
     }
 });
 
-var reader = new osmium.Reader(input_filename);
+var reader = new osmium.BasicReader(input_filename);
 osmium.apply(reader, handler);
 console.log("first pass done");
 

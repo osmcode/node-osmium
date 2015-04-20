@@ -21,7 +21,7 @@ handler.on('way', function(way) {
 });
 
 console.log("Reading input file into memory...\n");
-var reader = new osmium.Reader(input_filename);
+var reader = new osmium.BasicReader(input_filename);
 var buffer = reader.read_all();
 reader.close();
 

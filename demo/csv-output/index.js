@@ -36,7 +36,7 @@ handler.on('done', function() {
     stream.close();
 });
 
-var reader = new osmium.Reader(input_filename);
+var reader = new osmium.BasicReader(input_filename);
 var location_handler = new osmium.LocationHandler();
 osmium.apply(reader, location_handler, handler);
 reader.close();

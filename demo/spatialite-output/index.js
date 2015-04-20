@@ -70,7 +70,7 @@ child.on('exit', function(code, signal) {
     });
 
     var location_handler = new osmium.LocationHandler();
-    var reader = new osmium.Reader(input_filename);
+    var reader = new osmium.BasicReader(input_filename);
     osmium.apply(reader, location_handler, handler);
     reader.close();
 

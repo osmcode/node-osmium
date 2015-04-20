@@ -23,7 +23,7 @@ function stop(msg) {
 if (!argv.output || typeof(argv.output) != 'string') stop('--output argument required (path to a new file or the keyword "stdout")');
 if (!argv.input || typeof(argv.input) != 'string') stop('--input argument required (path to an osm file)');
 
-var reader = new osmium.Reader(argv.input);
+var reader = new osmium.BasicReader(argv.input);
 
 var geojsonOut = geojsonStream.stringify();
 
