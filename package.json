@@ -31,7 +31,7 @@
         "package_name": "{node_abi}-{platform}-{arch}.tar.gz"
     },
     "dependencies": {
-        "node-pre-gyp": "0.5.27"
+        "node-pre-gyp": "~0.6.4"
     },
     "bundledDependencies":["node-pre-gyp"],
     "devDependencies": {
@@ -44,6 +44,6 @@
     },
     "scripts": {
         "install": "node-pre-gyp install --fallback-to-build",
-        "test": "mocha -R spec --timeout 10000"
+        "test": "mocha -R spec --timeout 100000"
     }
 }

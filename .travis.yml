@@ -6,23 +6,37 @@
 
 language: cpp
 
-os:
-  - linux
-  - osx
-
-compiler:
- - clang
+matrix:
+  include:
+     # Coverage
+     - os: osx
+       compiler: clang
+       env: NODE_VERSION="0.10.36" COVERAGE=true RUN_BUILD="shared_build"
+     # Linux
+     - os: linux
+       compiler: clang
+       env: NODE_VERSION="0.10.36" RUN_BUILD="static_build"
+     - os: linux
+       compiler: clang
+       env: NODE_VERSION="0.10.36" RUN_BUILD="shared_build"
+     # OS X
+     - os: osx
+       compiler: clang
+       env: NODE_VERSION="0.10.36" RUN_BUILD="shared_build"
+     - os: osx
+       compiler: clang
+       env: NODE_VERSION="0.10.36" RUN_BUILD="static_build"
+     # static_build == portable, statically linked node-osmium and deps
+     # shared_build == non-portable, shared libraries via package manager
 
 env:
-  matrix:
-   # static_build == portable, statically linked node-osmium and deps
-   # shared_build == non-portable, shared libraries via package manager
-   - NODE_NVM_VERSION="0.10" RUN_BUILD="static_build"
-   - NODE_NVM_VERSION="0.10" RUN_BUILD="shared_build"
   global:
+   - JOBS: "8"
    - secure: Ac0sNxaMmm/4NLJwjB5W74wNNrXH2cFz4qADJSJwGr+p78NVrp+3B70Nlffg6sf6sq57KeoQi5EbUNSa4fjLS2FqJJDr5U8cOA4nt5tPGm8cucdAyr4VCREEddtV4jfIcNN0/I/DKIK4d744SmpqomVYqTUFOVK8LOT4vAX3tTo=
    - secure: bsD0VyN6F6+ratG/C2AB1GrbmaPGyvaAgjZXd7tsQPYl+TR3BT643T9GikgN5IJdbjVBOJDfSqk76g/UlfLl9bRnoybP8tJsZJhCyMYKyRNGJZBIOyEVe6j5FrcT5ejBO0EIGaw2fXwSkG92pg7CFQOAPkVNgcl/H0XNdMa3Q/8=
+
 before_install:
+- export COVERAGE=${COVERAGE:-false}
 # check if tag exists and matches package.json
 - scripts/validate_tag.sh
 # get commit message
@@ -34,10 +48,20 @@ before_install:
 # objective-c in another branch (to run the same travis.yml on OS X)
 - git clone https://github.com/creationix/nvm.git ../.nvm
 - source ../.nvm/nvm.sh
-- nvm install $NODE_NVM_VERSION
-- nvm use $NODE_NVM_VERSION
+- nvm install $NODE_VERSION
+- nvm use $NODE_VERSION
 - node --version
 - npm --version
+- if [[ ${COVERAGE} == true ]]; then
+      brew update;
+      brew install pyenv;
+      eval "$(pyenv init -)";
+      pyenv install 2.7.6;
+      pyenv global 2.7.6;
+      pyenv rehash;
+      pip install cpp-coveralls;
+      pyenv rehash;
+     fi;
 
 install:
 # set a few env settings for the static build script
@@ -50,18 +74,24 @@ install:
 before_script:
 # install from source, ensure this works first
 - git clone https://github.com/osmcode/libosmium.git ../libosmium
-- npm install --build-from-source --clang=1
+- if [[ ${COVERAGE} == true ]]; then
+    make coverage;
+  else
+    npm install --build-from-source --clang=1;
+  fi;
+
 - if [[ `uname -s` == 'Darwin' ]]; then otool -L ./lib/binding/* || true; fi
 - if [[ `uname -s` == 'Linux' ]]; then readelf -d ./lib/binding/* || true; fi
 - npm test
 - node-pre-gyp package
 - node-pre-gyp testpackage
+- if [[ ${COVERAGE} == true ]]; then cpp-coveralls --exclude src/node_osmium.hpp --exclude src/apply.hpp --exclude src/include_v8.hpp --exclude node_modules --exclude tests --build-root build --gcov-options '\-lp' --exclude doc --exclude build/Release/obj/gen; fi;
 
 script:
 # now we publish the binary, if needed
 - PUBLISH_BINARY=false
 # or check if we are manually requesting binary publishing via a commit keyword
-- if [[ $RUN_BUILD == "static_build" ]] && test "${COMMIT_MESSAGE#*'[publish binary]'}" != "$COMMIT_MESSAGE"; then PUBLISH_BINARY=true; fi;
+- if [[ $RUN_BUILD == "static_build" ]] && [[ ${COVERAGE} == false ]] && test "${COMMIT_MESSAGE#*'[publish binary]'}" != "$COMMIT_MESSAGE"; then PUBLISH_BINARY=true; fi;
 # if either are true, then publish the binary
 # Note: this publishing is done here, in the 'script' section, instead of the 'after_success'
 # since we want any failure here to stop the build immediately
