@@ -150,7 +150,7 @@ namespace node_osmium {
                     throw javascript_error();
                 }
             }
-        } catch (const javascript_error& e) {
+        } catch (const javascript_error&) {
             trycatch.ReThrow();
         } catch (const std::exception& e) {
             std::string msg("osmium error: ");

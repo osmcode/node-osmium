@@ -4,7 +4,7 @@ var assert = require('assert');
 
 describe('apply', function() {
 
-    it('should be able to call apply with a Buffer and a handler', function(done) {
+    it('should be able to call apply with a node Buffer and a handler', function(done) {
         var handler = new osmium.Handler();
         var count = 0;
         handler.on('node', function(node) {
@@ -25,9 +25,12 @@ describe('apply', function() {
             }
         });
 
-        var buffer = fs.readFileSync(__dirname + "/data/winthrop.osm.ser");
+        var file = new osmium.File(__dirname + "/data/winthrop.osm");
+        var reader = new osmium.BasicReader(file);
+        var osmium_buffer = reader.read_all();
+        var node_buffer = osmium_buffer.create_node_buffer();
 
-        osmium.apply(buffer, handler);
+        osmium.apply(node_buffer, handler);
     });
 
 });

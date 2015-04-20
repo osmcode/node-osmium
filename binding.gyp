@@ -48,6 +48,22 @@
               '<!(echo %LODEPSDIR%)/osmpbf/include',
               '<!(echo %LODEPSDIR%)/protobuf/include',
               '<!(echo %LODEPSDIR%)/expat/include',
+            ],
+            "libraries": [
+              "Ws2_32.lib",
+              "<!(echo %LODEPSDIR%)/osmpbf/lib/osmpbf.lib",
+              "<!(echo %LODEPSDIR%)/protobuf/lib/libprotobuf-lite",
+              "<!(echo %LODEPSDIR%)/expat/lib/libexpat.lib",
+              "<!(echo %LODEPSDIR%)/zlib/lib/zlibwapi.lib",
+              "<!(echo %LODEPSDIR%)/bzip2/lib/libbz2.lib"
+            ]
+          },{
+            "libraries": [
+              "-losmpbf",
+              "-lprotobuf-lite",
+              "-lexpat",
+              "-lz",
+              "-lbz2"
             ]
           }
         ]
@@ -62,13 +78,6 @@
       },
       "cflags_cc!": ["-fno-rtti", "-fno-exceptions"],
       "cflags_cc" : ["-std=c++11", "-Wno-return-type"],
-      "libraries": [
-          "-losmpbf",
-          "-lprotobuf-lite",
-          "-lexpat",
-          "-lz",
-          "-lbz2"
-      ]
     },
     {
       "target_name": "action_after_build",
