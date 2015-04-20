@@ -65,4 +65,17 @@ describe('changesets', function() {
         stream.on('data', stream.dispatch);
     });
 
+    it('should not be able to create an osmium.Changeset from Javascript', function() {
+        var got_exception = false;
+        try {
+            var object = new osmium.Changeset;
+        } catch (e) {
+            assert.ok(e instanceof TypeError);
+            assert.equal(e.message, 'osmium.Changeset cannot be created in Javascript');
+            got_exception = true;
+        } finally {
+            assert.ok(got_exception);
+        }
+    });
+
 });

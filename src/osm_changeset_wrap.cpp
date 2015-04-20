@@ -37,7 +37,7 @@ namespace node_osmium {
             static_cast<OSMChangesetWrap*>(ext->Value())->Wrap(args.This());
             return args.This();
         } else {
-            return ThrowException(v8::Exception::TypeError(v8::String::New("osmium.OSMChangeset cannot be created in Javascript")));
+            return ThrowException(v8::Exception::TypeError(v8::String::New("osmium.Changeset cannot be created in Javascript")));
         }
     }
 
