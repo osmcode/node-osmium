@@ -31,12 +31,12 @@
         "package_name": "{node_abi}-{platform}-{arch}.tar.gz"
     },
     "dependencies": {
-        "node-pre-gyp": "~0.6.4"
+        "node-pre-gyp": "~0.6.6"
     },
     "bundledDependencies":["node-pre-gyp"],
     "devDependencies": {
-        "mocha": "*",
-        "aws-sdk": "2.0.12"
+        "mocha": "1.x",
+        "aws-sdk": "~2.1.26"
     },
     "licenses": [ { "type": "Boost" } ],
     "engines": {
