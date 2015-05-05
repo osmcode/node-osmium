@@ -67,7 +67,7 @@ before_script:
     make;
   fi;
 - npm test
-- ./scripts/run_coverage.sh
+- ./scripts/coverage.sh
 
 script:
 - ./scripts/publish.sh
