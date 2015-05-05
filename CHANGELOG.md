@@ -4,6 +4,7 @@
 
  - Added `osmium.Stream`
  - Added `osmium.FlexReader`
+ - Added `osmium.Filter`
  - Renamed `osmium.Reader` to `osmium.BasicReader`
  - Updated to libosmium@33d479d7eada041
  - Ported build system to [mason](https://github.com/mapbox/mason)
