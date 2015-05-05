@@ -64,7 +64,7 @@ before_script:
     PYTHONUSERBASE=$(pwd)/mason_packages/.link pip install --user cpp-coveralls;
     make coverage;
   else
-    make
+    make;
   fi;
 - npm test
 - ./scripts/run_coverage.sh
