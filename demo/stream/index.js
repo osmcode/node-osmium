@@ -2,13 +2,20 @@
 
 var osmium = require('../../');
 
+if (process.argv.length != 3) {
+    console.log("Usage: " + process.argv[0] + ' ' + process.argv[1] + " OSMFILE");
+    process.exit(1);
+}
+
+var input_filename = process.argv[2];
+
 /*function ffunc() {
     console.log("ffunc");
 }
 
 setInterval(ffunc, 1000);*/
 
-var file = new osmium.File('../../test/data/winthrop.osm');
+var file = new osmium.File(input_filename);
 var location_handler = new osmium.LocationHandler();
 var stream = new osmium.Stream(new osmium.Reader(file, location_handler));
 
