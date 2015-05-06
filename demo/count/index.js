@@ -27,7 +27,7 @@ handler.on('relation', function(relation) {
     relations++;
 });
 
-var reader = new osmium.BasicReader(input_filename);
+var reader = new osmium.Reader(input_filename);
 osmium.apply(reader, handler);
 console.log("Nodes: " + nodes);
 console.log("Ways: " + ways);

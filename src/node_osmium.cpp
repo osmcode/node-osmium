@@ -73,7 +73,7 @@ namespace node_osmium {
             v8::HandleScope scope;
             module = v8::Persistent<v8::Object>::New(target);
 
-            node::SetMethod(target, "apply", node_osmium::apply);
+            node::SetMethod(target, "apply_", node_osmium::apply);
             node::SetMethod(target, "register_filter", node_osmium::Filter::register_filter);
 
             symbol_OSMEntity       = NODE_PSYMBOL("OSMEntity");
