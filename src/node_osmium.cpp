@@ -68,6 +68,12 @@ namespace node_osmium {
     v8::Persistent<v8::String> symbol_BasicReader;
     v8::Persistent<v8::String> symbol_FlexReader;
 
+    v8::Persistent<v8::Object> the_Node;
+    v8::Persistent<v8::Object> the_Way;
+    v8::Persistent<v8::Object> the_Relation;
+    v8::Persistent<v8::Object> the_Area;
+    v8::Persistent<v8::Object> the_Changeset;
+
     extern "C" {
         static void start(v8::Handle<v8::Object> target) {
             v8::HandleScope scope;
@@ -122,6 +128,12 @@ namespace node_osmium {
             node_osmium::BufferWrap::Initialize(target);
 
             Filter::init_filters();
+
+            the_Node      = v8::Persistent<v8::Object>::New(new_external<OSMNodeWrap>());
+            the_Way       = v8::Persistent<v8::Object>::New(new_external<OSMWayWrap>());
+            the_Relation  = v8::Persistent<v8::Object>::New(new_external<OSMRelationWrap>());
+            the_Area      = v8::Persistent<v8::Object>::New(new_external<OSMAreaWrap>());
+            the_Changeset = v8::Persistent<v8::Object>::New(new_external<OSMChangesetWrap>());
         }
     }
 

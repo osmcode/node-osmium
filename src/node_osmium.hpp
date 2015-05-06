@@ -41,6 +41,12 @@ namespace node_osmium {
     extern v8::Persistent<v8::String> symbol_BasicReader;
     extern v8::Persistent<v8::String> symbol_FlexReader;
 
+    extern v8::Persistent<v8::Object> the_Node;
+    extern v8::Persistent<v8::Object> the_Way;
+    extern v8::Persistent<v8::Object> the_Relation;
+    extern v8::Persistent<v8::Object> the_Area;
+    extern v8::Persistent<v8::Object> the_Changeset;
+
 } // namespace node_osmium
 
 #endif // NODE_OSMIUM

@@ -83,19 +83,24 @@ namespace node_osmium {
             if (Filter::get_filter(filter_id).match(entity)) {
                 switch (entity.type()) {
                     case osmium::item_type::node: {
-                        return scope.Close(new_external<OSMNodeWrap>(entity));
+                        node::ObjectWrap::Unwrap<OSMNodeWrap>(the_Node)->set(entity);
+                        return scope.Close(the_Node);
                     }
                     case osmium::item_type::way: {
-                        return scope.Close(new_external<OSMWayWrap>(entity));
+                        node::ObjectWrap::Unwrap<OSMWayWrap>(the_Way)->set(entity);
+                        return scope.Close(the_Way);
                     }
                     case osmium::item_type::relation: {
-                        return scope.Close(new_external<OSMRelationWrap>(entity));
+                        node::ObjectWrap::Unwrap<OSMRelationWrap>(the_Relation)->set(entity);
+                        return scope.Close(the_Relation);
                     }
                     case osmium::item_type::area: {
-                        return scope.Close(new_external<OSMAreaWrap>(entity));
+                        node::ObjectWrap::Unwrap<OSMAreaWrap>(the_Area)->set(entity);
+                        return scope.Close(the_Area);
                     }
                     case osmium::item_type::changeset: {
-                        return scope.Close(new_external<OSMChangesetWrap>(entity));
+                        node::ObjectWrap::Unwrap<OSMChangesetWrap>(the_Changeset)->set(entity);
+                        return scope.Close(the_Changeset);
                     }
                     default:
                         assert(false);

@@ -37,6 +37,10 @@ namespace node_osmium {
             return static_cast<const osmium::Area&>(unwrap<OSMEntityWrap>(object));
         }
 
+        OSMAreaWrap() :
+            OSMObjectWrap() {
+        }
+
         OSMAreaWrap(const osmium::OSMEntity& entity) :
             OSMObjectWrap(entity) {
         }

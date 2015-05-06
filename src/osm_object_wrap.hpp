@@ -37,6 +37,10 @@ namespace node_osmium {
             return static_cast<const osmium::OSMObject&>(unwrap<OSMEntityWrap>(object));
         }
 
+        OSMObjectWrap() :
+            OSMEntityWrap() {
+        }
+
         OSMObjectWrap(const osmium::OSMEntity& entity) :
             OSMEntityWrap(entity) {
         }

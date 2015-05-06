@@ -58,8 +58,16 @@ namespace node_osmium {
         static void Initialize(v8::Handle<v8::Object> target);
         static v8::Handle<v8::Value> New(const v8::Arguments& args);
 
+        OSMEntityWrap() :
+            m_entity(nullptr) {
+        }
+
         OSMEntityWrap(const osmium::OSMEntity& entity) :
             m_entity(&entity) {
+        }
+
+        void set(const osmium::OSMEntity& entity) {
+            m_entity = &entity;
         }
 
         const osmium::OSMEntity& get() {
