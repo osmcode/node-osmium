@@ -11,11 +11,9 @@ CXX=${CXX:-clang++}
 function all_deps() {
     dep boost 1.57.0 &
     dep expat 2.1.0 &
-    dep osmpbf 1.3.3 &
-    dep protobuf 2.6.1 &
     dep bzip 1.0.6 &
     dep zlib system &
-    dep sparsehash 2.0.2 & 
+    dep sparsehash 2.0.2 &
     wait
 }
 
