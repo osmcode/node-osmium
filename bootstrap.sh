@@ -28,7 +28,9 @@ function main() {
     fi
     export C_INCLUDE_PATH="${MASON_HOME}/include"
     export CPLUS_INCLUDE_PATH="${MASON_HOME}/include"
+    export CXXFLAGS="-I${MASON_HOME}/include"
     export LIBRARY_PATH="${MASON_HOME}/lib"
+    export LDFLAGS="-L${MASON_HOME}/lib"
     echo "success: now run 'npm install --build-from-source'"
 }
 
