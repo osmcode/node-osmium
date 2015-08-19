@@ -36,6 +36,12 @@ debug: ./node_modules ./build
 coverage: ./node_modules ./build
 	export LDFLAGS="--coverage" && export CXXFLAGS="--coverage" && ./node_modules/.bin/node-pre-gyp build --loglevel=$(LOGLEVEL) --debug --clang=1
 
+testpack:
+	rm -f ./*tgz
+	npm pack
+	tar -ztvf *tgz
+	rm -f ./*tgz
+
 clean:
 	rm -rf ./build ./check_reports lib/binding ./node_modules/
 	rm -f includes.log iwyu.log
