@@ -28,15 +28,15 @@ matrix:
      # Linux
      - os: linux
        compiler: clang
-       env: NODE_VERSION="0.10.38"
+       env: NODE_VERSION="0.10.40"
      # OS X
      - os: osx
        compiler: clang
-       env: NODE_VERSION="0.10.38"
+       env: NODE_VERSION="0.10.40"
      # Coverage
      - os: osx
        compiler: clang
-       env: NODE_VERSION="0.10.38" COVERAGE=true
+       env: NODE_VERSION="0.10.40" COVERAGE=true
 
 env:
   global:
