@@ -53,6 +53,7 @@ before_install:
    else
      export PYTHONPATH=$(pwd)/mason_packages/.link/lib/python/site-packages;
    fi;
+- if [[ $(uname -s) == 'Darwin' ]]; then brew uninstall --force node; fi;
 - source ./scripts/install_node.sh ${NODE_VERSION}
 
 install:
