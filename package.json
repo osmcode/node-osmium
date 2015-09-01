@@ -43,6 +43,7 @@
         "node": ">= 0.10.0 < 0.11.0"
     },
     "scripts": {
+        "prepublish": "npm ls",
         "install": "node-pre-gyp install --fallback-to-build",
         "test": "mocha -R spec --timeout 100000"
     }
