@@ -24,7 +24,9 @@ needed.
 
 Just do:
 
-    npm install osmium
+```shell
+npm install osmium
+```
 
 We currently provide binaries for 64 bit OS X and 64 bit Linux. Running `npm
 install` on other platforms will fall back to a source compile (see
@@ -43,9 +45,11 @@ there. You can also have a look at the tests in the `test` directory.
 If you wish to develop on `node-osmium` you can check out the code and then
 build like:
 
-    git clone https://github.com/osmcode/node-osmium.git
-    cd node-osmium
-    make
+```shell
+git clone https://github.com/osmcode/node-osmium.git
+cd node-osmium
+make
+```
 
 Use `make debug` to build with debug information. Use `make coverage` to build
 with code coverage.
@@ -70,33 +74,37 @@ See also the dependency information for the Osmium library.
 
 Set dependencies up on Ubuntu Precise (12.04) like:
 
-    sudo apt-add-repository --yes ppa:chris-lea/node.js
-    sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
-    sudo apt-get -y update
-    sudo apt-get -y install git gcc-4.8 g++-4.8 build-essential nodejs
-    sudo apt-get -y install libboost-dev zlib1g-dev protobuf-compiler
-    sudo apt-get -y install libprotobuf-lite7 libprotobuf-dev libexpat1-dev
-    sudo apt-get -y install libsparsehash-dev
-    export CC=gcc-4.8
-    export CXX=g++-4.8
-    git clone https://github.com/scrosby/OSM-binary.git
-    cd OSM-binary/src
-    make && sudo make install
+```shell
+sudo apt-add-repository --yes ppa:chris-lea/node.js
+sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
+sudo apt-get -y update
+sudo apt-get -y install git gcc-4.8 g++-4.8 build-essential nodejs
+sudo apt-get -y install libboost-dev zlib1g-dev protobuf-compiler
+sudo apt-get -y install libprotobuf-lite7 libprotobuf-dev libexpat1-dev
+sudo apt-get -y install libsparsehash-dev
+export CC=gcc-4.8
+export CXX=g++-4.8
+git clone https://github.com/scrosby/OSM-binary.git
+cd OSM-binary/src
+make && sudo make install
+```
 
 Set dependencies up on OS X like:
 
-    git clone https://github.com/mapnik/mapnik-packaging.git
-    cd mapnik-packaging/osx
-    export CXX11=true
-    source MacOSX.sh
-    ./scripts/build_bzip2.sh
-    ./scripts/build_expat.sh
-    ./scripts/build_google_sparsetable.sh
-    ./scripts/build_boost.sh --with-test --with-program_options
-    ./scripts/build_protobuf.sh
-    ./scripts/build_osm-pbf.sh
-    # NOTE: in the same terminal then run the build commands
-    # Or from a different terminal re-run `source MacOSX.sh`
+```shell
+git clone https://github.com/mapnik/mapnik-packaging.git
+cd mapnik-packaging/osx
+export CXX11=true
+source MacOSX.sh
+./scripts/build_bzip2.sh
+./scripts/build_expat.sh
+./scripts/build_google_sparsetable.sh
+./scripts/build_boost.sh --with-test --with-program_options
+./scripts/build_protobuf.sh
+./scripts/build_osm-pbf.sh
+# NOTE: in the same terminal then run the build commands
+# Or from a different terminal re-run `source MacOSX.sh`
+```
 
 ## License
 
@@ -114,4 +122,3 @@ or on [OFTC net IRC channel #osm-dev](https://wiki.openstreetmap.org/wiki/Irc).
 
  - Dane Springmeyer (dane@mapbox.com)
  - Jochen Topf (jochen@topf.org)
-
