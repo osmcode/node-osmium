@@ -55,7 +55,29 @@ IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 CALL npm test
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
+SET PUBLISH=0
+SET REPUBLISH=0
+for /F "tokens=1 usebackq" %%i in (`powershell .\scripts\parse-commit-message.ps1 '[pUbLiSh biNarY]'`) DO SET PUBLISH=%%i
+for /F "tokens=1 usebackq" %%i in (`powershell .\scripts\parse-commit-message.ps1 '[rEpUbLiSh biNarY]'`) DO SET REPUBLISH=%%i
 
+ECHO APPVEYOR_REPO_COMMIT_MESSAGE^: %APPVEYOR_REPO_COMMIT_MESSAGE%
+ECHO PUBLISH^: %PUBLISH%
+ECHO REPUBLISH^: %REPUBLISH%
+
+IF %PUBLISH% EQU 0 IF %REPUBLISH% EQU 0 ECHO not publishing && GOTO DONE
+SET PUBLISH_CMD=publish
+IF %REPUBLISH% EQU 1 SET PUBLISH_CMD=unpublish %PUBLISH_CMD%
+ECHO node-pre-gyp publish command^: %PUBLISH_CMD%
+
+ECHO packaging...
+CALL .\node_modules\.bin\node-pre-gyp package --target=%nodejs_version%
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+
+ECHO install aws-sdk... && CALL npm install aws-sdk
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+ECHO publishing...
+CALL .\node_modules\.bin\node-pre-gyp %PUBLISH_CMD% --target=%nodejs_version%
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 GOTO DONE
 

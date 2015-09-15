@@ -4,6 +4,9 @@ SET EL=0
 
 ECHO ~~~~~~~~~~~~~~~~~~~ %~f0 ~~~~~~~~~~~~~~~~~~~
 
+SET APPVEYOR_REPO_COMMIT_MESSAGE=local testing
+::SET APPVEYOR_REPO_COMMIT_MESSAGE=local testing [publish binary]
+::SET APPVEYOR_REPO_COMMIT_MESSAGE=local testing [republish binary]
 SET nodejs_version=0.10.33
 SET platform=x64
 SET LOCAL_BUILD=1
