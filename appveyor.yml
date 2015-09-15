@@ -27,6 +27,5 @@ platform: x64
 build_script:
   - scripts\build-appveyor.bat
 
-build: off
 test: off
 deploy: off
