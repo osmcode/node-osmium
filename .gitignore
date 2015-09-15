@@ -2,6 +2,8 @@
 mason_packages
 .*.swp
 .DS_Store
+*.7z
+node.exe
 berlin-latest.osm.pbf
 build
 check_reports
