@@ -5,16 +5,17 @@
 #-----------------------------------------------------------------------------
 
 # branches to build
-branches:
-  # whitelist
-  only:
-    - master
+#branches:
+#  # whitelist
+#  only:
+#    - master
 
 # Operating system (build VM template)
 os: Visual Studio 2015
 
 environment:
   nodejs_version: "0.10.33"
+
 # scripts that are called at very beginning, before repo cloning
 init:
 
