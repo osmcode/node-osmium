@@ -6,6 +6,7 @@
 // osmium
 #include <osmium/geom/wkb.hpp>
 #include <osmium/geom/wkt.hpp>
+#include <osmium/geom/geojson.hpp>
 
 // node-osmium
 #include "osm_area_wrap.hpp"
@@ -14,6 +15,7 @@ namespace node_osmium {
 
     extern osmium::geom::WKBFactory<> wkb_factory;
     extern osmium::geom::WKTFactory<> wkt_factory;
+    extern osmium::geom::GeoJSONFactory<> geojson_factory;
     extern v8::Persistent<v8::Object> module;
 
     v8::Persistent<v8::FunctionTemplate> OSMAreaWrap::constructor;
@@ -28,6 +30,7 @@ namespace node_osmium {
         set_accessor(constructor, "type", get_type, attributes);
         node::SetPrototypeMethod(constructor, "wkb", wkb);
         node::SetPrototypeMethod(constructor, "wkt", wkt);
+        node::SetPrototypeMethod(constructor, "geojson", geojson);
         target->Set(symbol_Area, constructor->GetFunction());
     }
 
@@ -52,6 +55,26 @@ namespace node_osmium {
 #else
             return scope.Close(node::Buffer::New(const_cast<char*>(wkb.data()), wkb.size())->handle_);
 #endif
+        } catch (std::runtime_error& e) {
+            return ThrowException(v8::Exception::Error(v8::String::New(e.what())));
+        }
+    }
+
+    v8::Handle<v8::Value> OSMAreaWrap::geojson(const v8::Arguments& args) {
+        INSTANCE_CHECK(OSMAreaWrap, "Area", "geojson");
+        v8::HandleScope scope;
+
+        try {
+            std::string geojson { geojson_factory.create_multipolygon(wrapped(args.This())) };
+
+            v8::Handle<v8::Context> context = v8::Context::GetCurrent();
+            v8::Handle<v8::Object> global = context->Global();
+
+            v8::Handle<v8::Object> JSON = global->Get(v8::String::New("JSON"))->ToObject();
+            v8::Handle<v8::Function> JSON_parse = v8::Handle<v8::Function>::Cast(JSON->Get(v8::String::New("parse")));
+
+            v8::Handle<v8::Value> jsonString = v8::String::New(geojson.c_str());
+            return scope.Close(JSON_parse->Call(JSON, 1, &jsonString));
         } catch (std::runtime_error& e) {
             return ThrowException(v8::Exception::Error(v8::String::New(e.what())));
         }

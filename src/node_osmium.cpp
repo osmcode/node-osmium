@@ -5,6 +5,7 @@
 // osmium
 #include <osmium/geom/wkb.hpp>
 #include <osmium/geom/wkt.hpp>
+#include <osmium/geom/geojson.hpp>
 #include <osmium/io/input_iterator.hpp>
 #include <osmium/memory/buffer.hpp>
 #include <osmium/visitor.hpp>
@@ -31,6 +32,7 @@ namespace node_osmium {
     v8::Persistent<v8::Object> module;
     osmium::geom::WKBFactory<> wkb_factory;
     osmium::geom::WKTFactory<> wkt_factory;
+    osmium::geom::GeoJSONFactory<> geojson_factory;
 
     v8::Persistent<v8::String> symbol_OSMEntity;
     v8::Persistent<v8::String> symbol_OSMObject;
