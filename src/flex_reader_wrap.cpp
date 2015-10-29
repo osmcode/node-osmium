@@ -44,7 +44,7 @@ namespace node_osmium {
             return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a File object or string for the first argument, a LocationHandler as second argument, and optional options v8::Object when creating a FlexReader")));
         }
         try {
-            osmium::osm_entity_bits::type read_which_entities = osmium::osm_entity_bits::nwr;
+            osmium::osm_entity_bits::type read_which_entities = osmium::osm_entity_bits::nwra;
             if (args.Length() == 3 && !args[2]->IsUndefined()) {
                 if (!args[2]->IsObject()) {
                     return ThrowException(v8::Exception::TypeError(v8::String::New("Third argument to FlexReader constructor must be object")));
