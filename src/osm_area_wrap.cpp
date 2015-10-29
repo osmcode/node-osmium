@@ -28,6 +28,7 @@ namespace node_osmium {
         set_accessor(constructor, "type", get_type, attributes);
         node::SetPrototypeMethod(constructor, "wkb", wkb);
         node::SetPrototypeMethod(constructor, "wkt", wkt);
+        node::SetPrototypeMethod(constructor, "coordinates", coordinates);
         target->Set(symbol_Area, constructor->GetFunction());
     }
 
@@ -67,6 +68,47 @@ namespace node_osmium {
         } catch (std::runtime_error& e) {
             return ThrowException(v8::Exception::Error(v8::String::New(e.what())));
         }
+    }
+
+    v8::Handle<v8::Array> get_coordinates(const osmium::NodeRefList& node_ref_list) {
+        v8::Local<v8::Array> locations = v8::Array::New(node_ref_list.size());
+        int i = 0;
+        for (const auto& node_ref : node_ref_list) {
+            const osmium::Location location = node_ref.location();
+            v8::Local<v8::Array> coordinates = v8::Array::New(2);
+            coordinates->Set(0, v8::Number::New(location.lon()));
+            coordinates->Set(1, v8::Number::New(location.lat()));
+            locations->Set(i, coordinates);
+            ++i;
+        }
+        return locations;
+    }
+
+    v8::Handle<v8::Value> OSMAreaWrap::coordinates(const v8::Arguments& args) {
+        INSTANCE_CHECK(OSMAreaWrap, "Area", "coordinates");
+        v8::HandleScope scope;
+
+        v8::Local<v8::Value> cf = module->Get(symbol_Coordinates);
+        assert(cf->IsFunction());
+
+        const osmium::Area& area = wrapped(args.This());
+        auto num_rings = area.num_rings();
+        v8::Local<v8::Array> rings = v8::Array::New(num_rings.first);
+
+        int n = 0;
+        for (auto oit = area.cbegin<osmium::OuterRing>(); oit != area.cend<osmium::OuterRing>(); ++oit, ++n) {
+            v8::Local<v8::Array> ring = v8::Array::New(
+                1 + std::distance(area.inner_ring_cbegin(oit), area.inner_ring_cend(oit))
+            );
+            int m = 0;
+            ring->Set(m++, get_coordinates(*oit));
+            for (auto iit = area.inner_ring_cbegin(oit); iit != area.inner_ring_cend(oit); ++iit) {
+                ring->Set(m++, get_coordinates(*iit));
+            }
+            rings->Set(n, ring);
+        }
+
+        return scope.Close(rings);
     }
 
 } // namespace node_osmium
