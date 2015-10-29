@@ -88,9 +88,6 @@ namespace node_osmium {
                     break;
             }
             switch (m_current) {
-                case osmium::item_type::undefined:
-                    visitor.done();
-                    break;
                 case osmium::item_type::node:
                     visitor.before_nodes();
                     break;

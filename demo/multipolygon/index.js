@@ -13,6 +13,10 @@ var output_filename = process.argv[3];
 
 var stream = buffered_writer.open(output_filename);
 
+stream.on("error", function(error) {
+    console.log(error);
+})
+
 // =====================================
 
 var handler = new osmium.Handler();
@@ -29,7 +33,24 @@ handler.on('done', function() {
 });
 
 var location_handler = new osmium.LocationHandler();
+
+// using the FlexReader interface...
 var reader = new osmium.FlexReader(input_filename, location_handler);
 osmium.apply(reader, handler);
+handler.end();
 reader.close();
+
+// ...or using the old "manual" interface...
+/*
+var reader = new osmium.BasicReader(input_filename);
+var mp = new osmium.MultipolygonCollector();
+mp.read_relations(reader);
+reader.close();
+
+reader = new osmium.BasicReader(input_filename);
+osmium.apply(reader, location_handler, handler, mp.handler(handler));
+mp.handler(handler).end();
+handler.end();
+reader.close();
+*/
 

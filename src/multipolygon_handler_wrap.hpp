@@ -16,6 +16,8 @@ namespace node_osmium {
         typedef osmium::area::MultipolygonCollector<osmium::area::Assembler>::HandlerPass2 handler_type;
         handler_type m_handler;
 
+        static v8::Handle<v8::Value> stream_end(const v8::Arguments& args);
+
     public:
 
         static v8::Persistent<v8::FunctionTemplate> constructor;

@@ -86,6 +86,7 @@ describe('handler', function() {
         var file = new osmium.File(__dirname + "/data/winthrop.osm");
         var reader = new osmium.BasicReader(file);
         osmium.apply(reader, handler);
+        handler.end();
 
         assert.equal(count, 8);
     });
@@ -104,6 +105,7 @@ describe('handler', function() {
         var file = new osmium.File(__dirname + "/data/changesets.osm");
         var reader = new osmium.BasicReader(file);
         osmium.apply(reader, handler);
+        handler.end();
 
         assert.equal(count, 4);
     });

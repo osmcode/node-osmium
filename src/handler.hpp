@@ -42,6 +42,7 @@ namespace node_osmium {
 
         static v8::Handle<v8::Value> on(const v8::Arguments& args);
         static v8::Handle<v8::Value> options(const v8::Arguments& args);
+        static v8::Handle<v8::Value> stream_end(const v8::Arguments& args);
 
     public:
 
