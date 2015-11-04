@@ -93,6 +93,11 @@ namespace node_osmium {
 
         const osmium::Area& area = wrapped(args.This());
         auto num_rings = area.num_rings();
+
+        if (num_rings.first == 0) {
+            return ThrowException(v8::Exception::Error(v8::String::New("Area has no geometry")));
+        }
+
         v8::Local<v8::Array> rings = v8::Array::New(num_rings.first);
 
         int n = 0;
