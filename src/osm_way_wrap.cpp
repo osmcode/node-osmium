@@ -121,7 +121,7 @@ namespace node_osmium {
         switch (args.Length()) {
             case 0: {
                 try {
-                    v8::Local<v8::Array> nodes = v8::Array::New(way.nodes().size());
+                    v8::Local<v8::Array> nodes = v8::Array::New(0);
                     int i = 0;
                     osmium::Location last_location;
                     for (const auto& node_ref : way.nodes()) {
