@@ -114,6 +114,10 @@ namespace node_osmium {
 
         const osmium::Way& way = wrapped(args.This());
 
+        if (way.nodes().size() < 2) {
+            return ThrowException(v8::Exception::Error(v8::String::New("Way has no geometry")));
+        }
+
         switch (args.Length()) {
             case 0: {
                 try {
@@ -153,4 +157,3 @@ namespace node_osmium {
     }
 
 } // namespace node_osmium
-
