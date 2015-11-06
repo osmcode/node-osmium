@@ -48,7 +48,7 @@ namespace node_osmium {
         v8::HandleScope scope;
 
         try {
-            std::string wkb { wkb_factory.create_linestring(wrapped(args.This())) };
+            std::string wkb { wkb_factory.create_linestring(wrapped(args.This()), osmium::geom::use_nodes::unique) };
 #if NODE_VERSION_AT_LEAST(0, 10, 0)
             return scope.Close(node::Buffer::New(wkb.data(), wkb.size())->handle_);
 #else
@@ -63,7 +63,7 @@ namespace node_osmium {
         v8::HandleScope scope;
 
         try {
-            std::string wkt { wkt_factory.create_linestring(wrapped(args.This())) };
+            std::string wkt { wkt_factory.create_linestring(wrapped(args.This()), osmium::geom::use_nodes::unique) };
             return scope.Close(v8::String::New(wkt.c_str()));
         } catch (std::runtime_error& e) {
             return ThrowException(v8::Exception::Error(v8::String::New(e.what())));
@@ -123,11 +123,18 @@ namespace node_osmium {
                 try {
                     v8::Local<v8::Array> nodes = v8::Array::New(way.nodes().size());
                     int i = 0;
+                    osmium::Location last_location;
                     for (const auto& node_ref : way.nodes()) {
                         const osmium::Location location = node_ref.location();
-                        v8::Local<v8::Value> argv[2] = { v8::Number::New(location.lon()), v8::Number::New(location.lat()) };
-                        nodes->Set(i, v8::Local<v8::Function>::Cast(cf)->NewInstance(2, argv));
-                        ++i;
+                        if (location != last_location) {
+                            v8::Local<v8::Value> argv[2] = { v8::Number::New(location.lon()), v8::Number::New(location.lat()) };
+                            nodes->Set(i, v8::Local<v8::Function>::Cast(cf)->NewInstance(2, argv));
+                            ++i;
+                            last_location = location;
+                        }
+                    }
+                    if (i < 2) {
+                        return ThrowException(v8::Exception::Error(v8::String::New("Way has no geometry")));
                     }
                     return scope.Close(nodes);
                 } catch (osmium::invalid_location&) {
