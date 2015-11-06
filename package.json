@@ -35,8 +35,12 @@
     },
     "bundledDependencies":["node-pre-gyp"],
     "devDependencies": {
+        "aws-sdk": "~2.1.26",
+        "geojson-coords": "0.0.0",
         "mocha": "1.x",
-        "aws-sdk": "~2.1.26"
+        "osm-testdata": "1.0.0",
+        "turf-difference": "^2.0.0",
+        "wellknown": "^0.4.0"
     },
     "licenses": [ { "type": "Boost" } ],
     "engines": {
