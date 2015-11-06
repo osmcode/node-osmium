@@ -83,42 +83,38 @@ tests.forEach(function(test) {
         Object.keys(features.wkt).forEach(function(id) {
             var expected = test.wkt[id];
             var found = features.wkt[id];
-
-            var matches = found === expected;
             var errored = found instanceof Error;
 
-            if (test.valid) {
-                it('expected wkt for feature ' + id, function() {
-                    assert.ok(matches);
+            if (errored && !test.valid) {
+                it('wkt threw error for invalid feature ' + id, function() {
+                    assert.ok(true);
                 });
             } else {
-                it('threw error or generated fixed wkt for invalid feature ' + id, function() {
-                    assert.ok(matches || errored);
+                it('generated wkt for feature ' + id, function() {
+                    assert.equal(found, expected);
                 });
             }
 
             delete test.wkt[id];
         });
 
-        it('all expected wkt for test', function() {
-            assert.equal(Object.keys(test.wkt).length, 0);
+        it('all expected wkt', function() {
+            assert.deepEqual(Object.keys(test.wkt), []);
         });
 
         // test basic feature geojson generation
         Object.keys(features.geojson).forEach(function(id) {
             var expected = test.geojson[id];
             var found = features.geojson[id];
-
-            var matches = JSON.stringify(found) === JSON.stringify(expected);
             var errored = found instanceof Error;
 
-            if (test.valid) {
-                it('expected geojson for feature ' + id, function() {
-                    assert.ok(matches);
+            if (errored && !test.valid) {
+                it('geojson threw error for invalid feature ' + id, function() {
+                    assert.ok(true);
                 });
             } else {
-                it('threw error or generated fixed geojson for invalid feature ' + id, function() {
-                    assert.ok(matches || errored);
+                it('generated geojson for feature ' + id, function() {
+                    assert.equal(JSON.stringify(found), JSON.stringify(expected));
                 });
             }
 
@@ -126,7 +122,7 @@ tests.forEach(function(test) {
         });
 
         it('all expected geojson', function() {
-            assert.equal(Object.keys(test.geojson).length, 0);
+            assert.deepEqual(Object.keys(test.geojson), []);
         });
 
         if (!test.info.areas) return;
@@ -141,10 +137,14 @@ tests.forEach(function(test) {
                 var expectedGeojson = wellknown(expectedArea.wkt);
 
                 it('generated wkt area for feature ' + expectedArea.from_id, function() {
-                    assert.ok(areasEqual(wellknown(foundWkt), expectedGeojson));
+                    var equal = areasEqual(wellknown(foundWkt), expectedGeojson);
+                    if (equal) assert.ok(equal);
+                    else assert.equal(foundWkt, expectedArea.wkt);
                 });
                 it('generated geojson area for feature ' + expectedArea.from_id, function() {
-                    assert.ok(areasEqual(foundGeojson, expectedGeojson));
+                    var equal = areasEqual(foundGeojson, expectedGeojson);
+                    if (equal) assert.ok(equal);
+                    else assert.equal(JSON.stringify(foundGeojson), JSON.stringify(expectedGeojson));
                 });
             });
         } else {
@@ -154,16 +154,30 @@ tests.forEach(function(test) {
                 var foundGeojson = areas.geojson[2 * fixedArea.from_id] || areas.geojson[(2 * fixedArea.from_id) + 1];
                 var erroredWkt = foundWkt instanceof Error;
                 var erroredGeojson = foundGeojson instanceof Error;
-                var matchesWkt = erroredWkt ? 'false' : areasEqual(wellknown(foundWkt), wellknown(expected));
-                var matchesGeojson = erroredGeojson ? 'false' : areasEqual(foundGeojson, wellknown(expected));
 
-                it('threw error or generated fixed wkt for invalid area ' + fixedArea.from_id, function() {
-                    assert.ok(matchesWkt || erroredWkt);
-                });
+                if (erroredWkt) {
+                    it('wkt threw error for invalid area ' + fixedArea.from_id, function() {
+                        assert.ok(true);
+                    });
+                } else {
+                    it('generated fixed wkt for invalid area ' + fixedArea.from_id, function() {
+                        var equal = areasEqual(wellknown(foundWkt), wellknown(expected));
+                        if (equal) assert.ok(equal);
+                        else assert.equal(foundWkt, expected);
+                    });
+                }
 
-                it('threw error or generated fixed geojson for invalid area ' + fixedArea.from_id, function() {
-                    assert.ok(matchesGeojson || erroredGeojson);
-                });
+                if (erroredGeojson) {
+                    it('geojson threw error for invalid area ' + fixedArea.from_id, function() {
+                        assert.ok(true);
+                    });
+                } else {
+                    it('generated fixed geojson for invalid area ' + fixedArea.from_id, function() {
+                        var equal = areasEqual(foundGeojson, wellknown(expected));
+                        if (equal) assert.ok(equal);
+                        else assert.equal(JSON.stringify(foundGeojson), JSON.stringify(wellknown(expected)));
+                    });
+                }
 
                 delete areas.wkt[2 * fixedArea.from_id];
                 delete areas.wkt[2 * fixedArea.from_id + 1];
