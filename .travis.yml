@@ -58,7 +58,7 @@ before_install:
 
 install:
 - source ./bootstrap.sh
-- git clone https://github.com/osmcode/libosmium.git ../libosmium
+- git clone --depth=1 --branch=v2.5.2 https://github.com/osmcode/libosmium.git ../libosmium
 
 before_script:
 - if [[ ${COVERAGE} == true ]]; then

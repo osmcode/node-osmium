@@ -13,6 +13,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 
+## [0.4.3] - 2015-11-10
+
+### Added
+
+- GeoJSON support for Areas
+- Lots of tests for Areas
+
+### Fixed
+
+- Issue with buffer not being flushed which resulted in some Areas
+  not showing up in the handler.
+
+
 ## [0.4.2] - 2015-09-01
 
 ### Changed
@@ -45,7 +58,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Upgraded node-pre-gyp to 0.5.10
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v0.4.2...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v0.4.3...HEAD
+[0.4.3]: https://github.com/osmcode/libosmium/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/osmcode/libosmium/compare/v0.4.0...v0.4.2
 [0.4.0]: https://github.com/osmcode/libosmium/compare/v0.1.2...v0.4.0
 
