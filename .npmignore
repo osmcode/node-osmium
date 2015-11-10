@@ -14,3 +14,4 @@ mason_packages
 appveyor.yml
 build-local-test.bat
 bootstrap.sh
+lib/binding
