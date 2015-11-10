@@ -63,6 +63,9 @@ tests.forEach(function(test) {
     var areas = { wkt: {}, geojson: {} };
 
     function getGeometry(osm) {
+        if (osm.type === 'area') {
+            assert.equal(osm.id, 2 * osm.orig_id + !osm.from_way);
+        }
         var stash = osm.type === 'area' ? areas : features;
         try { stash.geojson[osm.id] = osm.geojson(); }
         catch (err) { stash.geojson[osm.id] = err; }

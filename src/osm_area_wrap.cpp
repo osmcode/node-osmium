@@ -26,6 +26,8 @@ namespace node_osmium {
         constructor->SetClassName(symbol_Area);
         auto attributes = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
         set_accessor(constructor, "type", get_type, attributes);
+        set_accessor(constructor, "orig_id", get_orig_id, attributes);
+        set_accessor(constructor, "from_way", from_way, attributes);
         node::SetPrototypeMethod(constructor, "wkb", wkb);
         node::SetPrototypeMethod(constructor, "wkt", wkt);
         node::SetPrototypeMethod(constructor, "coordinates", coordinates);
@@ -40,6 +42,15 @@ namespace node_osmium {
         } else {
             return ThrowException(v8::Exception::TypeError(v8::String::New("osmium.Area cannot be created in Javascript")));
         }
+    }
+
+    v8::Handle<v8::Value> OSMAreaWrap::get_orig_id(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
+        v8::HandleScope scope;
+        return scope.Close(v8::Number::New(wrapped(info.This()).orig_id()));
+    }
+
+    v8::Handle<v8::Value> OSMAreaWrap::from_way(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
+        return v8::Boolean::New(wrapped(info.This()).from_way());
     }
 
     v8::Handle<v8::Value> OSMAreaWrap::wkb(const v8::Arguments& args) {
