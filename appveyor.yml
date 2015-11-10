@@ -42,7 +42,7 @@ install:
   - 7z x lodeps.7z > nul
   - echo %LODEPSDIR%
   - dir %LODEPSDIR%
-  - git clone https://github.com/osmcode/libosmium.git ../libosmium
+  - git clone --depth=1 --branch=v2.5.2 https://github.com/osmcode/libosmium.git ../libosmium
 
 build_script:
   - cd c:\projects\node-osmium
