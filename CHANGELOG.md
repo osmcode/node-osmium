@@ -13,6 +13,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 
+## [0.4.4] - 2015-11-10
+
+### Fixed
+
+- Removes bindings from npm bundle to fix installation via node-pre-gyp
+
+
 ## [0.4.3] - 2015-11-10
 
 ### Added
@@ -37,7 +44,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.4.0] - 2015-08-19
 
-### Added 
+### Added
 
 - Added `osmium.Stream`
 - Added `osmium.FlexReader`
@@ -58,8 +65,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Upgraded node-pre-gyp to 0.5.10
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v0.4.3...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v0.4.4...HEAD
+[0.4.4]: https://github.com/osmcode/libosmium/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/osmcode/libosmium/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/osmcode/libosmium/compare/v0.4.0...v0.4.2
 [0.4.0]: https://github.com/osmcode/libosmium/compare/v0.1.2...v0.4.0
-
