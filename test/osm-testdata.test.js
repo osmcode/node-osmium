@@ -67,10 +67,10 @@ tests.forEach(function(test) {
             assert.equal(osm.id, 2 * osm.orig_id + !osm.from_way);
         }
         var stash = osm.type === 'area' ? areas : features;
-        try { stash.geojson[osm.id] = osm.geojson(); }
-        catch (err) { stash.geojson[osm.id] = err; }
-        try { stash.wkt[osm.id] = osm.wkt(); }
-        catch (err) { stash.wkt[osm.id] = err; }
+        try { stash.geojson[osm.orig_id || osm.id] = osm.geojson(); }
+        catch (err) { stash.geojson[osm.orig_id || osm.id] = err; }
+        try { stash.wkt[osm.orig_id || osm.id] = osm.wkt(); }
+        catch (err) { stash.wkt[osm.orig_id || osm.id] = err; }
     }
 
     handler.on('node', getGeometry);
@@ -133,10 +133,8 @@ tests.forEach(function(test) {
         // test area generation
         if (test.valid) {
             test.info.areas.default.forEach(function(expectedArea) {
-                // osmium doubles id values when creating an area from a way and
-                // doubles + 1 when creating an area from a relation
-                var foundWkt = areas.wkt[2 * expectedArea.from_id] || areas.wkt[(2 * expectedArea.from_id) + 1];
-                var foundGeojson = areas.geojson[2 * expectedArea.from_id] || areas.geojson[(2 * expectedArea.from_id) + 1];
+                var foundWkt = areas.wkt[expectedArea.from_id] || areas.wkt[expectedArea.from_id];
+                var foundGeojson = areas.geojson[expectedArea.from_id] || areas.geojson[expectedArea.from_id];
                 var expectedGeojson = wellknown(expectedArea.wkt);
 
                 it('generated wkt area for feature ' + expectedArea.from_id, function() {
@@ -153,8 +151,8 @@ tests.forEach(function(test) {
         } else {
             (test.info.areas.fix || test.info.areas.location || test.info.areas.default || []).forEach(function(fixedArea) {
                 var expected = fixedArea.wkt;
-                var foundWkt = areas.wkt[2 * fixedArea.from_id] || areas.wkt[(2 * fixedArea.from_id) + 1];
-                var foundGeojson = areas.geojson[2 * fixedArea.from_id] || areas.geojson[(2 * fixedArea.from_id) + 1];
+                var foundWkt = areas.wkt[fixedArea.from_id] || areas.wkt[fixedArea.from_id];
+                var foundGeojson = areas.geojson[fixedArea.from_id] || areas.geojson[fixedArea.from_id];
                 var erroredWkt = foundWkt instanceof Error;
                 var erroredGeojson = foundGeojson instanceof Error;
 
@@ -182,10 +180,10 @@ tests.forEach(function(test) {
                     });
                 }
 
-                delete areas.wkt[2 * fixedArea.from_id];
-                delete areas.wkt[2 * fixedArea.from_id + 1];
-                delete areas.geojson[2 * fixedArea.from_id];
-                delete areas.geojson[2 * fixedArea.from_id + 1];
+                delete areas.wkt[fixedArea.from_id];
+                delete areas.wkt[fixedArea.from_id];
+                delete areas.geojson[fixedArea.from_id];
+                delete areas.geojson[fixedArea.from_id];
             });
 
             Object.keys(areas.wkt).forEach(function(id) {
