@@ -137,9 +137,7 @@ namespace node_osmium {
             auto dend   = diff_iterator(buffer.end<osmium::OSMObject>(), buffer.end<osmium::OSMObject>());
 
             std::for_each(dbegin, dend, [point_in_time, &fbuffer](const osmium::DiffObject& d) {
-                if (((d.end_time() == 0 || d.end_time() > point_in_time) &&
-                        d.start_time() <= point_in_time) &&
-                    d.curr().visible()) {
+                if (d.is_visible_at(point_in_time)) {
                     fbuffer.add_item(d.curr());
                     fbuffer.commit();
                 }
