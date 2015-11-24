@@ -102,6 +102,9 @@ describe('buffer', function() {
         assert.throws(function() {
             buffer.clear.apply(undefined);
         }, TypeError);
+        assert.throws(function() {
+            new osmium.Buffer(new Buffer("<"));
+        });
     });
 
 });
