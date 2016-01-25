@@ -15,6 +15,7 @@ namespace node_osmium {
         constructor->SetClassName(symbol_LocationHandler);
         node::SetPrototypeMethod(constructor, "clear", clear);
         node::SetPrototypeMethod(constructor, "ignoreErrors", ignoreErrors);
+        node::SetPrototypeMethod(constructor, "end", stream_end);
         target->Set(symbol_LocationHandler, constructor->GetFunction());
     }
 
@@ -57,6 +58,10 @@ namespace node_osmium {
         v8::HandleScope scope;
         unwrap<LocationHandlerWrap>(args.This()).clear();
         return scope.Close(v8::Undefined());
+    }
+
+    v8::Handle<v8::Value> LocationHandlerWrap::stream_end(const v8::Arguments& args) {
+        return v8::Undefined();
     }
 
 } // namespace node_osmium

@@ -31,6 +31,7 @@ namespace node_osmium {
         constructor->SetClassName(symbol_Handler);
         node::SetPrototypeMethod(constructor, "on", on);
         node::SetPrototypeMethod(constructor, "options", options);
+        node::SetPrototypeMethod(constructor, "end", stream_end);
         target->Set(symbol_Handler, constructor->GetFunction());
 
         symbol_tagged_nodes_only = NODE_PSYMBOL("tagged_nodes_only");
@@ -254,6 +255,19 @@ namespace node_osmium {
 
     void JSHandler::done() const {
         call_callback(done_cb);
+    }
+
+    v8::Handle<v8::Value> JSHandler::stream_end(const v8::Arguments& args) {
+        INSTANCE_CHECK(JSHandler, "handler", "end");
+        v8::HandleScope scope;
+        if (args.Length() != 0) {
+            return ThrowException(v8::Exception::TypeError(v8::String::New("end() doesn't take any parameters")));
+        }
+
+        JSHandler& handler = unwrap<JSHandler>(args.This());
+        call_callback(handler.done_cb);
+
+        return scope.Close(v8::Undefined());
     }
 
 } // namespace node_osmium

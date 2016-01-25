@@ -1,3 +1,5 @@
+.mason
+mason_packages
 .*.swp
 .DS_Store
 berlin-latest.osm.pbf

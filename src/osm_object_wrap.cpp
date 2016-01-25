@@ -61,7 +61,7 @@ namespace node_osmium {
 
     v8::Handle<v8::Value> OSMObjectWrap::get_timestamp(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
         v8::HandleScope scope;
-        return scope.Close(v8::Uint32::New(uint32_t { wrapped(info.This()).timestamp() } ));
+        return scope.Close(v8::Uint32::New(uint32_t(wrapped(info.This()).timestamp())));
     }
 
     v8::Handle<v8::Value> OSMObjectWrap::get_uid(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {

@@ -32,7 +32,10 @@ namespace node_osmium {
         BufferWrap(osmium::memory::Buffer&& buffer) :
             ObjectWrap(),
             m_this(std::move(buffer)),
-            m_iterator(m_this.begin()) {
+            m_iterator() {
+            if (m_this) {
+                m_iterator = m_this.begin();
+            }
         }
 
         osmium::memory::Buffer& get() {

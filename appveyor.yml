@@ -11,7 +11,7 @@ branches:
     - master
 
 # Operating system (build VM template)
-os: Visual Studio 2014 CTP4
+os: Visual Studio 2015
 
 # scripts that are called at very beginning, before repo cloning
 init:
@@ -42,7 +42,7 @@ install:
   - 7z x lodeps.7z > nul
   - echo %LODEPSDIR%
   - dir %LODEPSDIR%
-  - git clone https://github.com/osmcode/libosmium.git ../libosmium
+  - git clone --depth=1 --branch=v2.5.2 https://github.com/osmcode/libosmium.git ../libosmium
 
 build_script:
   - cd c:\projects\node-osmium

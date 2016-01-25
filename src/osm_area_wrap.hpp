@@ -24,8 +24,12 @@ namespace node_osmium {
             return symbol_area;
         }
 
+        static v8::Handle<v8::Value> get_orig_id(v8::Local<v8::String> property, const v8::AccessorInfo& info);
+        static v8::Handle<v8::Value> from_way(v8::Local<v8::String> property, const v8::AccessorInfo& info);
+
         static v8::Handle<v8::Value> wkb(const v8::Arguments& args);
         static v8::Handle<v8::Value> wkt(const v8::Arguments& args);
+        static v8::Handle<v8::Value> coordinates(const v8::Arguments& args);
 
     public:
 

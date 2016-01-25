@@ -42,16 +42,20 @@ namespace node_osmium {
         } else if (args.Length() == 1 && args[0]->IsObject()) {
             auto obj = args[0]->ToObject();
             if (node::Buffer::HasInstance(obj)) {
-                osmium::memory::Buffer buffer(reinterpret_cast<unsigned char*>(node::Buffer::Data(obj)), node::Buffer::Length(obj));
-                BufferWrap* buffer_wrap = new BufferWrap(std::move(buffer));
-                buffer_wrap->Wrap(args.This());
+                try {
+                    osmium::memory::Buffer buffer(reinterpret_cast<unsigned char*>(node::Buffer::Data(obj)), node::Buffer::Length(obj));
+                    BufferWrap* buffer_wrap = new BufferWrap(std::move(buffer));
+                    buffer_wrap->Wrap(args.This());
 
-                // Store the node::Buffer in the new osmium::Buffer object
-                // so the node::Buffer doesn't go away if it goes out of scope
-                // outside this function.
-                args.This()->Set(NODE_PSYMBOL("_data"), obj);
+                    // Store the node::Buffer in the new osmium::Buffer object
+                    // so the node::Buffer doesn't go away if it goes out of scope
+                    // outside this function.
+                    args.This()->Set(NODE_PSYMBOL("_data"), obj);
 
-                return args.This();
+                    return args.This();
+                } catch (std::exception const& ex) {
+                    return ThrowException(v8::Exception::TypeError(v8::String::New(ex.what())));
+                }
             }
         }
         return ThrowException(v8::Exception::TypeError(v8::String::New("osmium.Buffer takes a single argument, a node::Buffer")));
@@ -137,9 +141,7 @@ namespace node_osmium {
             auto dend   = diff_iterator(buffer.end<osmium::OSMObject>(), buffer.end<osmium::OSMObject>());
 
             std::for_each(dbegin, dend, [point_in_time, &fbuffer](const osmium::DiffObject& d) {
-                if (((d.end_time() == 0 || d.end_time() > point_in_time) &&
-                        d.start_time() <= point_in_time) &&
-                    d.curr().visible()) {
+                if (d.is_visible_at(point_in_time)) {
                     fbuffer.add_item(d.curr());
                     fbuffer.commit();
                 }

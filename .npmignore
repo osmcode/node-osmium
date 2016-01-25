@@ -8,3 +8,10 @@ demo
 node_modules
 scripts
 test
+mason_packages
+.mason
+.ycm_extra_conf.py
+appveyor.yml
+build-local-test.bat
+bootstrap.sh
+lib/binding

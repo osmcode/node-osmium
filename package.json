@@ -1,6 +1,6 @@
 {
     "name": "osmium",
-    "version": "0.4.0",
+    "version": "0.4.4",
     "description": "Node.js bindings to Osmium",
     "url": "https://github.com/osmcode/node-osmium",
     "homepage": "http://osmcode.org/node-osmium",
@@ -35,14 +35,19 @@
     },
     "bundledDependencies":["node-pre-gyp"],
     "devDependencies": {
+        "aws-sdk": "~2.1.26",
+        "geojson-coords": "0.0.0",
         "mocha": "1.x",
-        "aws-sdk": "~2.1.26"
+        "osm-testdata": "1.0.0",
+        "turf-difference": "^2.0.0",
+        "wellknown": "^0.4.0"
     },
     "licenses": [ { "type": "Boost" } ],
     "engines": {
         "node": ">= 0.10.0 < 0.11.0"
     },
     "scripts": {
+        "prepublish": "npm ls",
         "install": "node-pre-gyp install --fallback-to-build",
         "test": "mocha -R spec --timeout 100000"
     }

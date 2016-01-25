@@ -11,11 +11,9 @@ CXX=${CXX:-clang++}
 function all_deps() {
     dep boost 1.57.0 &
     dep expat 2.1.0 &
-    dep osmpbf 1.3.3 &
-    dep protobuf 2.6.1 &
     dep bzip 1.0.6 &
     dep zlib system &
-    dep sparsehash 2.0.2 & 
+    dep sparsehash 2.0.2 &
     wait
 }
 
@@ -30,7 +28,9 @@ function main() {
     fi
     export C_INCLUDE_PATH="${MASON_HOME}/include"
     export CPLUS_INCLUDE_PATH="${MASON_HOME}/include"
+    export CXXFLAGS="-I${MASON_HOME}/include"
     export LIBRARY_PATH="${MASON_HOME}/lib"
+    export LDFLAGS="-L${MASON_HOME}/lib"
     echo "success: now run 'npm install --build-from-source'"
 }
 

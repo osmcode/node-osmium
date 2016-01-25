@@ -28,15 +28,15 @@ matrix:
      # Linux
      - os: linux
        compiler: clang
-       env: NODE_VERSION="0.10.38"
+       env: NODE_VERSION="0.10.40"
      # OS X
      - os: osx
        compiler: clang
-       env: NODE_VERSION="0.10.38"
+       env: NODE_VERSION="0.10.40"
      # Coverage
      - os: osx
        compiler: clang
-       env: NODE_VERSION="0.10.38" COVERAGE=true
+       env: NODE_VERSION="0.10.40" COVERAGE=true
 
 env:
   global:
@@ -53,11 +53,12 @@ before_install:
    else
      export PYTHONPATH=$(pwd)/mason_packages/.link/lib/python/site-packages;
    fi;
+- if [[ $(uname -s) == 'Darwin' ]]; then brew uninstall --force node; fi;
 - source ./scripts/install_node.sh ${NODE_VERSION}
 
 install:
 - source ./bootstrap.sh
-- git clone https://github.com/osmcode/libosmium.git ../libosmium
+- git clone --depth=1 --branch=v2.5.2 https://github.com/osmcode/libosmium.git ../libosmium
 
 before_script:
 - if [[ ${COVERAGE} == true ]]; then
