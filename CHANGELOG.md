@@ -12,6 +12,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+## [0.4.5] - 2016-02-10
+
+### Changed
+
+- Updated to libosmium 2.6.0
+
+### Fixed
+
+- Fixed abort when invalid data is based to an `osmium.Buffer`
 
 ## [0.4.4] - 2015-11-10
 

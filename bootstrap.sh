@@ -9,7 +9,7 @@ function dep() {
 CXX=${CXX:-clang++}
 
 function all_deps() {
-    dep boost 1.57.0 &
+    dep boost 1.59.0 &
     dep expat 2.1.0 &
     dep bzip 1.0.6 &
     dep zlib system &
