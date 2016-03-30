@@ -12,10 +12,11 @@ namespace node_osmium {
 
     void FileWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
-        constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(FileWrap::New));
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_File);
-        target->Set(symbol_File, constructor->GetFunction());
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(FileWrap::New);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_File));
+        target->Set(Nan::New(symbol_File), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
     NAN_METHOD(FileWrap::New) {
@@ -61,7 +62,7 @@ namespace node_osmium {
             info.GetReturnValue().Set(info.This());
             return;
         } catch (const std::exception& e) {
-            ThrowException(v8::Exception::TypeError(Nan::New(e.what())));
+            ThrowException(v8::Exception::TypeError(Nan::New(e.what()).ToLocalChecked()));
             return;
         }
 
