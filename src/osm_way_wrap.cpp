@@ -17,17 +17,17 @@ namespace node_osmium {
     void OSMWayWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
         v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMWayWrap::New);
-        constructor->Inherit(OSMWrappedObject::constructor);
+        lcons->Inherit(Nan::New(OSMWrappedObject::constructor));
         lcons->InstanceTemplate()->SetInternalFieldCount(1);
         lcons->SetClassName(Nan::New(symbol_Way));
-        auto attributes = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
-        set_accessor(constructor, "type", get_type, attributes);
-        set_accessor(constructor, "nodes_count", get_nodes_count, attributes);
+        ATTR(lcons, "type", get_type);
+        ATTR(lcons, "nodes_count", get_nodes_count);
         Nan::SetPrototypeMethod(lcons, "node_refs", node_refs);
         Nan::SetPrototypeMethod(lcons, "node_coordinates", node_coordinates);
         Nan::SetPrototypeMethod(lcons, "wkb", wkb);
         Nan::SetPrototypeMethod(lcons, "wkt", wkt);
         target->Set(Nan::New(symbol_Way), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
     NAN_METHOD(OSMWayWrap::New) {
@@ -47,15 +47,10 @@ namespace node_osmium {
 
         try {
             std::string wkb { wkb_factory.create_linestring(wrapped(info.This()), osmium::geom::use_nodes::unique) };
-#if NODE_VERSION_AT_LEAST(0, 10, 0)
-            info.GetReturnValue().Set(node::Buffer::New(wkb.data(), wkb.size())->handle_);
+            info.GetReturnValue().Set(Nan::CopyBuffer(wkb.data(), wkb.size()).ToLocalChecked());
             return;
-#else
-            info.GetReturnValue().Set(node::Buffer::New(const_cast<char*>(wkb.data()), wkb.size())->handle_);
-            return;
-#endif
         } catch (std::runtime_error& e) {
-            ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            ThrowException(v8::Exception::Error(Nan::New(e.what()).ToLocalChecked()));
             return;
         }
     }
@@ -68,14 +63,14 @@ namespace node_osmium {
             info.GetReturnValue().Set(Nan::New(wkt).ToLocalChecked());
             return;
         } catch (std::runtime_error& e) {
-            ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            ThrowException(v8::Exception::Error(Nan::New(e.what()).ToLocalChecked()));
             return;
         }
     }
 
-    NAN_METHOD(OSMWayWrap::get_nodes_count) {
+    NAN_GETTER(OSMWayWrap::get_nodes_count) {
         Nan::HandleScope scope;
-        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).nodes().size()));
+        info.GetReturnValue().Set(Nan::New<v8::Number>(wrapped(info.This()).nodes().size()));
         return;
     }
 
@@ -86,10 +81,10 @@ namespace node_osmium {
 
         switch (info.Length()) {
             case 0: {
-                v8::Local<v8::Array> nodes = Nan::New(way.nodes().size());
+                v8::Local<v8::Array> nodes = Nan::New<v8::Array>(way.nodes().size());
                 int i = 0;
                 for (const auto& node_ref : way.nodes()) {
-                    nodes->Set(i, Nan::New(node_ref.ref()));
+                    nodes->Set(i, Nan::New<v8::Number>(node_ref.ref()));
                     ++i;
                 }
                 info.GetReturnValue().Set(nodes);
@@ -102,7 +97,7 @@ namespace node_osmium {
                 }
                 uint32_t n = info[0]->ToUint32()->Value();
                 if (n < way.nodes().size()) {
-                    info.GetReturnValue().Set(Nan::New(way.nodes()[n].ref()));
+                    info.GetReturnValue().Set(Nan::New<v8::Number>(way.nodes()[n].ref()));
                     return;
                 } else {
                     ThrowException(v8::Exception::RangeError(Nan::New("argument to node_refs() out of range").ToLocalChecked()));
@@ -118,7 +113,7 @@ namespace node_osmium {
     NAN_METHOD(OSMWayWrap::node_coordinates) {
         Nan::HandleScope scope;
 
-        auto cf = module->Get(symbol_Coordinates);
+        auto cf = Nan::New(module)->Get(Nan::New(symbol_Coordinates));
         assert(cf->IsFunction());
 
         const osmium::Way& way = wrapped(info.This());
@@ -131,7 +126,7 @@ namespace node_osmium {
         switch (info.Length()) {
             case 0: {
                 try {
-                    v8::Local<v8::Array> nodes = Nan::New(0);
+                    v8::Local<v8::Array> nodes = Nan::New<v8::Array>(0);
                     int i = 0;
                     osmium::Location last_location;
                     for (const auto& node_ref : way.nodes()) {

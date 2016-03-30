@@ -17,6 +17,7 @@ namespace node_osmium {
         Nan::SetPrototypeMethod(lcons, "ignoreErrors", ignoreErrors);
         Nan::SetPrototypeMethod(lcons, "end", stream_end);
         target->Set(Nan::New(symbol_LocationHandler), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
     NAN_METHOD(LocationHandlerWrap::New) {

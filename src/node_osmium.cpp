@@ -76,39 +76,36 @@ namespace node_osmium {
             Nan::HandleScope scope;
             module.Reset(target.As<v8::Object>());
 
-            /*
             Nan::SetMethod(target, "apply_", node_osmium::apply);
             Nan::SetMethod(target, "register_filter", node_osmium::Filter::register_filter);
-
-            symbol_OSMEntity       = NODE_PSYMBOL("OSMEntity");
-            symbol_OSMObject       = NODE_PSYMBOL("OSMObject");
-            symbol_Node            = NODE_PSYMBOL("Node");
-            symbol_node            = NODE_PSYMBOL("node");
-            symbol_Way             = NODE_PSYMBOL("Way");
-            symbol_way             = NODE_PSYMBOL("way");
-            symbol_Relation        = NODE_PSYMBOL("Relation");
-            symbol_relation        = NODE_PSYMBOL("relation");
-            symbol_type            = NODE_PSYMBOL("type");
-            symbol_ref             = NODE_PSYMBOL("ref");
-            symbol_role            = NODE_PSYMBOL("role");
-            symbol_Area            = NODE_PSYMBOL("Area");
-            symbol_area            = NODE_PSYMBOL("area");
-            symbol_Changeset       = NODE_PSYMBOL("Changeset");
-            symbol_changeset       = NODE_PSYMBOL("changeset");
-            symbol_Coordinates     = NODE_PSYMBOL("Coordinates");
-            symbol_Box             = NODE_PSYMBOL("Box");
-            symbol_generator       = NODE_PSYMBOL("generator");
-            symbol_bounds          = NODE_PSYMBOL("bounds");
-
-            symbol_Buffer                = NODE_PSYMBOL("Buffer");
-            symbol_File                  = NODE_PSYMBOL("File");
-            symbol_Handler               = NODE_PSYMBOL("Handler");
-            symbol_LocationHandler       = NODE_PSYMBOL("LocationHandler");
-            symbol_MultipolygonCollector = NODE_PSYMBOL("MultipolygonCollector");
-            symbol_MultipolygonHandler   = NODE_PSYMBOL("MultipolygonHandler");
-            symbol_BasicReader           = NODE_PSYMBOL("BasicReader");
-            symbol_FlexReader            = NODE_PSYMBOL("FlexReader");
-            */
+            
+            symbol_OSMEntity.Reset(v8::String::NewSymbol("OSMEntity"));
+            symbol_OSMObject.Reset(v8::String::NewSymbol("OSMObject"));
+            symbol_Node.Reset(v8::String::NewSymbol("Node"));
+            symbol_node.Reset(v8::String::NewSymbol("node"));
+            symbol_Way.Reset(v8::String::NewSymbol("Way"));
+            symbol_way.Reset(v8::String::NewSymbol("way"));
+            symbol_Relation.Reset(v8::String::NewSymbol("Relation"));
+            symbol_relation.Reset(v8::String::NewSymbol("relation"));
+            symbol_type.Reset(v8::String::NewSymbol("type"));
+            symbol_ref.Reset(v8::String::NewSymbol("ref"));
+            symbol_role.Reset(v8::String::NewSymbol("role"));
+            symbol_Area.Reset(v8::String::NewSymbol("Area"));
+            symbol_area.Reset(v8::String::NewSymbol("area"));
+            symbol_Changeset.Reset(v8::String::NewSymbol("Changeset"));
+            symbol_changeset.Reset(v8::String::NewSymbol("changeset"));
+            symbol_Coordinates.Reset(v8::String::NewSymbol("Coordinates"));
+            symbol_Box.Reset(v8::String::NewSymbol("Box"));
+            symbol_generator.Reset(v8::String::NewSymbol("generator"));
+            symbol_bounds.Reset(v8::String::NewSymbol("bounds"));
+            symbol_Buffer.Reset(v8::String::NewSymbol("Buffer"));
+            symbol_File.Reset(v8::String::NewSymbol("File"));
+            symbol_Handler.Reset(v8::String::NewSymbol("Handler"));
+            symbol_LocationHandler.Reset(v8::String::NewSymbol("LocationHandler"));
+            symbol_MultipolygonCollector.Reset(v8::String::NewSymbol("MultipolygonCollector"));
+            symbol_MultipolygonHandler.Reset(v8::String::NewSymbol("MultipolygonHandler"));
+            symbol_BasicReader.Reset(v8::String::NewSymbol("BasicReader"));
+            symbol_FlexReader.Reset(v8::String::NewSymbol("FlexReader"));
 
             node_osmium::OSMEntityWrap::Initialize(target);
             node_osmium::OSMWrappedObject::Initialize(target);

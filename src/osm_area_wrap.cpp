@@ -17,17 +17,17 @@ namespace node_osmium {
     void OSMAreaWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
         v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMAreaWrap::New);
-        constructor->Inherit(OSMWrappedObject::constructor);
+        lcons->Inherit(Nan::New(OSMWrappedObject::constructor));
         lcons->InstanceTemplate()->SetInternalFieldCount(1);
         lcons->SetClassName(Nan::New(symbol_Area));
-        auto attributes = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
-        set_accessor(constructor, "type", get_type, attributes);
-        set_accessor(constructor, "orig_id", get_orig_id, attributes);
-        set_accessor(constructor, "from_way", from_way, attributes);
+        ATTR(lcons, "type", get_type);
+        ATTR(lcons, "orig_id", get_orig_id);
+        ATTR(lcons, "from_way", get_from_way);
         Nan::SetPrototypeMethod(lcons, "wkb", wkb);
         Nan::SetPrototypeMethod(lcons, "wkt", wkt);
         Nan::SetPrototypeMethod(lcons, "coordinates", coordinates);
         target->Set(Nan::New(symbol_Area), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
     NAN_METHOD(OSMAreaWrap::New) {
@@ -42,14 +42,16 @@ namespace node_osmium {
         }
     }
 
-    NAN_METHOD(OSMAreaWrap::get_orig_id) {
+    NAN_GETTER(OSMAreaWrap::get_orig_id) {
         Nan::HandleScope scope;
-        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).orig_id()));
+        info.GetReturnValue().Set(Nan::New<v8::Number>(wrapped(info.This()).orig_id()));
         return;
     }
 
-    NAN_METHOD(OSMAreaWrap::from_way) {
-        return Nan::New(wrapped(info.This()).from_way());
+    NAN_GETTER(OSMAreaWrap::get_from_way) {
+        Nan::HandleScope scope;
+        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).from_way()));
+        return;
     }
 
     NAN_METHOD(OSMAreaWrap::wkb) {
@@ -58,15 +60,10 @@ namespace node_osmium {
 
         try {
             std::string wkb { wkb_factory.create_multipolygon(wrapped(info.This())) };
-#if NODE_VERSION_AT_LEAST(0, 10, 0)
-            info.GetReturnValue().Set(node::Buffer::New(wkb.data(), wkb.size())->handle_);
+            info.GetReturnValue().Set(Nan::CopyBuffer(wkb.data(), wkb.size()).ToLocalChecked());
             return;
-#else
-            info.GetReturnValue().Set(node::Buffer::New(const_cast<char*>(wkb.data()), wkb.size())->handle_);
-            return;
-#endif
         } catch (std::runtime_error& e) {
-            ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            ThrowException(v8::Exception::Error(Nan::New(e.what()).ToLocalChecked()));
             return;
         }
     }
@@ -80,17 +77,17 @@ namespace node_osmium {
             info.GetReturnValue().Set(Nan::New(wkt).ToLocalChecked());
             return;
         } catch (std::runtime_error& e) {
-            ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            ThrowException(v8::Exception::Error(Nan::New(e.what()).ToLocalChecked()));
             return;
         }
     }
 
     v8::Local<v8::Array> get_coordinates(const osmium::NodeRefList& node_ref_list) {
-        v8::Local<v8::Array> locations = Nan::New(node_ref_list.size());
+        v8::Local<v8::Array> locations = Nan::New<v8::Array>(node_ref_list.size());
         int i = 0;
         for (const auto& node_ref : node_ref_list) {
             const osmium::Location location = node_ref.location();
-            v8::Local<v8::Array> coordinates = Nan::New(2);
+            v8::Local<v8::Array> coordinates = Nan::New<v8::Array>(2);
             coordinates->Set(0, Nan::New(location.lon()));
             coordinates->Set(1, Nan::New(location.lat()));
             locations->Set(i, coordinates);
@@ -103,7 +100,7 @@ namespace node_osmium {
         INSTANCE_CHECK(OSMAreaWrap, "Area", "coordinates");
         Nan::HandleScope scope;
 
-        v8::Local<v8::Value> cf = module->Get(symbol_Coordinates);
+        v8::Local<v8::Value> cf = Nan::New(module)->Get(Nan::New(symbol_Coordinates));
         assert(cf->IsFunction());
 
         const osmium::Area& area = wrapped(info.This());
@@ -114,7 +111,7 @@ namespace node_osmium {
             return;
         }
 
-        v8::Local<v8::Array> rings = Nan::New(num_rings.first);
+        v8::Local<v8::Array> rings = Nan::New<v8::Array>(num_rings.first);
 
         int n = 0;
         for (auto oit = area.cbegin<osmium::OuterRing>(); oit != area.cend<osmium::OuterRing>(); ++oit, ++n) {

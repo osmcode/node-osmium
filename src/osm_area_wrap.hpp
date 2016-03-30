@@ -24,7 +24,7 @@ namespace node_osmium {
         }
 
         static NAN_GETTER(get_orig_id);
-        static NAN_METHOD(from_way);
+        static NAN_GETTER(get_from_way);
 
         static NAN_METHOD(wkb);
         static NAN_METHOD(wkt);

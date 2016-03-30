@@ -33,9 +33,9 @@ namespace node_osmium {
     }
 
     template<class T, class... Args>
-    v8::Local<v8::Object> new_external(Args&&... info) {
+    v8::Local<v8::Object> new_external(Args&&... args) {
         Nan::EscapableHandleScope scope;
-        v8::Local<v8::Value> ext = Nan::New(new T(std::forward<Args>(info)...));
+        v8::Handle<v8::Value> ext = v8::External::New(new T(std::forward<Args>(args)...));
         return scope.Escape(Nan::New(T::constructor)->GetFunction()->NewInstance(1, &ext));
     }
 

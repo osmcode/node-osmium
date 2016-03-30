@@ -17,18 +17,18 @@ namespace node_osmium {
     void OSMNodeWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
         v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMNodeWrap::New);
-        constructor->Inherit(OSMWrappedObject::constructor);
+        lcons->Inherit(Nan::New(OSMWrappedObject::constructor));
         lcons->InstanceTemplate()->SetInternalFieldCount(1);
         lcons->SetClassName(Nan::New(symbol_Node));
         Nan::SetPrototypeMethod(lcons, "wkb", wkb);
         Nan::SetPrototypeMethod(lcons, "wkt", wkt);
-        auto attributes = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
-        set_accessor(constructor, "type", get_type, attributes);
-        set_accessor(constructor, "location", get_coordinates, attributes);
-        set_accessor(constructor, "coordinates", get_coordinates, attributes);
-        set_accessor(constructor, "lon", get_lon, attributes);
-        set_accessor(constructor, "lat", get_lat, attributes);
+        ATTR(lcons, "type", get_type);
+        ATTR(lcons, "location", get_coordinates);
+        ATTR(lcons, "coordinates", get_coordinates);
+        ATTR(lcons, "lon", get_lon);
+        ATTR(lcons, "lat", get_lat);
         target->Set(Nan::New(symbol_Node), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
     NAN_METHOD(OSMNodeWrap::New) {
@@ -43,10 +43,10 @@ namespace node_osmium {
         }
     }
 
-    NAN_METHOD(OSMNodeWrap::get_coordinates) {
+    NAN_GETTER(OSMNodeWrap::get_coordinates) {
         Nan::HandleScope scope;
 
-        auto cf = module->Get(symbol_Coordinates);
+        auto cf = Nan::New(module)->Get(Nan::New(symbol_Coordinates));
         assert(cf->IsFunction());
 
         const osmium::Location& location = wrapped(info.This()).location();
@@ -62,7 +62,7 @@ namespace node_osmium {
         return;
     }
 
-    NAN_METHOD(OSMNodeWrap::get_lon) {
+    NAN_GETTER(OSMNodeWrap::get_lon) {
         Nan::HandleScope scope;
         try {
             info.GetReturnValue().Set(Nan::New(wrapped(info.This()).location().lon()));
@@ -73,7 +73,7 @@ namespace node_osmium {
         }
     }
 
-    NAN_METHOD(OSMNodeWrap::get_lat) {
+    NAN_GETTER(OSMNodeWrap::get_lat) {
         Nan::HandleScope scope;
         try {
             info.GetReturnValue().Set(Nan::New(wrapped(info.This()).location().lat()));
@@ -90,15 +90,10 @@ namespace node_osmium {
 
         try {
             std::string wkb { wkb_factory.create_point(wrapped(info.This())) };
-#if NODE_VERSION_AT_LEAST(0, 10, 0)
-            info.GetReturnValue().Set(node::Buffer::New(wkb.data(), wkb.size())->handle_);
+            info.GetReturnValue().Set(Nan::CopyBuffer(wkb.data(), wkb.size()).ToLocalChecked());
             return;
-#else
-            info.GetReturnValue().Set(node::Buffer::New(const_cast<char*>(wkb.data()), wkb.size())->handle_);
-            return;
-#endif
         } catch (std::runtime_error& e) {
-            ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            ThrowException(v8::Exception::Error(Nan::New(e.what()).ToLocalChecked()));
             return;
         }
     }
@@ -112,7 +107,7 @@ namespace node_osmium {
             info.GetReturnValue().Set(Nan::New(wkt).ToLocalChecked());
             return;
         } catch (std::runtime_error& e) {
-            ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            ThrowException(v8::Exception::Error(Nan::New(e.what()).ToLocalChecked()));
             return;
         }
     }

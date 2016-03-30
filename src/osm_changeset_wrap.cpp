@@ -13,22 +13,22 @@ namespace node_osmium {
         Nan::HandleScope scope;
 
         v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMChangesetWrap::New);
-        constructor->Inherit(OSMEntityWrap::constructor);
+        lcons->Inherit(Nan::New(OSMEntityWrap::constructor));
         lcons->InstanceTemplate()->SetInternalFieldCount(1);
         lcons->SetClassName(Nan::New(symbol_Changeset));
-        auto attributes = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
-        set_accessor(constructor, "type", get_type, attributes);
-        set_accessor(constructor, "id", get_id, attributes);
-        set_accessor(constructor, "uid", get_uid, attributes);
-        set_accessor(constructor, "user", get_user, attributes);
-        set_accessor(constructor, "num_changes", get_num_changes, attributes);
-        set_accessor(constructor, "created_at_seconds_since_epoch", get_created_at, attributes);
-        set_accessor(constructor, "closed_at_seconds_since_epoch", get_closed_at, attributes);
-        set_accessor(constructor, "open", get_open, attributes);
-        set_accessor(constructor, "closed", get_closed, attributes);
-        set_accessor(constructor, "bounds", get_bounds, attributes);
+        ATTR(lcons, "type", get_type);
+        ATTR(lcons, "id", get_id);
+        ATTR(lcons, "uid", get_uid);
+        ATTR(lcons, "user", get_user);
+        ATTR(lcons, "num_changes", get_num_changes);
+        ATTR(lcons, "created_at_seconds_since_epoch", get_created_at);
+        ATTR(lcons, "closed_at_seconds_since_epoch", get_closed_at);
+        ATTR(lcons, "open", get_open);
+        ATTR(lcons, "closed", get_closed);
+        ATTR(lcons, "bounds", get_bounds);
         Nan::SetPrototypeMethod(lcons, "tags", tags);
         target->Set(Nan::New(symbol_Changeset), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
     NAN_METHOD(OSMChangesetWrap::New) {
@@ -48,56 +48,57 @@ namespace node_osmium {
         return OSMEntityWrap::tags_impl<osmium::Changeset>(info);
     }
 
-    NAN_METHOD(OSMChangesetWrap::get_id) {
+    NAN_GETTER(OSMChangesetWrap::get_id) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).id()));
         return;
     }
 
-    NAN_METHOD(OSMChangesetWrap::get_uid) {
+    NAN_GETTER(OSMChangesetWrap::get_uid) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).uid()));
         return;
     }
 
-    NAN_METHOD(OSMChangesetWrap::get_user) {
+    NAN_GETTER(OSMChangesetWrap::get_user) {
         Nan::HandleScope scope;
-        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).user()));
+        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).user()).ToLocalChecked());
         return;
     }
 
-    NAN_METHOD(OSMChangesetWrap::get_num_changes) {
+    NAN_GETTER(OSMChangesetWrap::get_num_changes) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).num_changes()));
         return;
     }
 
-    NAN_METHOD(OSMChangesetWrap::get_created_at) {
+    NAN_GETTER(OSMChangesetWrap::get_created_at) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(uint32_t(wrapped(info.This()).created_at())));
         return;
     }
 
-    NAN_METHOD(OSMChangesetWrap::get_closed_at) {
+    NAN_GETTER(OSMChangesetWrap::get_closed_at) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(uint32_t(wrapped(info.This()).closed_at())));
         return;
     }
 
-    NAN_METHOD(OSMChangesetWrap::get_open) {
+    NAN_GETTER(OSMChangesetWrap::get_open) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).open()));
         return;
     }
 
-    NAN_METHOD(OSMChangesetWrap::get_closed) {
+    NAN_GETTER(OSMChangesetWrap::get_closed) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).closed()));
         return;
     }
 
-    NAN_METHOD(OSMChangesetWrap::get_bounds) {
-        return create_js_box(wrapped(info.This()).bounds());
+    NAN_GETTER(OSMChangesetWrap::get_bounds) {
+        info.GetReturnValue().Set(Nan::New(create_js_box(wrapped(info.This()).bounds())));
+        return;
     }
 
 } // namespace node_osmium

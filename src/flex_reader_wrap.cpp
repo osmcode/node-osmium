@@ -30,6 +30,7 @@ namespace node_osmium {
         Nan::SetPrototypeMethod(lcons, "read", read);
         Nan::SetPrototypeMethod(lcons, "read_all", read_all);
         target->Set(Nan::New(symbol_FlexReader), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
     NAN_METHOD(FlexReaderWrap::New) {
@@ -52,7 +53,7 @@ namespace node_osmium {
                 read_which_entities = object_to_entity_bits(info[2]->ToObject());
             }
 
-            if (info[1]->IsObject() && LocationHandlerWrap::constructor->HasInstance(info[1]->ToObject())) {
+            if (info[1]->IsObject() && Nan::New(LocationHandlerWrap::constructor)->HasInstance(info[1]->ToObject())) {
                 v8::Local<v8::Object> location_handler_obj = info[1]->ToObject();
                 location_handler_type& location_handler = unwrap<LocationHandlerWrap>(location_handler_obj);
                 if (info[0]->IsString()) {
@@ -62,7 +63,7 @@ namespace node_osmium {
                     reader_wrap->Wrap(info.This());
                     info.GetReturnValue().Set(info.This());
                     return;
-                } else if (info[0]->IsObject() && FileWrap::constructor->HasInstance(info[0]->ToObject())) {
+                } else if (info[0]->IsObject() && Nan::New(FileWrap::constructor)->HasInstance(info[0]->ToObject())) {
                     v8::Local<v8::Object> file_obj = info[0]->ToObject();
                     FlexReaderWrap* reader_wrap = new FlexReaderWrap(unwrap<FileWrap>(file_obj), location_handler, read_which_entities);
                     reader_wrap->Wrap(info.This());
@@ -87,18 +88,18 @@ namespace node_osmium {
     NAN_METHOD(FlexReaderWrap::header) {
         INSTANCE_CHECK(FlexReaderWrap, "FlexReader", "header");
         Nan::HandleScope scope;
-        v8::Local<v8::Object> obj = Nan::New();
+        v8::Local<v8::Object> obj = Nan::New<v8::Object>();
         const osmium::io::Header& header = unwrap<FlexReaderWrap>(info.This()).header();
-        obj->Set(symbol_generator, Nan::New(header.get("generator")).ToLocalChecked());
+        obj->Set(Nan::New(symbol_generator), Nan::New(header.get("generator")).ToLocalChecked());
 
-        auto bounds_array = Nan::New(header.boxes().size());
+        auto bounds_array = Nan::New<v8::Array>(static_cast<unsigned int>(header.boxes().size()));
 
         int i=0;
         for (const osmium::Box& box : header.boxes()) {
             bounds_array->Set(i++, create_js_box(box));
         }
 
-        obj->Set(symbol_bounds, bounds_array);
+        obj->Set(Nan::New(symbol_bounds), bounds_array);
         info.GetReturnValue().Set(obj);
         return;
     }

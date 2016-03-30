@@ -12,16 +12,16 @@ namespace node_osmium {
         v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMWrappedObject::New);
         lcons->InstanceTemplate()->SetInternalFieldCount(1);
         lcons->SetClassName(Nan::New(symbol_OSMObject));
-        auto attributes = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
-        set_accessor(constructor, "id", get_id, attributes);
-        set_accessor(constructor, "version", get_version, attributes);
-        set_accessor(constructor, "changeset", get_changeset, attributes);
-        set_accessor(constructor, "visible", get_visible, attributes);
-        set_accessor(constructor, "timestamp_seconds_since_epoch", get_timestamp, attributes);
-        set_accessor(constructor, "uid", get_uid, attributes);
-        set_accessor(constructor, "user", get_user, attributes);
+        ATTR(lcons, "id", get_id);
+        ATTR(lcons, "version", get_version);
+        ATTR(lcons, "changeset", get_changeset);
+        ATTR(lcons, "visible", get_visible);
+        ATTR(lcons, "timestamp_seconds_since_epoch", get_timestamp);
+        ATTR(lcons, "uid", get_uid);
+        ATTR(lcons, "user", get_user);
         Nan::SetPrototypeMethod(lcons, "tags", tags);
         target->Set(Nan::New(symbol_OSMObject), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
     NAN_METHOD(OSMWrappedObject::New) {
@@ -41,45 +41,45 @@ namespace node_osmium {
         return OSMEntityWrap::tags_impl<osmium::OSMObject>(info);
     }
 
-    NAN_METHOD(OSMWrappedObject::get_id) {
+    NAN_GETTER(OSMWrappedObject::get_id) {
         Nan::HandleScope scope;
-        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).id()));
+        info.GetReturnValue().Set(Nan::New<v8::Number>(wrapped(info.This()).id()));
         return;
     }
 
-    NAN_METHOD(OSMWrappedObject::get_version) {
+    NAN_GETTER(OSMWrappedObject::get_version) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).version()));
         return;
     }
 
-    NAN_METHOD(OSMWrappedObject::get_changeset) {
+    NAN_GETTER(OSMWrappedObject::get_changeset) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).changeset()));
         return;
     }
 
-    NAN_METHOD(OSMWrappedObject::get_visible) {
+    NAN_GETTER(OSMWrappedObject::get_visible) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).visible()));
         return;
     }
 
-    NAN_METHOD(OSMWrappedObject::get_timestamp) {
+    NAN_GETTER(OSMWrappedObject::get_timestamp) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(uint32_t(wrapped(info.This()).timestamp())));
         return;
     }
 
-    NAN_METHOD(OSMWrappedObject::get_uid) {
+    NAN_GETTER(OSMWrappedObject::get_uid) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).uid()));
         return;
     }
 
-    NAN_METHOD(OSMWrappedObject::get_user) {
+    NAN_GETTER(OSMWrappedObject::get_user) {
         Nan::HandleScope scope;
-        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).user()));
+        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).user()).ToLocalChecked());
         return;
     }
 

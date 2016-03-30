@@ -21,6 +21,7 @@ namespace node_osmium {
         Nan::SetPrototypeMethod(lcons, "read_relations", read_relations);
         Nan::SetPrototypeMethod(lcons, "handler", handler);
         target->Set(Nan::New(symbol_MultipolygonCollector), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
     NAN_METHOD(MultipolygonCollectorWrap::New) {

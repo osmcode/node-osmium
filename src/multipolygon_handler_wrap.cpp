@@ -15,6 +15,7 @@ namespace node_osmium {
         lcons->SetClassName(Nan::New(symbol_MultipolygonHandler));
         Nan::SetPrototypeMethod(lcons, "end", stream_end);
         target->Set(Nan::New(symbol_MultipolygonHandler), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
     NAN_METHOD(MultipolygonHandlerWrap::New) {

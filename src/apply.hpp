@@ -5,7 +5,7 @@
 
 namespace node_osmium {
 
-    v8::Local<v8::Value> apply(const v8::Arguments& info);
+    NAN_METHOD(apply);
 
 } // namespace node_osmium
 

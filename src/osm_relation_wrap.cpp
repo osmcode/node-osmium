@@ -9,14 +9,14 @@ namespace node_osmium {
     void OSMRelationWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
         v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMRelationWrap::New);
-        constructor->Inherit(OSMWrappedObject::constructor);
+        lcons->Inherit(Nan::New(OSMWrappedObject::constructor));
         lcons->InstanceTemplate()->SetInternalFieldCount(1);
         lcons->SetClassName(Nan::New(symbol_Relation));
-        auto attributes = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
-        set_accessor(constructor, "type", get_type, attributes);
-        set_accessor(constructor, "members_count", get_members_count, attributes);
+        ATTR(lcons, "type", get_type);
+        ATTR(lcons, "members_count", get_members_count);
         Nan::SetPrototypeMethod(lcons, "members", members);
         target->Set(Nan::New(symbol_Relation), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
     NAN_METHOD(OSMRelationWrap::New) {
@@ -31,9 +31,9 @@ namespace node_osmium {
         }
     }
 
-    NAN_METHOD(OSMRelationWrap::get_members_count) {
+    NAN_GETTER(OSMRelationWrap::get_members_count) {
         Nan::HandleScope scope;
-        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).members().size()));
+        info.GetReturnValue().Set(Nan::New<v8::Number>(wrapped(info.This()).members().size()));
         return;
     }
 
@@ -44,15 +44,15 @@ namespace node_osmium {
 
         switch (info.Length()) {
             case 0: {
-                v8::Local<v8::Array> members = Nan::New();
+                v8::Local<v8::Array> members = Nan::New<v8::Array>();
                 int i = 0;
                 char typec[2] = " ";
                 for (const auto& member : relation.members()) {
-                    v8::Local<v8::Object> jsmember = Nan::New();
+                    v8::Local<v8::Object> jsmember = Nan::New<v8::Object>();
                     typec[0] = osmium::item_type_to_char(member.type());
-                    jsmember->Set(symbol_type, Nan::New(typec));
-                    jsmember->Set(symbol_ref, Nan::New(member.ref()));
-                    jsmember->Set(symbol_role, Nan::New(member.role()));
+                    jsmember->Set(Nan::New(symbol_type), Nan::New(typec).ToLocalChecked());
+                    jsmember->Set(Nan::New(symbol_ref), Nan::New<v8::Number>(member.ref()));
+                    jsmember->Set(Nan::New(symbol_role), Nan::New(member.role()).ToLocalChecked());
                     members->Set(i, jsmember);
                     ++i;
                 }
@@ -69,12 +69,12 @@ namespace node_osmium {
                     auto it = relation.members().begin();
                     std::advance(it, n);
                     const osmium::RelationMember& member = *it;
-                    v8::Local<v8::Object> jsmember = Nan::New();
+                    v8::Local<v8::Object> jsmember = Nan::New<v8::Object>();
                     char typec[2] = " ";
                     typec[0] = osmium::item_type_to_char(member.type());
-                    jsmember->Set(symbol_type, Nan::New(typec));
-                    jsmember->Set(symbol_ref, Nan::New(member.ref()));
-                    jsmember->Set(symbol_role, Nan::New(member.role()));
+                    jsmember->Set(Nan::New(symbol_type), Nan::New(typec).ToLocalChecked());
+                    jsmember->Set(Nan::New(symbol_ref), Nan::New<v8::Number>(member.ref()));
+                    jsmember->Set(Nan::New(symbol_role), Nan::New(member.role()).ToLocalChecked());
                     info.GetReturnValue().Set(jsmember);
                     return;
                 } else {

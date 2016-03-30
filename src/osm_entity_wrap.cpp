@@ -13,6 +13,7 @@ namespace node_osmium {
         lcons->InstanceTemplate()->SetInternalFieldCount(1);
         lcons->SetClassName(Nan::New(symbol_OSMEntity));
         target->Set(Nan::New(symbol_OSMEntity), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
     NAN_METHOD(OSMEntityWrap::New) {
