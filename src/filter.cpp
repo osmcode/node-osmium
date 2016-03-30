@@ -19,8 +19,6 @@ namespace node_osmium {
     }
 
     NAN_METHOD(Filter::register_filter) {
-        Nan::HandleScope scope;
-
         if (info.Length() == 1 && info[0]->IsObject()) {
             auto object = info[0]->ToObject();
             // XXX check that object is of class Filter

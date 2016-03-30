@@ -74,8 +74,6 @@ namespace node_osmium {
         INSTANCE_CHECK(BufferWrap, "Buffer", "next");
         BufferWrap* buffer_wrap = Nan::ObjectWrap::Unwrap<BufferWrap>(info.This());
 
-        Nan::HandleScope scope;
-
         int filter_id = 0;
         if (info.Length() == 1 && info[0]->IsInt32()) {
             filter_id = info[0]->ToInt32()->Value();
@@ -125,7 +123,6 @@ namespace node_osmium {
 
     NAN_METHOD(BufferWrap::filter_point_in_time) {
         INSTANCE_CHECK(BufferWrap, "Buffer", "filter_point_in_time");
-        Nan::HandleScope scope;
         if (info.Length() != 1) {
             Nan::ThrowTypeError(Nan::New("please provide a point in time as first and only argument").ToLocalChecked());
             return;
@@ -168,8 +165,6 @@ namespace node_osmium {
             info.GetReturnValue().Set(Nan::Undefined());
             return;
         }
-
-        Nan::HandleScope scope;
 
         int length = buffer.committed();
         v8::Local<v8::Object> slow_buffer = Nan::NewBuffer(length).ToLocalChecked();

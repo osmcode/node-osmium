@@ -157,8 +157,6 @@ namespace node_osmium {
     }
 
     NAN_METHOD(apply) {
-        Nan::HandleScope scope;
-
         if (info.Length() > 0 && info[0]->IsObject()) {
             std::vector<some_handler_type> handlers;
 

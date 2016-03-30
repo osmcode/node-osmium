@@ -43,7 +43,6 @@ namespace node_osmium {
     }
 
     NAN_METHOD(OSMWayWrap::wkb) {
-        Nan::HandleScope scope;
 
         try {
             std::string wkb { wkb_factory.create_linestring(wrapped(info.This()), osmium::geom::use_nodes::unique) };
@@ -56,7 +55,6 @@ namespace node_osmium {
     }
 
     NAN_METHOD(OSMWayWrap::wkt) {
-        Nan::HandleScope scope;
 
         try {
             std::string wkt { wkt_factory.create_linestring(wrapped(info.This()), osmium::geom::use_nodes::unique) };
@@ -69,13 +67,11 @@ namespace node_osmium {
     }
 
     NAN_GETTER(OSMWayWrap::get_nodes_count) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New<v8::Number>(wrapped(info.This()).nodes().size()));
         return;
     }
 
     NAN_METHOD(OSMWayWrap::node_refs) {
-        Nan::HandleScope scope;
 
         const osmium::Way& way = wrapped(info.This());
 
@@ -111,7 +107,6 @@ namespace node_osmium {
     }
 
     NAN_METHOD(OSMWayWrap::node_coordinates) {
-        Nan::HandleScope scope;
 
         auto cf = Nan::New(module)->Get(Nan::New(symbol_Coordinates));
         assert(cf->IsFunction());

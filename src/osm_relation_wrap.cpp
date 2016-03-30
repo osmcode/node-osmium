@@ -32,14 +32,11 @@ namespace node_osmium {
     }
 
     NAN_GETTER(OSMRelationWrap::get_members_count) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New<v8::Number>(wrapped(info.This()).members().size()));
         return;
     }
 
     NAN_METHOD(OSMRelationWrap::members) {
-        Nan::HandleScope scope;
-
         const osmium::Relation& relation = wrapped(info.This());
 
         switch (info.Length()) {

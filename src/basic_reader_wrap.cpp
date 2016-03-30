@@ -37,7 +37,6 @@ namespace node_osmium {
     }
 
     NAN_METHOD(BasicReaderWrap::New) {
-        Nan::HandleScope scope;
         if (!info.IsConstructCall()) {
             Nan::ThrowError(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked());
             return;
@@ -82,7 +81,6 @@ namespace node_osmium {
 
     NAN_METHOD(BasicReaderWrap::header) {
         INSTANCE_CHECK(BasicReaderWrap, "BasicReader", "header");
-        Nan::HandleScope scope;
         v8::Local<v8::Object> obj = Nan::New<v8::Object>();
         const osmium::io::Header& header = unwrap<BasicReaderWrap>(info.This()).header();
         obj->Set(Nan::New(symbol_generator), Nan::New(header.get("generator")).ToLocalChecked());
@@ -101,7 +99,6 @@ namespace node_osmium {
 
     NAN_METHOD(BasicReaderWrap::close) {
         INSTANCE_CHECK(BasicReaderWrap, "BasicReader", "close");
-        Nan::HandleScope scope;
         try {
             unwrap<BasicReaderWrap>(info.This()).close();
         } catch (const std::exception& e) {
@@ -116,7 +113,6 @@ namespace node_osmium {
 
     NAN_METHOD(BasicReaderWrap::read) {
         INSTANCE_CHECK(BasicReaderWrap, "BasicReader", "read");
-        Nan::HandleScope scope;
         try {
             osmium::memory::Buffer buffer = unwrap<BasicReaderWrap>(info.This()).read();
             if (buffer) {
@@ -136,7 +132,6 @@ namespace node_osmium {
     NAN_METHOD(BasicReaderWrap::read_all) {
         INSTANCE_CHECK(BasicReaderWrap, "BasicReader", "read_all");
         osmium::memory::Buffer buffer(1024*1024, osmium::memory::Buffer::auto_grow::yes);
-        Nan::HandleScope scope;
         try {
             osmium::io::Reader& reader = unwrap<BasicReaderWrap>(info.This());
             while (osmium::memory::Buffer read_buffer = reader.read()) {

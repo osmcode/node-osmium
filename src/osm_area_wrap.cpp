@@ -43,20 +43,17 @@ namespace node_osmium {
     }
 
     NAN_GETTER(OSMAreaWrap::get_orig_id) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New<v8::Number>(wrapped(info.This()).orig_id()));
         return;
     }
 
     NAN_GETTER(OSMAreaWrap::get_from_way) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).from_way()));
         return;
     }
 
     NAN_METHOD(OSMAreaWrap::wkb) {
         INSTANCE_CHECK(OSMAreaWrap, "Area", "wkb");
-        Nan::HandleScope scope;
 
         try {
             std::string wkb { wkb_factory.create_multipolygon(wrapped(info.This())) };
@@ -70,7 +67,6 @@ namespace node_osmium {
 
     NAN_METHOD(OSMAreaWrap::wkt) {
         INSTANCE_CHECK(OSMAreaWrap, "Area", "wkt");
-        Nan::HandleScope scope;
 
         try {
             std::string wkt { wkt_factory.create_multipolygon(wrapped(info.This())) };
@@ -98,7 +94,6 @@ namespace node_osmium {
 
     NAN_METHOD(OSMAreaWrap::coordinates) {
         INSTANCE_CHECK(OSMAreaWrap, "Area", "coordinates");
-        Nan::HandleScope scope;
 
         v8::Local<v8::Value> cf = Nan::New(module)->Get(Nan::New(symbol_Coordinates));
         assert(cf->IsFunction());

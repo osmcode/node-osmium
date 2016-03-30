@@ -20,8 +20,6 @@ namespace node_osmium {
     }
 
     NAN_METHOD(FileWrap::New) {
-        Nan::HandleScope scope;
-
         if (!info.IsConstructCall()) {
             Nan::ThrowError(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked());
             return;

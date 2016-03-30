@@ -158,8 +158,6 @@ namespace node_osmium {
         if (function.IsEmpty()) {
             return;
         }
-
-        Nan::HandleScope scope;
         v8::Local<v8::Value> argv[1] = { new_external<TWrapped>(entity) };
         Nan::MakeCallback(Nan::GetCurrentContext()->Global(), Nan::New(function), 1, argv);
     }

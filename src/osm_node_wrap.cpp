@@ -44,8 +44,6 @@ namespace node_osmium {
     }
 
     NAN_GETTER(OSMNodeWrap::get_coordinates) {
-        Nan::HandleScope scope;
-
         auto cf = Nan::New(module)->Get(Nan::New(symbol_Coordinates));
         assert(cf->IsFunction());
 
@@ -63,7 +61,6 @@ namespace node_osmium {
     }
 
     NAN_GETTER(OSMNodeWrap::get_lon) {
-        Nan::HandleScope scope;
         try {
             info.GetReturnValue().Set(Nan::New(wrapped(info.This()).location().lon()));
             return;
@@ -74,7 +71,6 @@ namespace node_osmium {
     }
 
     NAN_GETTER(OSMNodeWrap::get_lat) {
-        Nan::HandleScope scope;
         try {
             info.GetReturnValue().Set(Nan::New(wrapped(info.This()).location().lat()));
             return;
@@ -86,8 +82,6 @@ namespace node_osmium {
 
     NAN_METHOD(OSMNodeWrap::wkb) {
         INSTANCE_CHECK(OSMNodeWrap, "Node", "wkb");
-        Nan::HandleScope scope;
-
         try {
             std::string wkb { wkb_factory.create_point(wrapped(info.This())) };
             info.GetReturnValue().Set(Nan::CopyBuffer(wkb.data(), wkb.size()).ToLocalChecked());
@@ -100,8 +94,6 @@ namespace node_osmium {
 
     NAN_METHOD(OSMNodeWrap::wkt) {
         INSTANCE_CHECK(OSMNodeWrap, "Node", "wkt");
-        Nan::HandleScope scope;
-
         try {
             std::string wkt { wkt_factory.create_point(wrapped(info.This())) };
             info.GetReturnValue().Set(Nan::New(wkt).ToLocalChecked());

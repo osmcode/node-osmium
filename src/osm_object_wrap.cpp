@@ -42,43 +42,36 @@ namespace node_osmium {
     }
 
     NAN_GETTER(OSMWrappedObject::get_id) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New<v8::Number>(wrapped(info.This()).id()));
         return;
     }
 
     NAN_GETTER(OSMWrappedObject::get_version) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).version()));
         return;
     }
 
     NAN_GETTER(OSMWrappedObject::get_changeset) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).changeset()));
         return;
     }
 
     NAN_GETTER(OSMWrappedObject::get_visible) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).visible()));
         return;
     }
 
     NAN_GETTER(OSMWrappedObject::get_timestamp) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(uint32_t(wrapped(info.This()).timestamp())));
         return;
     }
 
     NAN_GETTER(OSMWrappedObject::get_uid) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).uid()));
         return;
     }
 
     NAN_GETTER(OSMWrappedObject::get_user) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).user()).ToLocalChecked());
         return;
     }

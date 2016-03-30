@@ -32,7 +32,6 @@ namespace node_osmium {
 
     NAN_METHOD(MultipolygonHandlerWrap::stream_end) {
         INSTANCE_CHECK(MultipolygonHandlerWrap, "MultipolygonHandler", "end");
-        Nan::HandleScope scope;
         if (info.Length() != 0) {
             Nan::ThrowTypeError(Nan::New("end() doesn't take any parameters").ToLocalChecked());
             return;

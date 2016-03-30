@@ -25,8 +25,6 @@ namespace node_osmium {
     }
 
     NAN_METHOD(MultipolygonCollectorWrap::New) {
-        Nan::HandleScope scope;
-
         if (!info.IsConstructCall()) {
             Nan::ThrowError(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked());
             return;
@@ -53,7 +51,6 @@ namespace node_osmium {
 
     NAN_METHOD(MultipolygonCollectorWrap::read_relations) {
         INSTANCE_CHECK(MultipolygonCollectorWrap, "MultipolygonCollector", "read_relations");
-        Nan::HandleScope scope;
         if (info.Length() != 1 || !info[0]->IsObject()) {
             Nan::ThrowError(Nan::New("call MultipolygonCollector.read_relation() with BasicReader or Buffer object").ToLocalChecked());
             return;
@@ -81,7 +78,6 @@ namespace node_osmium {
 
     NAN_METHOD(MultipolygonCollectorWrap::handler) {
         INSTANCE_CHECK(MultipolygonCollectorWrap, "MultipolygonCollector", "handler");
-        Nan::HandleScope scope;
         if (info.Length() != 1 || !info[0]->IsObject() || !Nan::New(JSHandler::constructor)->HasInstance(info[0]->ToObject())) {
             Nan::ThrowError(Nan::New("call MultipolygonCollector.handler() with Handler object").ToLocalChecked());
             return;

@@ -49,49 +49,41 @@ namespace node_osmium {
     }
 
     NAN_GETTER(OSMChangesetWrap::get_id) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).id()));
         return;
     }
 
     NAN_GETTER(OSMChangesetWrap::get_uid) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).uid()));
         return;
     }
 
     NAN_GETTER(OSMChangesetWrap::get_user) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).user()).ToLocalChecked());
         return;
     }
 
     NAN_GETTER(OSMChangesetWrap::get_num_changes) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).num_changes()));
         return;
     }
 
     NAN_GETTER(OSMChangesetWrap::get_created_at) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(uint32_t(wrapped(info.This()).created_at())));
         return;
     }
 
     NAN_GETTER(OSMChangesetWrap::get_closed_at) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(uint32_t(wrapped(info.This()).closed_at())));
         return;
     }
 
     NAN_GETTER(OSMChangesetWrap::get_open) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).open()));
         return;
     }
 
     NAN_GETTER(OSMChangesetWrap::get_closed) {
-        Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).closed()));
         return;
     }
