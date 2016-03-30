@@ -43,7 +43,8 @@ namespace node_osmium {
                 location_handler_wrap = new LocationHandlerWrap(*index_map_type);
             }
             location_handler_wrap->Wrap(info.This());
-            return info.This();
+            info.GetReturnValue().Set(info.This());
+            return;
         } catch (const std::exception& ex) {
             ThrowException(v8::Exception::TypeError(Nan::New(ex.what())));
             return;

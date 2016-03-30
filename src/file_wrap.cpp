@@ -58,7 +58,8 @@ namespace node_osmium {
             file.check();
             FileWrap* file_wrap = new FileWrap(std::move(file));
             file_wrap->Wrap(info.This());
-            return info.This();
+            info.GetReturnValue().Set(info.This());
+            return;
         } catch (const std::exception& e) {
             ThrowException(v8::Exception::TypeError(Nan::New(e.what())));
             return;

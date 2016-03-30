@@ -59,12 +59,14 @@ namespace node_osmium {
                 osmium::io::File file(*filename);
                 BasicReaderWrap* reader_wrap = new BasicReaderWrap(file, read_which_entities);
                 reader_wrap->Wrap(info.This());
-                return info.This();
+                info.GetReturnValue().Set(info.This());
+                return;
             } else if (info[0]->IsObject() && FileWrap::constructor->HasInstance(info[0]->ToObject())) {
                 v8::Local<v8::Object> file_obj = info[0]->ToObject();
                 BasicReaderWrap* reader_wrap = new BasicReaderWrap(unwrap<FileWrap>(file_obj), read_which_entities);
                 reader_wrap->Wrap(info.This());
-                return info.This();
+                info.GetReturnValue().Set(info.This());
+                return;
             } else {
                 ThrowException(v8::Exception::TypeError(Nan::New("please provide a File object or string for the first argument when creating a BasicReader").ToLocalChecked()));
                 return;

@@ -73,11 +73,13 @@ namespace node_osmium {
             void* ptr = ext->Value();
             JSHandler* b =  static_cast<JSHandler*>(ptr);
             b->Wrap(info.This());
-            return info.This();
+            info.GetReturnValue().Set(info.This());
+            return;
         } else {
             JSHandler* jshandler = new JSHandler();
             jshandler->Wrap(info.This());
-            return info.This();
+            info.GetReturnValue().Set(info.This());
+            return;
         }
         info.GetReturnValue().Set(Nan::Undefined());
         return;

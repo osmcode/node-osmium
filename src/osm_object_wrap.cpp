@@ -28,7 +28,8 @@ namespace node_osmium {
         if (info.Length() == 1 && info[0]->IsExternal()) {
             v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
             static_cast<OSMWrappedObject*>(ext->Value())->Wrap(info.This());
-            return info.This();
+            info.GetReturnValue().Set(info.This());
+            return;
         } else {
             ThrowException(v8::Exception::TypeError(Nan::New("osmium.OSMObject cannot be created in Javascript").ToLocalChecked()));
             return;
