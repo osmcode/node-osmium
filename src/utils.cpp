@@ -21,10 +21,10 @@ namespace node_osmium {
         auto bf = Nan::New(module)->Get(Nan::New(symbol_Box));
         assert(bf->IsFunction());
 
-        v8::Local<v8::Value> argv_bl[2] = { Nan::New(box.bottom_left().lon()), v8::Number::New(box.bottom_left().lat()) };
+        v8::Local<v8::Value> argv_bl[2] = { Nan::New(box.bottom_left().lon()), Nan::New<v8::Number>(box.bottom_left().lat()) };
         auto bottom_left = v8::Local<v8::Function>::Cast(cf)->NewInstance(2, argv_bl);
 
-        v8::Local<v8::Value> argv_tr[2] = { Nan::New(box.top_right().lon()), v8::Number::New(box.top_right().lat()) };
+        v8::Local<v8::Value> argv_tr[2] = { Nan::New(box.top_right().lon()), Nan::New<v8::Number>(box.top_right().lat()) };
         auto top_right = v8::Local<v8::Function>::Cast(cf)->NewInstance(2, argv_tr);
 
         v8::Local<v8::Value> argv_box[2] = { bottom_left, top_right };

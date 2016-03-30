@@ -89,7 +89,7 @@ namespace node_osmium {
     }
 
     NAN_GETTER(OSMChangesetWrap::get_bounds) {
-        info.GetReturnValue().Set(Nan::New(create_js_box(wrapped(info.This()).bounds())));
+        info.GetReturnValue().Set(create_js_box(wrapped(info.This()).bounds()));
         return;
     }
 

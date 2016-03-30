@@ -21,12 +21,6 @@ namespace node_osmium {
 
     protected:
 
-        typedef v8::Handle<v8::Value> accessor_type(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-
-        static void set_accessor(v8::Persistent<v8::FunctionTemplate> t, const char* name, accessor_type getter, v8::PropertyAttribute attributes) {
-            t->InstanceTemplate()->SetAccessor(v8::String::NewSymbol(name), getter, nullptr, v8::Handle<v8::Value>(), v8::DEFAULT, attributes);
-        }
-
         template<class T>
         static NAN_METHOD(tags_impl) {
             Nan::HandleScope scope;
@@ -47,7 +41,11 @@ namespace node_osmium {
                     }
                     v8::String::Utf8Value key { info[0] };
                     const char* value = object.tags().get_value_by_key(*key);
-                    info.GetReturnValue().Set((value ? Nan::New(value) : Nan::Undefined()).ToLocalChecked());
+                    if (value) {
+                        info.GetReturnValue().Set(Nan::New(value).ToLocalChecked());
+                        return;
+                    }
+                    info.GetReturnValue().Set(Nan::Undefined());
                     return;
                 }
             }

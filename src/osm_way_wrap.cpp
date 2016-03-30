@@ -127,7 +127,7 @@ namespace node_osmium {
                     for (const auto& node_ref : way.nodes()) {
                         const osmium::Location location = node_ref.location();
                         if (location != last_location) {
-                            v8::Local<v8::Value> argv[2] = { Nan::New(location.lon()), v8::Number::New(location.lat()) };
+                            v8::Local<v8::Value> argv[2] = { Nan::New(location.lon()), Nan::New<v8::Number>(location.lat()) };
                             nodes->Set(i, v8::Local<v8::Function>::Cast(cf)->NewInstance(2, argv));
                             ++i;
                             last_location = location;
@@ -153,7 +153,7 @@ namespace node_osmium {
                 if (n < way.nodes().size()) {
                     const osmium::Location location = way.nodes()[n].location();
                     if (location.valid()) {
-                        v8::Local<v8::Value> argv[2] = { Nan::New(location.lon()), v8::Number::New(location.lat()) };
+                        v8::Local<v8::Value> argv[2] = { Nan::New(location.lon()), Nan::New<v8::Number>(location.lat()) };
                         info.GetReturnValue().Set(v8::Local<v8::Function>::Cast(cf)->NewInstance(2, argv));
                         return;
                     } else {

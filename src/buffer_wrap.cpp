@@ -49,7 +49,7 @@ namespace node_osmium {
                     // Store the node::Buffer in the new osmium::Buffer object
                     // so the node::Buffer doesn't go away if it goes out of scope
                     // outside this function.
-                    info.This()->Set(NODE_PSYMBOL("_data"), obj);
+                    info.This()->Set(Nan::New("_data").ToLocalChecked(), obj);
                     info.GetReturnValue().Set(info.This());
                     return;
                 } catch (std::exception const& ex) {
@@ -170,7 +170,7 @@ namespace node_osmium {
         v8::Local<v8::Object> slow_buffer = Nan::NewBuffer(length).ToLocalChecked();
         std::copy_n(buffer.data(), length, node::Buffer::Data(slow_buffer));
 
-        v8::Local<v8::Object> global = v8::Context::GetCurrent()->Global();
+        v8::Local<v8::Object> global = Nan::GetCurrentContext()->Global();
 
         v8::Local<v8::Function> buffer_constructor =
             v8::Local<v8::Function>::Cast(global->Get(Nan::New("Buffer").ToLocalChecked()));

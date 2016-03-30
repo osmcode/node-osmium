@@ -113,7 +113,7 @@ namespace node_osmium {
         struct javascript_error {};
 
         Nan::EscapableHandleScope scope;
-        v8::TryCatch trycatch;
+        Nan::TryCatch trycatch;
         try {
             osmium::item_type last_type = osmium::item_type::undefined;
 

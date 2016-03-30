@@ -110,9 +110,8 @@ namespace node_osmium {
 
         int n = 0;
         for (auto oit = area.cbegin<osmium::OuterRing>(); oit != area.cend<osmium::OuterRing>(); ++oit, ++n) {
-            v8::Local<v8::Array> ring = v8::Array::New(
-                1 + std::distance(area.inner_ring_cbegin(oit), area.inner_ring_cend(oit))
-            );
+            unsigned array_size = 1u + std::distance(area.inner_ring_cbegin(oit), area.inner_ring_cend(oit));
+            v8::Local<v8::Array> ring = Nan::New<v8::Array>(array_size);
             int m = 0;
             ring->Set(m++, get_coordinates(*oit));
             for (auto iit = area.inner_ring_cbegin(oit); iit != area.inner_ring_cend(oit); ++iit) {
