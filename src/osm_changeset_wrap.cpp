@@ -38,7 +38,7 @@ namespace node_osmium {
             info.GetReturnValue().Set(info.This());
             return;
         } else {
-            ThrowException(v8::Exception::TypeError(Nan::New("osmium.Changeset cannot be created in Javascript").ToLocalChecked()));
+            Nan::ThrowTypeError(Nan::New("osmium.Changeset cannot be created in Javascript").ToLocalChecked());
             return;
         }
     }

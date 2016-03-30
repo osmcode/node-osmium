@@ -21,7 +21,7 @@ namespace osmium {
 // this macro we can check whether we have the right kind of object.
 #define INSTANCE_CHECK(cpp_class, js_class, method) \
 if (!Nan::New(cpp_class::constructor)->HasInstance(info.This())) { \
-    ThrowException(v8::Exception::TypeError(Nan::New("You can only call " method "() on an osmium." js_class ).ToLocalChecked())); \
+    Nan::ThrowTypeError(Nan::New("You can only call " method "() on an osmium." js_class ).ToLocalChecked()); \
     return ; \
 }
 

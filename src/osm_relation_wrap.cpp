@@ -26,7 +26,7 @@ namespace node_osmium {
             info.GetReturnValue().Set(info.This());
             return;
         } else {
-            ThrowException(v8::Exception::TypeError(Nan::New("osmium.Relation cannot be created in Javascript").ToLocalChecked()));
+            Nan::ThrowTypeError(Nan::New("osmium.Relation cannot be created in Javascript").ToLocalChecked());
             return;
         }
     }
@@ -61,7 +61,7 @@ namespace node_osmium {
             }
             case 1: {
                 if (!info[0]->IsUint32()) {
-                    ThrowException(v8::Exception::TypeError(Nan::New("call members() without parameters or the index of the member you want").ToLocalChecked()));
+                    Nan::ThrowTypeError(Nan::New("call members() without parameters or the index of the member you want").ToLocalChecked());
                     return;
                 }
                 uint32_t n = info[0]->ToUint32()->Value();
@@ -78,13 +78,13 @@ namespace node_osmium {
                     info.GetReturnValue().Set(jsmember);
                     return;
                 } else {
-                    ThrowException(v8::Exception::RangeError(Nan::New("argument to members() out of range").ToLocalChecked()));
+                    Nan::ThrowRangeError(Nan::New("argument to members() out of range").ToLocalChecked());
                     return;
                 }
             }
         }
 
-        ThrowException(v8::Exception::TypeError(Nan::New("call members() without parameters or the index of the member you want").ToLocalChecked()));
+        Nan::ThrowTypeError(Nan::New("call members() without parameters or the index of the member you want").ToLocalChecked());
         return;
     }
 

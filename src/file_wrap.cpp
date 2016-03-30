@@ -23,19 +23,19 @@ namespace node_osmium {
         Nan::HandleScope scope;
 
         if (!info.IsConstructCall()) {
-            ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
+            Nan::ThrowError(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked());
             return;
         }
 
         if (info.Length() == 0 || info.Length() > 2) {
-            ThrowException(v8::Exception::TypeError(Nan::New("File is constructed with one or two arguments: filename or node.Buffer and optional format").ToLocalChecked()));
+            Nan::ThrowTypeError(Nan::New("File is constructed with one or two arguments: filename or node.Buffer and optional format").ToLocalChecked());
             return;
         }
 
         std::string format;
         if (info.Length() == 2) {
             if (!info[1]->IsString()) {
-                ThrowException(v8::Exception::TypeError(Nan::New("second argument to File constructor (format) must be a string").ToLocalChecked()));
+                Nan::ThrowTypeError(Nan::New("second argument to File constructor (format) must be a string").ToLocalChecked());
                 return;
             }
             v8::String::Utf8Value format_string { info[1] };
@@ -52,7 +52,7 @@ namespace node_osmium {
                 auto source = info[0]->ToObject();
                 file = osmium::io::File(node::Buffer::Data(source), node::Buffer::Length(source), format);
             } else {
-                ThrowException(v8::Exception::TypeError(Nan::New("first argument to File constructor must be a string (filename) or node.Buffer").ToLocalChecked()));
+                Nan::ThrowTypeError(Nan::New("first argument to File constructor must be a string (filename) or node.Buffer").ToLocalChecked());
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace node_osmium {
             info.GetReturnValue().Set(info.This());
             return;
         } catch (const std::exception& e) {
-            ThrowException(v8::Exception::TypeError(Nan::New(e.what()).ToLocalChecked()));
+            Nan::ThrowTypeError(Nan::New(e.what()).ToLocalChecked());
             return;
         }
 

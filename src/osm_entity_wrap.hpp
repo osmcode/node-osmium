@@ -52,7 +52,7 @@ namespace node_osmium {
                 }
             }
 
-            ThrowException(v8::Exception::TypeError(Nan::New("call tags() without parameters or with a string (the key)").ToLocalChecked()));
+            Nan::ThrowTypeError(Nan::New("call tags() without parameters or with a string (the key)").ToLocalChecked());
             return;
         }
 

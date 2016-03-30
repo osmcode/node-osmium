@@ -23,7 +23,7 @@ namespace node_osmium {
     NAN_METHOD(LocationHandlerWrap::New) {
         Nan::HandleScope scope;
         if (!info.IsConstructCall()) {
-            ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
+            Nan::ThrowError(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked());
             return;
         }
 
@@ -33,11 +33,11 @@ namespace node_osmium {
                 location_handler_wrap = new LocationHandlerWrap("sparse_mem_array");
             } else {
                 if (info.Length() != 1) {
-                    ThrowException(v8::Exception::TypeError(Nan::New("please provide a node cache type as string when creating a LocationHandler").ToLocalChecked()));
+                    Nan::ThrowTypeError(Nan::New("please provide a node cache type as string when creating a LocationHandler").ToLocalChecked());
                     return;
                 }
                 if (!info[0]->IsString()) {
-                    ThrowException(v8::Exception::TypeError(Nan::New("please provide a node cache type as string when creating a LocationHandler").ToLocalChecked()));
+                    Nan::ThrowTypeError(Nan::New("please provide a node cache type as string when creating a LocationHandler").ToLocalChecked());
                     return;
                 }
                 v8::String::Utf8Value index_map_type { info[0] };
@@ -47,7 +47,7 @@ namespace node_osmium {
             info.GetReturnValue().Set(info.This());
             return;
         } catch (const std::exception& ex) {
-            ThrowException(v8::Exception::TypeError(Nan::New(ex.what()).ToLocalChecked()));
+            Nan::ThrowTypeError(Nan::New(ex.what()).ToLocalChecked());
             return;
         }
     }

@@ -53,12 +53,12 @@ namespace node_osmium {
                     info.GetReturnValue().Set(info.This());
                     return;
                 } catch (std::exception const& ex) {
-                    ThrowException(v8::Exception::TypeError(Nan::New(ex.what()).ToLocalChecked()));
+                    Nan::ThrowTypeError(Nan::New(ex.what()).ToLocalChecked());
                     return;
                 }
             }
         }
-        ThrowException(v8::Exception::TypeError(Nan::New("osmium.Buffer takes a single argument, a node::Buffer").ToLocalChecked()));
+        Nan::ThrowTypeError(Nan::New("osmium.Buffer takes a single argument, a node::Buffer").ToLocalChecked());
         return;
     }
 
@@ -127,7 +127,7 @@ namespace node_osmium {
         INSTANCE_CHECK(BufferWrap, "Buffer", "filter_point_in_time");
         Nan::HandleScope scope;
         if (info.Length() != 1) {
-            ThrowException(v8::Exception::TypeError(Nan::New("please provide a point in time as first and only argument").ToLocalChecked()));
+            Nan::ThrowTypeError(Nan::New("please provide a point in time as first and only argument").ToLocalChecked());
             return;
         }
 

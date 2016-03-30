@@ -62,9 +62,8 @@ namespace node_osmium {
     }
 
     NAN_METHOD(JSHandler::New) {
-        Nan::HandleScope scope;
         if (!info.IsConstructCall()) {
-            ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
+            Nan::ThrowError(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked());
             return;
         }
         if (info[0]->IsExternal()) {
@@ -86,9 +85,8 @@ namespace node_osmium {
 
     NAN_METHOD(JSHandler::options) {
         INSTANCE_CHECK(JSHandler, "handler", "options");
-        Nan::HandleScope scope;
         if (info.Length() != 1 || !info[0]->IsObject()) {
-            ThrowException(v8::Exception::TypeError(Nan::New("please provide a single object as parameter").ToLocalChecked()));
+            Nan::ThrowTypeError(Nan::New("please provide a single object as parameter").ToLocalChecked());
             return;
         }
 
@@ -103,16 +101,15 @@ namespace node_osmium {
 
     NAN_METHOD(JSHandler::on) {
         INSTANCE_CHECK(JSHandler, "handler", "on");
-        Nan::HandleScope scope;
         if (info.Length() != 2 || !info[0]->IsString() || !info[1]->IsFunction()) {
-            ThrowException(v8::Exception::TypeError(Nan::New("please provide an event name and callback function").ToLocalChecked()));
+            Nan::ThrowTypeError(Nan::New("please provide an event name and callback function").ToLocalChecked());
             return;
         }
         v8::String::Utf8Value callback_name_string { info[0] };
         std::string callback_name = *callback_name_string;
         v8::Local<v8::Function> callback = v8::Local<v8::Function>::Cast(info[1]);
         if (callback->IsNull() || callback->IsUndefined()) {
-            ThrowException(v8::Exception::TypeError(Nan::New("please provide a valid callback function for second arg").ToLocalChecked()));
+            Nan::ThrowTypeError(Nan::New("please provide a valid callback function for second arg").ToLocalChecked());
             return;
         }
 
@@ -148,7 +145,7 @@ namespace node_osmium {
         } else if (callback_name == "done") {
             handler.done_cb.Reset(callback.As<v8::Function>());
         } else {
-            ThrowException(v8::Exception::RangeError(Nan::New("unknown callback name as first argument").ToLocalChecked()));
+            Nan::ThrowRangeError(Nan::New("unknown callback name as first argument").ToLocalChecked());
             return;
         }
 
@@ -249,9 +246,8 @@ namespace node_osmium {
 
     NAN_METHOD(JSHandler::stream_end) {
         INSTANCE_CHECK(JSHandler, "handler", "end");
-        Nan::HandleScope scope;
         if (info.Length() != 0) {
-            ThrowException(v8::Exception::TypeError(Nan::New("end() doesn't take any parameters").ToLocalChecked()));
+            Nan::ThrowTypeError(Nan::New("end() doesn't take any parameters").ToLocalChecked());
             return;
         }
 

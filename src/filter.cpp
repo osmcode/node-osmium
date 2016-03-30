@@ -30,7 +30,7 @@ namespace node_osmium {
             return;
         }
 
-        ThrowException(v8::Exception::Error(Nan::New("registering filter failed").ToLocalChecked()));
+        Nan::ThrowError(Nan::New("registering filter failed").ToLocalChecked());
         return;
     }
 

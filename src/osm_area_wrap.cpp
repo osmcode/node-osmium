@@ -37,7 +37,7 @@ namespace node_osmium {
             info.GetReturnValue().Set(info.This());
             return;
         } else {
-            ThrowException(v8::Exception::TypeError(Nan::New("osmium.Area cannot be created in Javascript").ToLocalChecked()));
+            Nan::ThrowTypeError(Nan::New("osmium.Area cannot be created in Javascript").ToLocalChecked());
             return;
         }
     }
@@ -63,7 +63,7 @@ namespace node_osmium {
             info.GetReturnValue().Set(Nan::CopyBuffer(wkb.data(), wkb.size()).ToLocalChecked());
             return;
         } catch (std::runtime_error& e) {
-            ThrowException(v8::Exception::Error(Nan::New(e.what()).ToLocalChecked()));
+            Nan::ThrowError(Nan::New(e.what()).ToLocalChecked());
             return;
         }
     }
@@ -77,7 +77,7 @@ namespace node_osmium {
             info.GetReturnValue().Set(Nan::New(wkt).ToLocalChecked());
             return;
         } catch (std::runtime_error& e) {
-            ThrowException(v8::Exception::Error(Nan::New(e.what()).ToLocalChecked()));
+            Nan::ThrowError(Nan::New(e.what()).ToLocalChecked());
             return;
         }
     }
@@ -107,7 +107,7 @@ namespace node_osmium {
         auto num_rings = area.num_rings();
 
         if (num_rings.first == 0) {
-            ThrowException(v8::Exception::Error(Nan::New("Area has no geometry").ToLocalChecked()));
+            Nan::ThrowError(Nan::New("Area has no geometry").ToLocalChecked());
             return;
         }
 

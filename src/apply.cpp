@@ -151,7 +151,7 @@ namespace node_osmium {
         } catch (const std::exception& e) {
             std::string msg("osmium error: ");
             msg += e.what();
-            ThrowException(v8::Exception::Error(Nan::New(msg).ToLocalChecked()));
+            Nan::ThrowError(Nan::New(msg).ToLocalChecked());
         }
         return scope.Escape(Nan::Undefined());
     }
@@ -164,7 +164,7 @@ namespace node_osmium {
 
             for (int i=1; i != info.Length(); ++i) {
                 if (!info[i]->IsObject()) {
-                    ThrowException(v8::Exception::TypeError(Nan::New("please provide handler objects as second and further parameters to apply()").ToLocalChecked()));
+                    Nan::ThrowTypeError(Nan::New("please provide handler objects as second and further parameters to apply()").ToLocalChecked());
                     return;
                 }
                 auto obj = info[i]->ToObject();
@@ -182,7 +182,7 @@ namespace node_osmium {
                 osmium::io::Reader& reader = unwrap<BasicReaderWrap>(source);
 
                 if (reader.eof()) {
-                    ThrowException(v8::Exception::Error(Nan::New("apply() called on a reader that has reached EOF").ToLocalChecked()));
+                    Nan::ThrowError(Nan::New("apply() called on a reader that has reached EOF").ToLocalChecked());
                     return;
                 }
 
@@ -194,7 +194,7 @@ namespace node_osmium {
                 flex_reader_type& reader = unwrap<FlexReaderWrap>(source);
 
                 if (reader.eof()) {
-                    ThrowException(v8::Exception::Error(Nan::New("apply() called on a reader that has reached EOF").ToLocalChecked()));
+                    Nan::ThrowError(Nan::New("apply() called on a reader that has reached EOF").ToLocalChecked());
                     return;
                 }
 
@@ -214,7 +214,7 @@ namespace node_osmium {
             }
         }
 
-        ThrowException(v8::Exception::TypeError(Nan::New("please provide a BasicReader, FlexReader or Buffer object as first parameter").ToLocalChecked()));
+        Nan::ThrowTypeError(Nan::New("please provide a BasicReader, FlexReader or Buffer object as first parameter").ToLocalChecked());
     }
 
 } // namespace node_osmium
