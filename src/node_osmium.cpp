@@ -74,10 +74,11 @@ namespace node_osmium {
     extern "C" {
         static void start(v8::Local<v8::Object> target) {
             Nan::HandleScope scope;
-            module = Nan::Persistent<v8::Object>::New(target);
+            module.Reset(target.As<v8::Object>());
 
-            node::SetMethod(target, "apply_", node_osmium::apply);
-            node::SetMethod(target, "register_filter", node_osmium::Filter::register_filter);
+            /*
+            Nan::SetMethod(target, "apply_", node_osmium::apply);
+            Nan::SetMethod(target, "register_filter", node_osmium::Filter::register_filter);
 
             symbol_OSMEntity       = NODE_PSYMBOL("OSMEntity");
             symbol_OSMObject       = NODE_PSYMBOL("OSMObject");
@@ -107,6 +108,7 @@ namespace node_osmium {
             symbol_MultipolygonHandler   = NODE_PSYMBOL("MultipolygonHandler");
             symbol_BasicReader           = NODE_PSYMBOL("BasicReader");
             symbol_FlexReader            = NODE_PSYMBOL("FlexReader");
+            */
 
             node_osmium::OSMEntityWrap::Initialize(target);
             node_osmium::OSMWrappedObject::Initialize(target);
@@ -126,11 +128,11 @@ namespace node_osmium {
 
             Filter::init_filters();
 
-            the_Node      = Nan::Persistent<v8::Object>::New(new_external<OSMNodeWrap>());
-            the_Way       = Nan::Persistent<v8::Object>::New(new_external<OSMWayWrap>());
-            the_Relation  = Nan::Persistent<v8::Object>::New(new_external<OSMRelationWrap>());
-            the_Area      = Nan::Persistent<v8::Object>::New(new_external<OSMAreaWrap>());
-            the_Changeset = Nan::Persistent<v8::Object>::New(new_external<OSMChangesetWrap>());
+            the_Node.Reset(new_external<OSMNodeWrap>());
+            the_Way.Reset(new_external<OSMWayWrap>());
+            the_Relation.Reset(new_external<OSMRelationWrap>());
+            the_Area.Reset(new_external<OSMAreaWrap>());
+            the_Changeset.Reset(new_external<OSMChangesetWrap>());
         }
     }
 

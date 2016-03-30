@@ -16,22 +16,22 @@ namespace node_osmium {
 
     void OSMNodeWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
-        constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(OSMNodeWrap::New));
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMNodeWrap::New);
         constructor->Inherit(OSMWrappedObject::constructor);
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_Node);
-        Nan::SetPrototypeMethod(constructor, "wkb", wkb);
-        Nan::SetPrototypeMethod(constructor, "wkt", wkt);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_Node));
+        Nan::SetPrototypeMethod(lcons, "wkb", wkb);
+        Nan::SetPrototypeMethod(lcons, "wkt", wkt);
         auto attributes = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
         set_accessor(constructor, "type", get_type, attributes);
         set_accessor(constructor, "location", get_coordinates, attributes);
         set_accessor(constructor, "coordinates", get_coordinates, attributes);
         set_accessor(constructor, "lon", get_lon, attributes);
         set_accessor(constructor, "lat", get_lat, attributes);
-        target->Set(symbol_Node, constructor->GetFunction());
+        target->Set(Nan::New(symbol_Node), lcons->GetFunction());
     }
 
-    v8::Local<v8::Value> OSMNodeWrap::New(const v8::Arguments& info) {
+    NAN_METHOD(OSMNodeWrap::New) {
         if (info.Length() == 1 && info[0]->IsExternal()) {
             v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
             static_cast<OSMNodeWrap*>(ext->Value())->Wrap(info.This());
@@ -43,7 +43,7 @@ namespace node_osmium {
         }
     }
 
-    v8::Local<v8::Value> OSMNodeWrap::get_coordinates(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
+    NAN_METHOD(OSMNodeWrap::get_coordinates) {
         Nan::HandleScope scope;
 
         auto cf = module->Get(symbol_Coordinates);
@@ -62,7 +62,7 @@ namespace node_osmium {
         return;
     }
 
-    v8::Local<v8::Value> OSMNodeWrap::get_lon(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
+    NAN_METHOD(OSMNodeWrap::get_lon) {
         Nan::HandleScope scope;
         try {
             info.GetReturnValue().Set(Nan::New(wrapped(info.This()).location().lon()));
@@ -73,7 +73,7 @@ namespace node_osmium {
         }
     }
 
-    v8::Local<v8::Value> OSMNodeWrap::get_lat(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
+    NAN_METHOD(OSMNodeWrap::get_lat) {
         Nan::HandleScope scope;
         try {
             info.GetReturnValue().Set(Nan::New(wrapped(info.This()).location().lat()));
@@ -84,7 +84,7 @@ namespace node_osmium {
         }
     }
 
-    v8::Local<v8::Value> OSMNodeWrap::wkb(const v8::Arguments& info) {
+    NAN_METHOD(OSMNodeWrap::wkb) {
         INSTANCE_CHECK(OSMNodeWrap, "Node", "wkb");
         Nan::HandleScope scope;
 
@@ -103,7 +103,7 @@ namespace node_osmium {
         }
     }
 
-    v8::Local<v8::Value> OSMNodeWrap::wkt(const v8::Arguments& info) {
+    NAN_METHOD(OSMNodeWrap::wkt) {
         INSTANCE_CHECK(OSMNodeWrap, "Node", "wkt");
         Nan::HandleScope scope;
 

@@ -9,13 +9,13 @@ namespace node_osmium {
 
     void OSMEntityWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
-        constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(OSMEntityWrap::New));
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_OSMEntity);
-        target->Set(symbol_OSMEntity, constructor->GetFunction());
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMEntityWrap::New);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_OSMEntity));
+        target->Set(Nan::New(symbol_OSMEntity), lcons->GetFunction());
     }
 
-    v8::Local<v8::Value> OSMEntityWrap::New(const v8::Arguments& info) {
+    NAN_METHOD(OSMEntityWrap::New) {
         if (info.Length() == 1 && info[0]->IsExternal()) {
             v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
             static_cast<OSMEntityWrap*>(ext->Value())->Wrap(info.This());

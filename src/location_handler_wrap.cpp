@@ -10,16 +10,16 @@ namespace node_osmium {
 
     void LocationHandlerWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
-        constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(LocationHandlerWrap::New));
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_LocationHandler);
-        Nan::SetPrototypeMethod(constructor, "clear", clear);
-        Nan::SetPrototypeMethod(constructor, "ignoreErrors", ignoreErrors);
-        Nan::SetPrototypeMethod(constructor, "end", stream_end);
-        target->Set(symbol_LocationHandler, constructor->GetFunction());
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(LocationHandlerWrap::New);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_LocationHandler));
+        Nan::SetPrototypeMethod(lcons, "clear", clear);
+        Nan::SetPrototypeMethod(lcons, "ignoreErrors", ignoreErrors);
+        Nan::SetPrototypeMethod(lcons, "end", stream_end);
+        target->Set(Nan::New(symbol_LocationHandler), lcons->GetFunction());
     }
 
-    v8::Local<v8::Value> LocationHandlerWrap::New(const v8::Arguments& info) {
+    NAN_METHOD(LocationHandlerWrap::New) {
         Nan::HandleScope scope;
         if (!info.IsConstructCall()) {
             ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
@@ -46,12 +46,12 @@ namespace node_osmium {
             info.GetReturnValue().Set(info.This());
             return;
         } catch (const std::exception& ex) {
-            ThrowException(v8::Exception::TypeError(Nan::New(ex.what())));
+            ThrowException(v8::Exception::TypeError(Nan::New(ex.what()).ToLocalChecked()));
             return;
         }
     }
 
-    v8::Local<v8::Value> LocationHandlerWrap::ignoreErrors(const v8::Arguments& info) {
+    NAN_METHOD(LocationHandlerWrap::ignoreErrors) {
         INSTANCE_CHECK(LocationHandlerWrap, "location_handler", "ignoreErrors");
         Nan::HandleScope scope;
         unwrap<LocationHandlerWrap>(info.This()).ignore_errors();
@@ -59,7 +59,7 @@ namespace node_osmium {
         return;
     }
 
-    v8::Local<v8::Value> LocationHandlerWrap::clear(const v8::Arguments& info) {
+    NAN_METHOD(LocationHandlerWrap::clear) {
         INSTANCE_CHECK(LocationHandlerWrap, "clear", "clear");
         Nan::HandleScope scope;
         unwrap<LocationHandlerWrap>(info.This()).clear();
@@ -67,8 +67,9 @@ namespace node_osmium {
         return;
     }
 
-    v8::Local<v8::Value> LocationHandlerWrap::stream_end(const v8::Arguments& info) {
-        return Nan::Undefined();
+    NAN_METHOD(LocationHandlerWrap::stream_end) {
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
 } // namespace node_osmium

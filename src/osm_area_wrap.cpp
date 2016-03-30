@@ -16,21 +16,21 @@ namespace node_osmium {
 
     void OSMAreaWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
-        constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(OSMAreaWrap::New));
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMAreaWrap::New);
         constructor->Inherit(OSMWrappedObject::constructor);
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_Area);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_Area));
         auto attributes = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
         set_accessor(constructor, "type", get_type, attributes);
         set_accessor(constructor, "orig_id", get_orig_id, attributes);
         set_accessor(constructor, "from_way", from_way, attributes);
-        Nan::SetPrototypeMethod(constructor, "wkb", wkb);
-        Nan::SetPrototypeMethod(constructor, "wkt", wkt);
-        Nan::SetPrototypeMethod(constructor, "coordinates", coordinates);
-        target->Set(symbol_Area, constructor->GetFunction());
+        Nan::SetPrototypeMethod(lcons, "wkb", wkb);
+        Nan::SetPrototypeMethod(lcons, "wkt", wkt);
+        Nan::SetPrototypeMethod(lcons, "coordinates", coordinates);
+        target->Set(Nan::New(symbol_Area), lcons->GetFunction());
     }
 
-    v8::Local<v8::Value> OSMAreaWrap::New(const v8::Arguments& info) {
+    NAN_METHOD(OSMAreaWrap::New) {
         if (info.Length() == 1 && info[0]->IsExternal()) {
             v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
             static_cast<OSMAreaWrap*>(ext->Value())->Wrap(info.This());
@@ -42,17 +42,17 @@ namespace node_osmium {
         }
     }
 
-    v8::Local<v8::Value> OSMAreaWrap::get_orig_id(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
+    NAN_METHOD(OSMAreaWrap::get_orig_id) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).orig_id()));
         return;
     }
 
-    v8::Local<v8::Value> OSMAreaWrap::from_way(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
+    NAN_METHOD(OSMAreaWrap::from_way) {
         return Nan::New(wrapped(info.This()).from_way());
     }
 
-    v8::Local<v8::Value> OSMAreaWrap::wkb(const v8::Arguments& info) {
+    NAN_METHOD(OSMAreaWrap::wkb) {
         INSTANCE_CHECK(OSMAreaWrap, "Area", "wkb");
         Nan::HandleScope scope;
 
@@ -71,7 +71,7 @@ namespace node_osmium {
         }
     }
 
-    v8::Local<v8::Value> OSMAreaWrap::wkt(const v8::Arguments& info) {
+    NAN_METHOD(OSMAreaWrap::wkt) {
         INSTANCE_CHECK(OSMAreaWrap, "Area", "wkt");
         Nan::HandleScope scope;
 
@@ -99,7 +99,7 @@ namespace node_osmium {
         return locations;
     }
 
-    v8::Local<v8::Value> OSMAreaWrap::coordinates(const v8::Arguments& info) {
+    NAN_METHOD(OSMAreaWrap::coordinates) {
         INSTANCE_CHECK(OSMAreaWrap, "Area", "coordinates");
         Nan::HandleScope scope;
 

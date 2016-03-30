@@ -10,14 +10,14 @@ namespace node_osmium {
 
     void MultipolygonHandlerWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
-        constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(MultipolygonHandlerWrap::New));
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_MultipolygonHandler);
-        Nan::SetPrototypeMethod(constructor, "end", stream_end);
-        target->Set(symbol_MultipolygonHandler, constructor->GetFunction());
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(MultipolygonHandlerWrap::New);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_MultipolygonHandler));
+        Nan::SetPrototypeMethod(lcons, "end", stream_end);
+        target->Set(Nan::New(symbol_MultipolygonHandler), lcons->GetFunction());
     }
 
-    v8::Local<v8::Value> MultipolygonHandlerWrap::New(const v8::Arguments& info) {
+    NAN_METHOD(MultipolygonHandlerWrap::New) {
         if (info.Length() == 1 && info[0]->IsExternal()) {
             v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
             static_cast<MultipolygonHandlerWrap*>(ext->Value())->Wrap(info.This());
@@ -29,7 +29,7 @@ namespace node_osmium {
         }
     }
 
-    v8::Local<v8::Value> MultipolygonHandlerWrap::stream_end(const v8::Arguments& info) {
+    NAN_METHOD(MultipolygonHandlerWrap::stream_end) {
         INSTANCE_CHECK(MultipolygonHandlerWrap, "MultipolygonHandler", "end");
         Nan::HandleScope scope;
         if (info.Length() != 0) {

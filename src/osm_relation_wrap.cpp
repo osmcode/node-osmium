@@ -8,18 +8,18 @@ namespace node_osmium {
 
     void OSMRelationWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
-        constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(OSMRelationWrap::New));
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMRelationWrap::New);
         constructor->Inherit(OSMWrappedObject::constructor);
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_Relation);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_Relation));
         auto attributes = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
         set_accessor(constructor, "type", get_type, attributes);
         set_accessor(constructor, "members_count", get_members_count, attributes);
-        Nan::SetPrototypeMethod(constructor, "members", members);
-        target->Set(symbol_Relation, constructor->GetFunction());
+        Nan::SetPrototypeMethod(lcons, "members", members);
+        target->Set(Nan::New(symbol_Relation), lcons->GetFunction());
     }
 
-    v8::Local<v8::Value> OSMRelationWrap::New(const v8::Arguments& info) {
+    NAN_METHOD(OSMRelationWrap::New) {
         if (info.Length() == 1 && info[0]->IsExternal()) {
             v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
             static_cast<OSMRelationWrap*>(ext->Value())->Wrap(info.This());
@@ -31,13 +31,13 @@ namespace node_osmium {
         }
     }
 
-    v8::Local<v8::Value> OSMRelationWrap::get_members_count(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
+    NAN_METHOD(OSMRelationWrap::get_members_count) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).members().size()));
         return;
     }
 
-    v8::Local<v8::Value> OSMRelationWrap::members(const v8::Arguments& info) {
+    NAN_METHOD(OSMRelationWrap::members) {
         Nan::HandleScope scope;
 
         const osmium::Relation& relation = wrapped(info.This());

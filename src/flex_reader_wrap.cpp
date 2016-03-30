@@ -22,17 +22,17 @@ namespace node_osmium {
 
     void FlexReaderWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
-        constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(FlexReaderWrap::New));
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_FlexReader);
-        Nan::SetPrototypeMethod(constructor, "header", header);
-        Nan::SetPrototypeMethod(constructor, "close", close);
-        Nan::SetPrototypeMethod(constructor, "read", read);
-        Nan::SetPrototypeMethod(constructor, "read_all", read_all);
-        target->Set(symbol_FlexReader, constructor->GetFunction());
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(FlexReaderWrap::New);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_FlexReader));
+        Nan::SetPrototypeMethod(lcons, "header", header);
+        Nan::SetPrototypeMethod(lcons, "close", close);
+        Nan::SetPrototypeMethod(lcons, "read", read);
+        Nan::SetPrototypeMethod(lcons, "read_all", read_all);
+        target->Set(Nan::New(symbol_FlexReader), lcons->GetFunction());
     }
 
-    v8::Local<v8::Value> FlexReaderWrap::New(const v8::Arguments& info) {
+    NAN_METHOD(FlexReaderWrap::New) {
         Nan::HandleScope scope;
         if (!info.IsConstructCall()) {
             ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
@@ -77,14 +77,14 @@ namespace node_osmium {
                 return;
             }
         } catch (const std::exception& ex) {
-            ThrowException(v8::Exception::TypeError(Nan::New(ex.what())));
+            ThrowException(v8::Exception::TypeError(Nan::New(ex.what()).ToLocalChecked()));
             return;
         }
         info.GetReturnValue().Set(Nan::Undefined());
         return;
     }
 
-    v8::Local<v8::Value> FlexReaderWrap::header(const v8::Arguments& info) {
+    NAN_METHOD(FlexReaderWrap::header) {
         INSTANCE_CHECK(FlexReaderWrap, "FlexReader", "header");
         Nan::HandleScope scope;
         v8::Local<v8::Object> obj = Nan::New();
@@ -103,7 +103,7 @@ namespace node_osmium {
         return;
     }
 
-    v8::Local<v8::Value> FlexReaderWrap::close(const v8::Arguments& info) {
+    NAN_METHOD(FlexReaderWrap::close) {
         INSTANCE_CHECK(FlexReaderWrap, "FlexReader", "close");
         Nan::HandleScope scope;
         try {
@@ -118,7 +118,7 @@ namespace node_osmium {
         return;
     }
 
-    v8::Local<v8::Value> FlexReaderWrap::read(const v8::Arguments& info) {
+    NAN_METHOD(FlexReaderWrap::read) {
         INSTANCE_CHECK(FlexReaderWrap, "FlexReader", "read");
         Nan::HandleScope scope;
         try {
@@ -137,7 +137,7 @@ namespace node_osmium {
         return;
     }
 
-    v8::Local<v8::Value> FlexReaderWrap::read_all(const v8::Arguments& info) {
+    NAN_METHOD(FlexReaderWrap::read_all) {
         INSTANCE_CHECK(FlexReaderWrap, "FlexReader", "read_all");
         osmium::memory::Buffer buffer(1024*1024, osmium::memory::Buffer::auto_grow::yes);
         Nan::HandleScope scope;
