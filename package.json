@@ -1,54 +1,60 @@
 {
-    "name": "osmium",
-    "version": "0.4.5",
-    "description": "Node.js bindings to Osmium",
-    "url": "https://github.com/osmcode/node-osmium",
-    "homepage": "http://osmcode.org/node-osmium",
-    "author": "Dane Springmeyer <springmeyer>",
-    "contributors": [
-        "Jochen Topf <joto>"
-    ],
-    "main": "./lib/osmium.js",
-    "bugs": {
-        "email": "dane@mapbox.com",
-        "url": "https://github.com/osmcode/node-osmium/issues"
-    },
-    "keywords": [
-        "osmium",
-        "osm",
-        "pbf",
-        "changeset"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/osmcode/node-osmium.git"
-    },
-    "binary": {
-        "module_name" : "osmium",
-        "module_path" : "./lib/binding/",
-        "host"        : "https://mapbox-node-binary.s3.amazonaws.com",
-        "remote_path" : "./{module_name}/v{version}",
-        "package_name": "{node_abi}-{platform}-{arch}.tar.gz"
-    },
-    "dependencies": {
-        "node-pre-gyp": "~0.6.6"
-    },
-    "bundledDependencies":["node-pre-gyp"],
-    "devDependencies": {
-        "aws-sdk": "~2.1.26",
-        "geojson-coords": "0.0.0",
-        "mocha": "1.x",
-        "osm-testdata": "1.0.0",
-        "turf-difference": "^2.0.0",
-        "wellknown": "^0.4.0"
-    },
-    "licenses": [ { "type": "Boost" } ],
-    "engines": {
-        "node": ">= 0.10.0 < 0.11.0"
-    },
-    "scripts": {
-        "prepublish": "npm ls",
-        "install": "node-pre-gyp install --fallback-to-build",
-        "test": "mocha -R spec --timeout 100000"
+  "name": "osmium",
+  "version": "0.4.5",
+  "description": "Node.js bindings to Osmium",
+  "url": "https://github.com/osmcode/node-osmium",
+  "homepage": "http://osmcode.org/node-osmium",
+  "author": "Dane Springmeyer <springmeyer>",
+  "contributors": [
+    "Jochen Topf <joto>"
+  ],
+  "main": "./lib/osmium.js",
+  "bugs": {
+    "email": "dane@mapbox.com",
+    "url": "https://github.com/osmcode/node-osmium/issues"
+  },
+  "keywords": [
+    "osmium",
+    "osm",
+    "pbf",
+    "changeset"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/osmcode/node-osmium.git"
+  },
+  "binary": {
+    "module_name": "osmium",
+    "module_path": "./lib/binding/",
+    "host": "https://mapbox-node-binary.s3.amazonaws.com",
+    "remote_path": "./{module_name}/v{version}",
+    "package_name": "{node_abi}-{platform}-{arch}.tar.gz"
+  },
+  "dependencies": {
+    "node-pre-gyp": "~0.6.6"
+  },
+  "bundledDependencies": [
+    "node-pre-gyp"
+  ],
+  "devDependencies": {
+    "aws-sdk": "~2.1.26",
+    "geojson-coords": "0.0.0",
+    "mocha": "1.x",
+    "osm-testdata": "1.0.0",
+    "turf-difference": "^2.0.0",
+    "wellknown": "^0.4.0"
+  },
+  "licenses": [
+    {
+      "type": "Boost"
     }
+  ],
+  "engines": {
+    "node": ">= 0.10.0 < 0.11.0"
+  },
+  "scripts": {
+    "prepublish": "npm ls",
+    "install": "node-pre-gyp install --fallback-to-build",
+    "test": "mocha -R spec --timeout 100000"
+  }
 }
