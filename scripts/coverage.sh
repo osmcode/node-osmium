@@ -14,5 +14,6 @@ if [[ ${COVERAGE} == true ]]; then
       --build-root build \
       --gcov-options '\-lp' \
       --exclude doc \
-      --exclude build/Release/obj/gen
+      --exclude build/Release/obj/gen \
+      --exclude build/Debug/obj/gen
 fi

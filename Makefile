@@ -33,8 +33,8 @@ build-all: ./node_modules ./build
 debug: ./node_modules ./build
 	./node_modules/.bin/node-pre-gyp build --loglevel=$(LOGLEVEL) --debug --clang=1
 
-coverage: ./node_modules ./build
-	export LDFLAGS="--coverage" && export CXXFLAGS="--coverage" && ./node_modules/.bin/node-pre-gyp build --loglevel=$(LOGLEVEL) --debug --clang=1
+coverage: ./node_modules
+	export LDFLAGS="--coverage" && export CXXFLAGS="--coverage" && ./node_modules/.bin/node-pre-gyp rebuild --loglevel=$(LOGLEVEL) --debug --clang=1
 
 testpack:
 	rm -f ./*tgz
