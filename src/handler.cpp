@@ -18,19 +18,18 @@
 namespace node_osmium {
 
     Nan::Persistent<v8::FunctionTemplate> JSHandler::constructor;
-    Nan::Persistent<v8::String> JSHandler::symbol_tagged_nodes_only;
 
     void JSHandler::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
-        constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(JSHandler::New));
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_Handler);
-        Nan::SetPrototypeMethod(constructor, "on", on);
-        Nan::SetPrototypeMethod(constructor, "options", options);
-        Nan::SetPrototypeMethod(constructor, "end", stream_end);
-        target->Set(symbol_Handler, constructor->GetFunction());
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(JSHandler::New);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_Handler));
+        Nan::SetPrototypeMethod(lcons, "on", on);
+        Nan::SetPrototypeMethod(lcons, "options", options);
+        Nan::SetPrototypeMethod(lcons, "end", stream_end);
+        target->Set(Nan::New(symbol_Handler), lcons->GetFunction());
+        constructor.Reset(lcons);
 
-        symbol_tagged_nodes_only = NODE_PSYMBOL("tagged_nodes_only");
     }
 
     JSHandler::JSHandler() :
@@ -39,30 +38,30 @@ namespace node_osmium {
     }
 
     JSHandler::~JSHandler() {
-        init_cb.Dispose();
+        init_cb.Reset();
 
-        before_nodes_cb.Dispose();
-        node_cb.Dispose();
-        after_nodes_cb.Dispose();
+        before_nodes_cb.Reset();
+        node_cb.Reset();
+        after_nodes_cb.Reset();
 
-        before_ways_cb.Dispose();
-        way_cb.Dispose();
-        after_ways_cb.Dispose();
+        before_ways_cb.Reset();
+        way_cb.Reset();
+        after_ways_cb.Reset();
 
-        before_relations_cb.Dispose();
-        relation_cb.Dispose();
-        after_relations_cb.Dispose();
+        before_relations_cb.Reset();
+        relation_cb.Reset();
+        after_relations_cb.Reset();
 
-        area_cb.Dispose();
+        area_cb.Reset();
 
-        before_changesets_cb.Dispose();
-        changeset_cb.Dispose();
-        after_changesets_cb.Dispose();
+        before_changesets_cb.Reset();
+        changeset_cb.Reset();
+        after_changesets_cb.Reset();
 
-        done_cb.Dispose();
+        done_cb.Reset();
     }
 
-    v8::Local<v8::Value> JSHandler::New(const v8::Arguments& info) {
+    NAN_METHOD(JSHandler::New) {
         Nan::HandleScope scope;
         if (!info.IsConstructCall()) {
             ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
@@ -85,7 +84,7 @@ namespace node_osmium {
         return;
     }
 
-    v8::Local<v8::Value> JSHandler::options(const v8::Arguments& info) {
+    NAN_METHOD(JSHandler::options) {
         INSTANCE_CHECK(JSHandler, "handler", "options");
         Nan::HandleScope scope;
         if (info.Length() != 1 || !info[0]->IsObject()) {
@@ -93,7 +92,7 @@ namespace node_osmium {
             return;
         }
 
-        v8::Local<v8::Value> tagged_nodes_only = info[0]->ToObject()->Get(symbol_tagged_nodes_only);
+        v8::Local<v8::Value> tagged_nodes_only = info[0]->ToObject()->Get(Nan::New("tagged_nodes_only").ToLocalChecked());
         if (tagged_nodes_only->IsBoolean()) {
             unwrap<JSHandler>(info.This()).node_callback_for_tagged_only = tagged_nodes_only->BooleanValue();
         }
@@ -102,7 +101,7 @@ namespace node_osmium {
         return;
     }
 
-    v8::Local<v8::Value> JSHandler::on(const v8::Arguments& info) {
+    NAN_METHOD(JSHandler::on) {
         INSTANCE_CHECK(JSHandler, "handler", "on");
         Nan::HandleScope scope;
         if (info.Length() != 2 || !info[0]->IsString() || !info[1]->IsFunction()) {
@@ -119,50 +118,35 @@ namespace node_osmium {
 
         JSHandler& handler = unwrap<JSHandler>(info.This());
         if (callback_name == "node") {
-            handler.node_cb.Dispose();
-            handler.node_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.node_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "way") {
-            handler.way_cb.Dispose();
-            handler.way_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.way_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "relation") {
-            handler.relation_cb.Dispose();
-            handler.relation_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.relation_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "area") {
-            handler.area_cb.Dispose();
-            handler.area_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.area_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "changeset") {
-            handler.changeset_cb.Dispose();
-            handler.changeset_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.changeset_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "init") {
-            handler.init_cb.Dispose();
-            handler.init_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.init_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "before_nodes") {
-            handler.before_nodes_cb.Dispose();
-            handler.before_nodes_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.before_nodes_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "after_nodes") {
-            handler.after_nodes_cb.Dispose();
-            handler.after_nodes_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.after_nodes_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "before_ways") {
-            handler.before_ways_cb.Dispose();
-            handler.before_ways_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.before_ways_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "after_ways") {
-            handler.after_ways_cb.Dispose();
-            handler.after_ways_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.after_ways_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "before_relations") {
-            handler.before_relations_cb.Dispose();
-            handler.before_relations_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.before_relations_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "after_relations") {
-            handler.after_relations_cb.Dispose();
-            handler.after_relations_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.after_relations_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "before_changesets") {
-            handler.before_changesets_cb.Dispose();
-            handler.before_changesets_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.before_changesets_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "after_changesets") {
-            handler.after_changesets_cb.Dispose();
-            handler.after_changesets_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.after_changesets_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "done") {
-            handler.done_cb.Dispose();
-            handler.done_cb = Nan::Persistent<v8::Function>::New(callback);
+            handler.done_cb.Reset(callback.As<v8::Function>());
         } else {
             ThrowException(v8::Exception::RangeError(Nan::New("unknown callback name as first argument").ToLocalChecked()));
             return;
@@ -180,7 +164,7 @@ namespace node_osmium {
 
         Nan::HandleScope scope;
         v8::Local<v8::Value> argv[1] = { new_external<TWrapped>(entity) };
-        function->Call(v8::Context::GetCurrent()->Global(), 1, argv);
+        Nan::MakeCallback(Nan::GetCurrentContext()->Global(), Nan::New(function), 1, argv);
     }
 
     void call_callback(const Nan::Persistent<v8::Function>& function) {
@@ -188,7 +172,7 @@ namespace node_osmium {
             return;
         }
 
-        function->Call(v8::Context::GetCurrent()->Global(), 0, nullptr);
+        Nan::MakeCallback(Nan::GetCurrentContext()->Global(), Nan::New(function), 0, nullptr);
     }
 
     void JSHandler::dispatch_entity(const osmium::OSMEntity& entity) const {
@@ -263,7 +247,7 @@ namespace node_osmium {
         call_callback(done_cb);
     }
 
-    v8::Local<v8::Value> JSHandler::stream_end(const v8::Arguments& info) {
+    NAN_METHOD(JSHandler::stream_end) {
         INSTANCE_CHECK(JSHandler, "handler", "end");
         Nan::HandleScope scope;
         if (info.Length() != 0) {

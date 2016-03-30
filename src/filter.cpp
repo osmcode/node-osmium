@@ -18,7 +18,7 @@ namespace node_osmium {
         all_filters.emplace_back(new Filter());
     }
 
-    v8::Local<v8::Value> Filter::register_filter(const v8::Arguments& info) {
+    NAN_METHOD(Filter::register_filter) {
         Nan::HandleScope scope;
 
         if (info.Length() == 1 && info[0]->IsObject()) {
