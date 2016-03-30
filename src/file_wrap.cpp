@@ -10,7 +10,7 @@ namespace node_osmium {
 
     Nan::Persistent<v8::FunctionTemplate> FileWrap::constructor;
 
-    void FileWrap::Initialize(v8::Handle<v8::Object> target) {
+    void FileWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
         constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(FileWrap::New));
         constructor->InstanceTemplate()->SetInternalFieldCount(1);
@@ -18,7 +18,7 @@ namespace node_osmium {
         target->Set(symbol_File, constructor->GetFunction());
     }
 
-    v8::Handle<v8::Value> FileWrap::New(const v8::Arguments& info) {
+    v8::Local<v8::Value> FileWrap::New(const v8::Arguments& info) {
         Nan::HandleScope scope;
 
         if (!info.IsConstructCall()) {

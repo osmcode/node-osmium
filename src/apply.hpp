@@ -5,7 +5,7 @@
 
 namespace node_osmium {
 
-    v8::Handle<v8::Value> apply(const v8::Arguments& info);
+    v8::Local<v8::Value> apply(const v8::Arguments& info);
 
 } // namespace node_osmium
 

@@ -31,7 +31,7 @@ namespace node_osmium {
         static const Filter& get_filter(size_t id);
 
         Filter();
-        Filter(v8::Handle<v8::Object> object);
+        Filter(v8::Local<v8::Object> object);
 
         bool match(const osmium::OSMEntity& entity) const;
 

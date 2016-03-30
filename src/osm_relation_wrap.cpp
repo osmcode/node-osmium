@@ -6,7 +6,7 @@ namespace node_osmium {
 
     Nan::Persistent<v8::FunctionTemplate> OSMRelationWrap::constructor;
 
-    void OSMRelationWrap::Initialize(v8::Handle<v8::Object> target) {
+    void OSMRelationWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
         constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(OSMRelationWrap::New));
         constructor->Inherit(OSMWrappedObject::constructor);
@@ -15,11 +15,11 @@ namespace node_osmium {
         auto attributes = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
         set_accessor(constructor, "type", get_type, attributes);
         set_accessor(constructor, "members_count", get_members_count, attributes);
-        node::SetPrototypeMethod(constructor, "members", members);
+        Nan::SetPrototypeMethod(constructor, "members", members);
         target->Set(symbol_Relation, constructor->GetFunction());
     }
 
-    v8::Handle<v8::Value> OSMRelationWrap::New(const v8::Arguments& info) {
+    v8::Local<v8::Value> OSMRelationWrap::New(const v8::Arguments& info) {
         if (info.Length() == 1 && info[0]->IsExternal()) {
             v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
             static_cast<OSMRelationWrap*>(ext->Value())->Wrap(info.This());
@@ -29,13 +29,13 @@ namespace node_osmium {
         }
     }
 
-    v8::Handle<v8::Value> OSMRelationWrap::get_members_count(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
+    v8::Local<v8::Value> OSMRelationWrap::get_members_count(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
         Nan::HandleScope scope;
         info.GetReturnValue().Set(Nan::New(wrapped(info.This()).members().size()));
         return;
     }
 
-    v8::Handle<v8::Value> OSMRelationWrap::members(const v8::Arguments& info) {
+    v8::Local<v8::Value> OSMRelationWrap::members(const v8::Arguments& info) {
         Nan::HandleScope scope;
 
         const osmium::Relation& relation = wrapped(info.This());

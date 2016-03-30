@@ -72,7 +72,7 @@ namespace node_osmium {
     Nan::Persistent<v8::Object> the_Changeset;
 
     extern "C" {
-        static void start(v8::Handle<v8::Object> target) {
+        static void start(v8::Local<v8::Object> target) {
             Nan::HandleScope scope;
             module = Nan::Persistent<v8::Object>::New(target);
 

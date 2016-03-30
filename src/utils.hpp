@@ -34,11 +34,11 @@ namespace node_osmium {
     template<class T, class... Args>
     v8::Local<v8::Object> new_external(Args&&... info) {
         Nan::EscapableHandleScope scope;
-        v8::Handle<v8::Value> ext = Nan::New(new T(std::forward<Args>(info)...));
+        v8::Local<v8::Value> ext = Nan::New(new T(std::forward<Args>(info)...));
         return scope.Escape(T::constructor->GetFunction()->NewInstance(1, &ext));
     }
 
-    v8::Handle<v8::Value> create_js_box(const osmium::Box& box);
+    v8::Local<v8::Value> create_js_box(const osmium::Box& box);
 
     osmium::osm_entity_bits::type object_to_entity_bits(v8::Local<v8::Object> options);
 

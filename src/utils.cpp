@@ -9,7 +9,7 @@ namespace node_osmium {
 
     extern Nan::Persistent<v8::Object> module;
 
-    v8::Handle<v8::Value> create_js_box(const osmium::Box& box) {
+    v8::Local<v8::Value> create_js_box(const osmium::Box& box) {
         Nan::HandleScope scope;
 
         if (!box.valid()) {

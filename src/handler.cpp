@@ -20,14 +20,14 @@ namespace node_osmium {
     Nan::Persistent<v8::FunctionTemplate> JSHandler::constructor;
     Nan::Persistent<v8::String> JSHandler::symbol_tagged_nodes_only;
 
-    void JSHandler::Initialize(v8::Handle<v8::Object> target) {
+    void JSHandler::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
         constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(JSHandler::New));
         constructor->InstanceTemplate()->SetInternalFieldCount(1);
         constructor->SetClassName(symbol_Handler);
-        node::SetPrototypeMethod(constructor, "on", on);
-        node::SetPrototypeMethod(constructor, "options", options);
-        node::SetPrototypeMethod(constructor, "end", stream_end);
+        Nan::SetPrototypeMethod(constructor, "on", on);
+        Nan::SetPrototypeMethod(constructor, "options", options);
+        Nan::SetPrototypeMethod(constructor, "end", stream_end);
         target->Set(symbol_Handler, constructor->GetFunction());
 
         symbol_tagged_nodes_only = NODE_PSYMBOL("tagged_nodes_only");
@@ -62,7 +62,7 @@ namespace node_osmium {
         done_cb.Dispose();
     }
 
-    v8::Handle<v8::Value> JSHandler::New(const v8::Arguments& info) {
+    v8::Local<v8::Value> JSHandler::New(const v8::Arguments& info) {
         Nan::HandleScope scope;
         if (!info.IsConstructCall()) {
             return ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
@@ -82,7 +82,7 @@ namespace node_osmium {
         return;
     }
 
-    v8::Handle<v8::Value> JSHandler::options(const v8::Arguments& info) {
+    v8::Local<v8::Value> JSHandler::options(const v8::Arguments& info) {
         INSTANCE_CHECK(JSHandler, "handler", "options");
         Nan::HandleScope scope;
         if (info.Length() != 1 || !info[0]->IsObject()) {
@@ -98,7 +98,7 @@ namespace node_osmium {
         return;
     }
 
-    v8::Handle<v8::Value> JSHandler::on(const v8::Arguments& info) {
+    v8::Local<v8::Value> JSHandler::on(const v8::Arguments& info) {
         INSTANCE_CHECK(JSHandler, "handler", "on");
         Nan::HandleScope scope;
         if (info.Length() != 2 || !info[0]->IsString() || !info[1]->IsFunction()) {
@@ -256,7 +256,7 @@ namespace node_osmium {
         call_callback(done_cb);
     }
 
-    v8::Handle<v8::Value> JSHandler::stream_end(const v8::Arguments& info) {
+    v8::Local<v8::Value> JSHandler::stream_end(const v8::Arguments& info) {
         INSTANCE_CHECK(JSHandler, "handler", "end");
         Nan::HandleScope scope;
         if (info.Length() != 0) {

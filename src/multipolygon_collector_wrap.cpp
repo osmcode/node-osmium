@@ -13,17 +13,17 @@ namespace node_osmium {
 
     Nan::Persistent<v8::FunctionTemplate> MultipolygonCollectorWrap::constructor;
 
-    void MultipolygonCollectorWrap::Initialize(v8::Handle<v8::Object> target) {
+    void MultipolygonCollectorWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
         constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(MultipolygonCollectorWrap::New));
         constructor->InstanceTemplate()->SetInternalFieldCount(1);
         constructor->SetClassName(symbol_MultipolygonCollector);
-        node::SetPrototypeMethod(constructor, "read_relations", read_relations);
-        node::SetPrototypeMethod(constructor, "handler", handler);
+        Nan::SetPrototypeMethod(constructor, "read_relations", read_relations);
+        Nan::SetPrototypeMethod(constructor, "handler", handler);
         target->Set(symbol_MultipolygonCollector, constructor->GetFunction());
     }
 
-    v8::Handle<v8::Value> MultipolygonCollectorWrap::New(const v8::Arguments& info) {
+    v8::Local<v8::Value> MultipolygonCollectorWrap::New(const v8::Arguments& info) {
         Nan::HandleScope scope;
 
         if (!info.IsConstructCall()) {
@@ -46,7 +46,7 @@ namespace node_osmium {
         return;
     }
 
-    v8::Handle<v8::Value> MultipolygonCollectorWrap::read_relations(const v8::Arguments& info) {
+    v8::Local<v8::Value> MultipolygonCollectorWrap::read_relations(const v8::Arguments& info) {
         INSTANCE_CHECK(MultipolygonCollectorWrap, "MultipolygonCollector", "read_relations");
         Nan::HandleScope scope;
         if (info.Length() != 1 || !info[0]->IsObject()) {
@@ -71,7 +71,7 @@ namespace node_osmium {
         return;
     }
 
-    v8::Handle<v8::Value> MultipolygonCollectorWrap::handler(const v8::Arguments& info) {
+    v8::Local<v8::Value> MultipolygonCollectorWrap::handler(const v8::Arguments& info) {
         INSTANCE_CHECK(MultipolygonCollectorWrap, "MultipolygonCollector", "handler");
         Nan::HandleScope scope;
         if (info.Length() != 1 || !info[0]->IsObject() || !JSHandler::constructor->HasInstance(info[0]->ToObject())) {

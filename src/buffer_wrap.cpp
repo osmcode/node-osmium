@@ -19,19 +19,19 @@ namespace node_osmium {
 
     Nan::Persistent<v8::FunctionTemplate> BufferWrap::constructor;
 
-    void BufferWrap::Initialize(v8::Handle<v8::Object> target) {
+    void BufferWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
         constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(BufferWrap::New));
         constructor->InstanceTemplate()->SetInternalFieldCount(1);
         constructor->SetClassName(symbol_Buffer);
-        node::SetPrototypeMethod(constructor, "clear", clear);
-        node::SetPrototypeMethod(constructor, "next", next);
-        node::SetPrototypeMethod(constructor, "filter_point_in_time", filter_point_in_time);
-        node::SetPrototypeMethod(constructor, "create_node_buffer", create_node_buffer);
+        Nan::SetPrototypeMethod(constructor, "clear", clear);
+        Nan::SetPrototypeMethod(constructor, "next", next);
+        Nan::SetPrototypeMethod(constructor, "filter_point_in_time", filter_point_in_time);
+        Nan::SetPrototypeMethod(constructor, "create_node_buffer", create_node_buffer);
         target->Set(symbol_Buffer, constructor->GetFunction());
     }
 
-    v8::Handle<v8::Value> BufferWrap::New(const v8::Arguments& info) {
+    v8::Local<v8::Value> BufferWrap::New(const v8::Arguments& info) {
         if (info.Length() == 1 && info[0]->IsExternal()) {
             v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
             static_cast<BufferWrap*>(ext->Value())->Wrap(info.This());
@@ -58,7 +58,7 @@ namespace node_osmium {
         return ThrowException(v8::Exception::TypeError(Nan::New("osmium.Buffer takes a single argument, a node::Buffer").ToLocalChecked()));
     }
 
-    v8::Handle<v8::Value> BufferWrap::clear(const v8::Arguments& info) {
+    v8::Local<v8::Value> BufferWrap::clear(const v8::Arguments& info) {
         INSTANCE_CHECK(BufferWrap, "Buffer", "clear");
         BufferWrap* buffer_wrap = Nan::ObjectWrap::Unwrap<BufferWrap>(info.This());
         buffer_wrap->m_this = std::move(osmium::memory::Buffer());
@@ -66,7 +66,7 @@ namespace node_osmium {
         return Nan::Undefined();
     }
 
-    v8::Handle<v8::Value> BufferWrap::next(const v8::Arguments& info) {
+    v8::Local<v8::Value> BufferWrap::next(const v8::Arguments& info) {
         INSTANCE_CHECK(BufferWrap, "Buffer", "next");
         BufferWrap* buffer_wrap = Nan::ObjectWrap::Unwrap<BufferWrap>(info.This());
 
@@ -119,7 +119,7 @@ namespace node_osmium {
         return;
     }
 
-    v8::Handle<v8::Value> BufferWrap::filter_point_in_time(const v8::Arguments& info) {
+    v8::Local<v8::Value> BufferWrap::filter_point_in_time(const v8::Arguments& info) {
         INSTANCE_CHECK(BufferWrap, "Buffer", "filter_point_in_time");
         Nan::HandleScope scope;
         if (info.Length() != 1) {
@@ -155,7 +155,7 @@ namespace node_osmium {
         return;
     }
 
-    v8::Handle<v8::Value> BufferWrap::create_node_buffer(const v8::Arguments& info) {
+    v8::Local<v8::Value> BufferWrap::create_node_buffer(const v8::Arguments& info) {
         INSTANCE_CHECK(BufferWrap, "Buffer", "create_node_buffer");
         osmium::memory::Buffer& buffer = unwrap<BufferWrap>(info.This());
 
@@ -174,7 +174,7 @@ namespace node_osmium {
         v8::Local<v8::Function> buffer_constructor =
             v8::Local<v8::Function>::Cast(global->Get(Nan::New("Buffer").ToLocalChecked()));
 
-        v8::Handle<v8::Value> constructor_info[3] = {
+        v8::Local<v8::Value> constructor_info[3] = {
             slow_buffer->handle_,
             Nan::New(length),
             Nan::New(0)

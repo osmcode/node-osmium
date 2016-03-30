@@ -7,7 +7,7 @@ namespace node_osmium {
 
     Nan::Persistent<v8::FunctionTemplate> OSMEntityWrap::constructor;
 
-    void OSMEntityWrap::Initialize(v8::Handle<v8::Object> target) {
+    void OSMEntityWrap::Initialize(v8::Local<v8::Object> target) {
         Nan::HandleScope scope;
         constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(OSMEntityWrap::New));
         constructor->InstanceTemplate()->SetInternalFieldCount(1);
@@ -15,7 +15,7 @@ namespace node_osmium {
         target->Set(symbol_OSMEntity, constructor->GetFunction());
     }
 
-    v8::Handle<v8::Value> OSMEntityWrap::New(const v8::Arguments& info) {
+    v8::Local<v8::Value> OSMEntityWrap::New(const v8::Arguments& info) {
         if (info.Length() == 1 && info[0]->IsExternal()) {
             v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
             static_cast<OSMEntityWrap*>(ext->Value())->Wrap(info.This());

@@ -32,7 +32,7 @@ namespace node_osmium {
     public:
 
         static Nan::Persistent<v8::FunctionTemplate> constructor;
-        static void Initialize(v8::Handle<v8::Object> target);
+        static void Initialize(v8::Local<v8::Object> target);
         static NAN_METHOD(New);
 
         static const osmium::Node& wrapped(const v8::Local<v8::Object>& object) {

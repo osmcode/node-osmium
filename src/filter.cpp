@@ -18,7 +18,7 @@ namespace node_osmium {
         all_filters.emplace_back(new Filter());
     }
 
-    v8::Handle<v8::Value> Filter::register_filter(const v8::Arguments& info) {
+    v8::Local<v8::Value> Filter::register_filter(const v8::Arguments& info) {
         Nan::HandleScope scope;
 
         if (info.Length() == 1 && info[0]->IsObject()) {
@@ -72,7 +72,7 @@ namespace node_osmium {
         m_tagged_entity_bits(osmium::osm_entity_bits::nothing) {
     }
 
-    Filter::Filter(v8::Handle<v8::Object> object) :
+    Filter::Filter(v8::Local<v8::Object> object) :
         m_entity_bits(osmium::osm_entity_bits::nothing),
         m_tagged_entity_bits(osmium::osm_entity_bits::nothing) {
         setup_filter(v8::Array::Cast(*object->Get(NODE_PSYMBOL("_node"))),      osmium::item_type::node);
