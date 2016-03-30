@@ -20,8 +20,9 @@ namespace osmium {
 // This will crash any C++ function that expects a certain type of object. With
 // this macro we can check whether we have the right kind of object.
 #define INSTANCE_CHECK(cpp_class, js_class, method) \
-if (!cpp_class::constructor->HasInstance(info.This())) { \
-    return ThrowException(v8::Exception::TypeError(Nan::New("You can only call " method "() on an osmium." js_class ).ToLocalChecked())); \
+if (!Nan::New(cpp_class::constructor)->HasInstance(info.This())) { \
+    ThrowException(v8::Exception::TypeError(Nan::New("You can only call " method "() on an osmium." js_class ).ToLocalChecked())); \
+    return ; \
 }
 
 namespace node_osmium {
@@ -35,7 +36,7 @@ namespace node_osmium {
     v8::Local<v8::Object> new_external(Args&&... info) {
         Nan::EscapableHandleScope scope;
         v8::Local<v8::Value> ext = Nan::New(new T(std::forward<Args>(info)...));
-        return scope.Escape(T::constructor->GetFunction()->NewInstance(1, &ext));
+        return scope.Escape(Nan::New(T::constructor)->GetFunction()->NewInstance(1, &ext));
     }
 
     v8::Local<v8::Value> create_js_box(const osmium::Box& box);
