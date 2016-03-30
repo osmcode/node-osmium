@@ -36,7 +36,8 @@ namespace node_osmium {
             static_cast<OSMWayWrap*>(ext->Value())->Wrap(info.This());
             return info.This();
         } else {
-            return ThrowException(v8::Exception::TypeError(Nan::New("osmium.Way cannot be created in Javascript").ToLocalChecked()));
+            ThrowException(v8::Exception::TypeError(Nan::New("osmium.Way cannot be created in Javascript").ToLocalChecked()));
+            return;
         }
     }
 
@@ -53,7 +54,8 @@ namespace node_osmium {
             return;
 #endif
         } catch (std::runtime_error& e) {
-            return ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            return;
         }
     }
 
@@ -65,7 +67,8 @@ namespace node_osmium {
             info.GetReturnValue().Set(Nan::New(wkt).ToLocalChecked());
             return;
         } catch (std::runtime_error& e) {
-            return ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            return;
         }
     }
 
@@ -93,19 +96,22 @@ namespace node_osmium {
             }
             case 1: {
                 if (!info[0]->IsUint32()) {
-                    return ThrowException(v8::Exception::TypeError(Nan::New("call node_refs() without parameters or the index of the node you want").ToLocalChecked()));
+                    ThrowException(v8::Exception::TypeError(Nan::New("call node_refs() without parameters or the index of the node you want").ToLocalChecked()));
+                    return;
                 }
                 uint32_t n = info[0]->ToUint32()->Value();
                 if (n < way.nodes().size()) {
                     info.GetReturnValue().Set(Nan::New(way.nodes()[n].ref()));
                     return;
                 } else {
-                    return ThrowException(v8::Exception::RangeError(Nan::New("argument to node_refs() out of range").ToLocalChecked()));
+                    ThrowException(v8::Exception::RangeError(Nan::New("argument to node_refs() out of range").ToLocalChecked()));
+                    return;
                 }
             }
         }
 
-        return ThrowException(v8::Exception::TypeError(Nan::New("call node_refs() without parameters or the index of the node you want").ToLocalChecked()));
+        ThrowException(v8::Exception::TypeError(Nan::New("call node_refs() without parameters or the index of the node you want").ToLocalChecked()));
+        return;
     }
 
     v8::Local<v8::Value> OSMWayWrap::node_coordinates(const v8::Arguments& info) {
@@ -117,7 +123,8 @@ namespace node_osmium {
         const osmium::Way& way = wrapped(info.This());
 
         if (way.nodes().size() < 2) {
-            return ThrowException(v8::Exception::Error(Nan::New("Way has no geometry").ToLocalChecked()));
+            ThrowException(v8::Exception::Error(Nan::New("Way has no geometry").ToLocalChecked()));
+            return;
         }
 
         switch (info.Length()) {
@@ -136,17 +143,20 @@ namespace node_osmium {
                         }
                     }
                     if (i < 2) {
-                        return ThrowException(v8::Exception::Error(Nan::New("Way has no geometry").ToLocalChecked()));
+                        ThrowException(v8::Exception::Error(Nan::New("Way has no geometry").ToLocalChecked()));
+                        return;
                     }
                     info.GetReturnValue().Set(nodes);
                     return;
                 } catch (osmium::invalid_location&) {
-                    return ThrowException(v8::Exception::TypeError(Nan::New("location of at least one of the nodes in this way not set").ToLocalChecked()));
+                    ThrowException(v8::Exception::TypeError(Nan::New("location of at least one of the nodes in this way not set").ToLocalChecked()));
+                    return;
                 }
             }
             case 1: {
                 if (!info[0]->IsUint32()) {
-                    return ThrowException(v8::Exception::TypeError(Nan::New("call node_coordinates() without parameters or the index of the node you want").ToLocalChecked()));
+                    ThrowException(v8::Exception::TypeError(Nan::New("call node_coordinates() without parameters or the index of the node you want").ToLocalChecked()));
+                    return;
                 }
                 uint32_t n = info[0]->ToUint32()->Value();
                 if (n < way.nodes().size()) {
@@ -160,12 +170,14 @@ namespace node_osmium {
                         return;
                     }
                 } else {
-                    return ThrowException(v8::Exception::RangeError(Nan::New("argument to node_coordinates() out of range").ToLocalChecked()));
+                    ThrowException(v8::Exception::RangeError(Nan::New("argument to node_coordinates() out of range").ToLocalChecked()));
+                    return;
                 }
             }
         }
 
-        return ThrowException(v8::Exception::TypeError(Nan::New("call node_coordinates() without parameters or the index of the node you want").ToLocalChecked()));
+        ThrowException(v8::Exception::TypeError(Nan::New("call node_coordinates() without parameters or the index of the node you want").ToLocalChecked()));
+        return;
     }
 
 } // namespace node_osmium

@@ -25,7 +25,8 @@ namespace node_osmium {
             static_cast<OSMRelationWrap*>(ext->Value())->Wrap(info.This());
             return info.This();
         } else {
-            return ThrowException(v8::Exception::TypeError(Nan::New("osmium.Relation cannot be created in Javascript").ToLocalChecked()));
+            ThrowException(v8::Exception::TypeError(Nan::New("osmium.Relation cannot be created in Javascript").ToLocalChecked()));
+            return;
         }
     }
 
@@ -59,7 +60,8 @@ namespace node_osmium {
             }
             case 1: {
                 if (!info[0]->IsUint32()) {
-                    return ThrowException(v8::Exception::TypeError(Nan::New("call members() without parameters or the index of the member you want").ToLocalChecked()));
+                    ThrowException(v8::Exception::TypeError(Nan::New("call members() without parameters or the index of the member you want").ToLocalChecked()));
+                    return;
                 }
                 uint32_t n = info[0]->ToUint32()->Value();
                 if (n < relation.members().size()) {
@@ -75,12 +77,14 @@ namespace node_osmium {
                     info.GetReturnValue().Set(jsmember);
                     return;
                 } else {
-                    return ThrowException(v8::Exception::RangeError(Nan::New("argument to members() out of range").ToLocalChecked()));
+                    ThrowException(v8::Exception::RangeError(Nan::New("argument to members() out of range").ToLocalChecked()));
+                    return;
                 }
             }
         }
 
-        return ThrowException(v8::Exception::TypeError(Nan::New("call members() without parameters or the index of the member you want").ToLocalChecked()));
+        ThrowException(v8::Exception::TypeError(Nan::New("call members() without parameters or the index of the member you want").ToLocalChecked()));
+        return;
     }
 
 } // namespace node_osmium

@@ -27,11 +27,13 @@ namespace node_osmium {
         Nan::HandleScope scope;
 
         if (!info.IsConstructCall()) {
-            return ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
+            ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
+            return;
         }
 
         if (info.Length() != 0) {
-            return ThrowException(v8::Exception::TypeError(Nan::New("MultipolygonCollector is constructed without arguments").ToLocalChecked()));
+            ThrowException(v8::Exception::TypeError(Nan::New("MultipolygonCollector is constructed without arguments").ToLocalChecked()));
+            return;
         }
 
         try {
@@ -39,7 +41,8 @@ namespace node_osmium {
             multipolygon_collector_wrap->Wrap(info.This());
             return info.This();
         } catch (const std::exception& e) {
-            return ThrowException(v8::Exception::TypeError(Nan::New(e.what())));
+            ThrowException(v8::Exception::TypeError(Nan::New(e.what())));
+            return;
         }
 
         info.GetReturnValue().Set(Nan::Undefined());
@@ -50,7 +53,8 @@ namespace node_osmium {
         INSTANCE_CHECK(MultipolygonCollectorWrap, "MultipolygonCollector", "read_relations");
         Nan::HandleScope scope;
         if (info.Length() != 1 || !info[0]->IsObject()) {
-            return ThrowException(v8::Exception::Error(Nan::New("call MultipolygonCollector.read_relation() with BasicReader or Buffer object").ToLocalChecked()));
+            ThrowException(v8::Exception::Error(Nan::New("call MultipolygonCollector.read_relation() with BasicReader or Buffer object").ToLocalChecked()));
+            return;
         }
         try {
             if (BasicReaderWrap::constructor->HasInstance(info[0]->ToObject())) {
@@ -60,12 +64,14 @@ namespace node_osmium {
                 osmium::memory::Buffer& buffer = unwrap<BufferWrap>(info[0]->ToObject());
                 unwrap<MultipolygonCollectorWrap>(info.This()).read_relations(buffer.begin(), buffer.end());
             } else {
-                return ThrowException(v8::Exception::Error(Nan::New("call MultipolygonCollector.read_relation() with BasicReader or Buffer object").ToLocalChecked()));
+                ThrowException(v8::Exception::Error(Nan::New("call MultipolygonCollector.read_relation() with BasicReader or Buffer object").ToLocalChecked()));
+                return;
             }
         } catch (const std::exception& e) {
             std::string msg("osmium error: ");
             msg += e.what();
-            return ThrowException(v8::Exception::Error(Nan::New(msg).ToLocalChecked()));
+            ThrowException(v8::Exception::Error(Nan::New(msg).ToLocalChecked()));
+            return;
         }
         info.GetReturnValue().Set(Nan::Undefined());
         return;
@@ -75,7 +81,8 @@ namespace node_osmium {
         INSTANCE_CHECK(MultipolygonCollectorWrap, "MultipolygonCollector", "handler");
         Nan::HandleScope scope;
         if (info.Length() != 1 || !info[0]->IsObject() || !JSHandler::constructor->HasInstance(info[0]->ToObject())) {
-            return ThrowException(v8::Exception::Error(Nan::New("call MultipolygonCollector.handler() with Handler object").ToLocalChecked()));
+            ThrowException(v8::Exception::Error(Nan::New("call MultipolygonCollector.handler() with Handler object").ToLocalChecked()));
+            return;
         }
         try {
             JSHandler& handler = unwrap<JSHandler>(info[0]->ToObject());
@@ -90,7 +97,8 @@ namespace node_osmium {
         } catch (const std::exception& e) {
             std::string msg("osmium error: ");
             msg += e.what();
-            return ThrowException(v8::Exception::Error(Nan::New(msg).ToLocalChecked()));
+            ThrowException(v8::Exception::Error(Nan::New(msg).ToLocalChecked()));
+            return;
         }
         info.GetReturnValue().Set(Nan::Undefined());
         return;

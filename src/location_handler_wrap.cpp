@@ -22,7 +22,8 @@ namespace node_osmium {
     v8::Local<v8::Value> LocationHandlerWrap::New(const v8::Arguments& info) {
         Nan::HandleScope scope;
         if (!info.IsConstructCall()) {
-            return ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
+            ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
+            return;
         }
 
         try {
@@ -31,10 +32,12 @@ namespace node_osmium {
                 location_handler_wrap = new LocationHandlerWrap("sparse_mem_array");
             } else {
                 if (info.Length() != 1) {
-                    return ThrowException(v8::Exception::TypeError(Nan::New("please provide a node cache type as string when creating a LocationHandler").ToLocalChecked()));
+                    ThrowException(v8::Exception::TypeError(Nan::New("please provide a node cache type as string when creating a LocationHandler").ToLocalChecked()));
+                    return;
                 }
                 if (!info[0]->IsString()) {
-                    return ThrowException(v8::Exception::TypeError(Nan::New("please provide a node cache type as string when creating a LocationHandler").ToLocalChecked()));
+                    ThrowException(v8::Exception::TypeError(Nan::New("please provide a node cache type as string when creating a LocationHandler").ToLocalChecked()));
+                    return;
                 }
                 v8::String::Utf8Value index_map_type { info[0] };
                 location_handler_wrap = new LocationHandlerWrap(*index_map_type);
@@ -42,7 +45,8 @@ namespace node_osmium {
             location_handler_wrap->Wrap(info.This());
             return info.This();
         } catch (const std::exception& ex) {
-            return ThrowException(v8::Exception::TypeError(Nan::New(ex.what())));
+            ThrowException(v8::Exception::TypeError(Nan::New(ex.what())));
+            return;
         }
     }
 

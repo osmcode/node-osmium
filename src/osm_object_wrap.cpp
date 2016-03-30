@@ -30,7 +30,8 @@ namespace node_osmium {
             static_cast<OSMWrappedObject*>(ext->Value())->Wrap(info.This());
             return info.This();
         } else {
-            return ThrowException(v8::Exception::TypeError(Nan::New("osmium.OSMObject cannot be created in Javascript").ToLocalChecked()));
+            ThrowException(v8::Exception::TypeError(Nan::New("osmium.OSMObject cannot be created in Javascript").ToLocalChecked()));
+            return;
         }
     }
 

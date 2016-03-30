@@ -23,7 +23,8 @@ namespace node_osmium {
             static_cast<MultipolygonHandlerWrap*>(ext->Value())->Wrap(info.This());
             return info.This();
         } else {
-            return ThrowException(v8::Exception::TypeError(Nan::New("osmium.MultipolygonHandler cannot be created in Javascript").ToLocalChecked()));
+            ThrowException(v8::Exception::TypeError(Nan::New("osmium.MultipolygonHandler cannot be created in Javascript").ToLocalChecked()));
+            return;
         }
     }
 
@@ -31,7 +32,8 @@ namespace node_osmium {
         INSTANCE_CHECK(MultipolygonHandlerWrap, "MultipolygonHandler", "end");
         Nan::HandleScope scope;
         if (info.Length() != 0) {
-            return ThrowException(v8::Exception::TypeError(Nan::New("end() doesn't take any parameters").ToLocalChecked()));
+            ThrowException(v8::Exception::TypeError(Nan::New("end() doesn't take any parameters").ToLocalChecked()));
+            return;
         }
 
         auto& handler = unwrap<MultipolygonHandlerWrap>(info.This());

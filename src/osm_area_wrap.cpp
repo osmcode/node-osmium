@@ -36,7 +36,8 @@ namespace node_osmium {
             static_cast<OSMAreaWrap*>(ext->Value())->Wrap(info.This());
             return info.This();
         } else {
-            return ThrowException(v8::Exception::TypeError(Nan::New("osmium.Area cannot be created in Javascript").ToLocalChecked()));
+            ThrowException(v8::Exception::TypeError(Nan::New("osmium.Area cannot be created in Javascript").ToLocalChecked()));
+            return;
         }
     }
 
@@ -64,7 +65,8 @@ namespace node_osmium {
             return;
 #endif
         } catch (std::runtime_error& e) {
-            return ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            return;
         }
     }
 
@@ -77,7 +79,8 @@ namespace node_osmium {
             info.GetReturnValue().Set(Nan::New(wkt).ToLocalChecked());
             return;
         } catch (std::runtime_error& e) {
-            return ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            ThrowException(v8::Exception::Error(Nan::New(e.what())));
+            return;
         }
     }
 
@@ -106,7 +109,8 @@ namespace node_osmium {
         auto num_rings = area.num_rings();
 
         if (num_rings.first == 0) {
-            return ThrowException(v8::Exception::Error(Nan::New("Area has no geometry").ToLocalChecked()));
+            ThrowException(v8::Exception::Error(Nan::New("Area has no geometry").ToLocalChecked()));
+            return;
         }
 
         v8::Local<v8::Array> rings = Nan::New(num_rings.first);

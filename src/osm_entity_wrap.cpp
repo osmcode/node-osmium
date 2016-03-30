@@ -21,7 +21,8 @@ namespace node_osmium {
             static_cast<OSMEntityWrap*>(ext->Value())->Wrap(info.This());
             return info.This();
         } else {
-            return ThrowException(v8::Exception::TypeError(Nan::New("osmium.OSMEntity cannot be created in Javascript").ToLocalChecked()));
+            ThrowException(v8::Exception::TypeError(Nan::New("osmium.OSMEntity cannot be created in Javascript").ToLocalChecked()));
+            return;
         }
     }
 

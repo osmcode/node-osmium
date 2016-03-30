@@ -30,7 +30,8 @@ namespace node_osmium {
             return;
         }
 
-        return ThrowException(v8::Exception::Error(Nan::New("registering filter failed").ToLocalChecked()));
+        ThrowException(v8::Exception::Error(Nan::New("registering filter failed").ToLocalChecked()));
+        return;
     }
 
     const Filter& Filter::get_filter(size_t id) {

@@ -38,16 +38,19 @@ namespace node_osmium {
     v8::Local<v8::Value> BasicReaderWrap::New(const v8::Arguments& info) {
         Nan::HandleScope scope;
         if (!info.IsConstructCall()) {
-            return ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
+            ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
+            return;
         }
         if (info.Length() < 1 || info.Length() > 2) {
-            return ThrowException(v8::Exception::TypeError(Nan::New("please provide a File object or string for the first argument and optional options v8::Object when creating a BasicReader").ToLocalChecked()));
+            ThrowException(v8::Exception::TypeError(Nan::New("please provide a File object or string for the first argument and optional options v8::Object when creating a BasicReader").ToLocalChecked()));
+            return;
         }
         try {
             osmium::osm_entity_bits::type read_which_entities = osmium::osm_entity_bits::all;
             if (info.Length() == 2) {
                 if (!info[1]->IsObject()) {
-                    return ThrowException(v8::Exception::TypeError(Nan::New("Second argument to BasicReader constructor must be object").ToLocalChecked()));
+                    ThrowException(v8::Exception::TypeError(Nan::New("Second argument to BasicReader constructor must be object").ToLocalChecked()));
+                    return;
                 }
                 read_which_entities = object_to_entity_bits(info[1]->ToObject());
             }
@@ -63,10 +66,12 @@ namespace node_osmium {
                 reader_wrap->Wrap(info.This());
                 return info.This();
             } else {
-                return ThrowException(v8::Exception::TypeError(Nan::New("please provide a File object or string for the first argument when creating a BasicReader").ToLocalChecked()));
+                ThrowException(v8::Exception::TypeError(Nan::New("please provide a File object or string for the first argument when creating a BasicReader").ToLocalChecked()));
+                return;
             }
         } catch (const std::exception& ex) {
-            return ThrowException(v8::Exception::TypeError(Nan::New(ex.what())));
+            ThrowException(v8::Exception::TypeError(Nan::New(ex.what())));
+            return;
         }
         info.GetReturnValue().Set(Nan::Undefined());
         return;
@@ -99,7 +104,8 @@ namespace node_osmium {
         } catch (const std::exception& e) {
             std::string msg("osmium error: ");
             msg += e.what();
-            return ThrowException(v8::Exception::Error(Nan::New(msg).ToLocalChecked()));
+            ThrowException(v8::Exception::Error(Nan::New(msg).ToLocalChecked()));
+            return;
         }
         info.GetReturnValue().Set(Nan::Undefined());
         return;
@@ -117,7 +123,8 @@ namespace node_osmium {
         } catch (const std::exception& e) {
             std::string msg("osmium error: ");
             msg += e.what();
-            return ThrowException(v8::Exception::Error(Nan::New(msg).ToLocalChecked()));
+            ThrowException(v8::Exception::Error(Nan::New(msg).ToLocalChecked()));
+            return;
         }
         info.GetReturnValue().Set(Nan::Undefined());
         return;
@@ -140,7 +147,8 @@ namespace node_osmium {
         } catch (const std::exception& e) {
             std::string msg("osmium error: ");
             msg += e.what();
-            return ThrowException(v8::Exception::Error(Nan::New(msg).ToLocalChecked()));
+            ThrowException(v8::Exception::Error(Nan::New(msg).ToLocalChecked()));
+            return;
         }
         info.GetReturnValue().Set(Nan::Undefined());
         return;
