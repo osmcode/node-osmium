@@ -24,6 +24,7 @@ addons:
      - llvm-toolchain-precise-3.5
     packages:
      - clang-3.5
+     - llvm-3.5-dev
 
 cache:
   directories:
@@ -35,14 +36,14 @@ matrix:
      - os: linux
        compiler: clang
        env: NODE_VERSION="0.10.40"
+     # Coverage
+     - os: linux
+       compiler: clang
+       env: NODE_VERSION="0.10.40" COVERAGE=true
      # OS X
      - os: osx
        compiler: clang
        env: NODE_VERSION="0.10.40"
-     # Coverage
-     - os: osx
-       compiler: clang
-       env: NODE_VERSION="0.10.40" COVERAGE=true
 
 env:
   global:
@@ -64,7 +65,7 @@ before_install:
 
 install:
 - source ./bootstrap.sh
-- git clone --depth=1 --branch=v2.6.0 https://github.com/osmcode/libosmium.git ../libosmium
+- git clone --depth=1 --branch=v2.6.1 https://github.com/osmcode/libosmium.git ../libosmium
 
 before_script:
 - if [[ ${COVERAGE} == true ]]; then
