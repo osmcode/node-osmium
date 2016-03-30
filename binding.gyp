@@ -30,7 +30,8 @@
       ],
       "include_dirs": [
           "../libosmium/include/",
-          "./src/"
+          "./src/",
+          "<!(node -e \"require('nan')\")"
       ],
       "defines": [
         "_LARGEFILE_SOURCE",

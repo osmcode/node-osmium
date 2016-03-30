@@ -1,8 +1,4 @@
 
-// node
-#include <node_buffer.h>
-#include <node_version.h>
-
 // osmium
 #include <osmium/geom/wkb.hpp>
 #include <osmium/geom/wkt.hpp>

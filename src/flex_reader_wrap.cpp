@@ -4,9 +4,6 @@
 #include <string>
 #include <vector>
 
-// node
-#include <node.h>
-
 // node-osmium
 #include "node_osmium.hpp"
 #include "buffer_wrap.hpp"

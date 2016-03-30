@@ -1,7 +1,4 @@
 
-// node
-#include <node.h>
-
 // osmium
 #include <osmium/geom/wkb.hpp>
 #include <osmium/geom/wkt.hpp>

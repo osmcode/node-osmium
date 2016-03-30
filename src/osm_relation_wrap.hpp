@@ -1,8 +1,7 @@
 #ifndef OSM_RELATION_WRAP_HPP
 #define OSM_RELATION_WRAP_HPP
 
-// v8/node
-#include "include_v8.hpp"
+#include "include_nan.hpp"
 
 // osmium
 #include <osmium/osm/relation.hpp>

@@ -1,9 +1,7 @@
 #ifndef MULTIPOLYGON_HANDLER_WRAP_HPP
 #define MULTIPOLYGON_HANDLER_WRAP_HPP
 
-// v8/node
-#include "include_v8.hpp"
-#include <node_object_wrap.h>
+#include "include_nan.hpp"
 
 // osmium
 #include <osmium/area/multipolygon_collector.hpp>

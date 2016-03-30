@@ -1,9 +1,6 @@
 
 #include <algorithm>
 
-// node
-#include <node_buffer.h>
-
 // osmium
 #include <osmium/diff_iterator.hpp>
 

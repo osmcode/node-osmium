@@ -1,9 +1,7 @@
 #ifndef OSM_ENTITY_WRAP_HPP
 #define OSM_ENTITY_WRAP_HPP
 
-// v8/node
-#include "include_v8.hpp"
-#include <node_object_wrap.h>
+#include "include_nan.hpp"
 
 // osmium
 namespace osmium {

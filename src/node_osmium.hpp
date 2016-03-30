@@ -1,7 +1,7 @@
 #ifndef NODE_OSMIUM
 #define NODE_OSMIUM
 
-#include "include_v8.hpp"
+#include "include_nan.hpp"
 
 namespace node_osmium {
 

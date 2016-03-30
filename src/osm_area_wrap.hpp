@@ -1,8 +1,7 @@
 #ifndef OSM_AREA_WRAP_HPP
 #define OSM_AREA_WRAP_HPP
 
-// v8/node
-#include "include_v8.hpp"
+#include "include_nan.hpp"
 
 // osmium
 #include <osmium/osm/area.hpp>

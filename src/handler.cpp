@@ -2,10 +2,6 @@
 // c++
 #include <string>
 
-// node
-#include <node.h>
-#include <node_object_wrap.h>
-
 // osmium
 #include <osmium/osm/object.hpp>
 

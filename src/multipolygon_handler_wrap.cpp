@@ -1,7 +1,4 @@
 
-// node
-#include <node_buffer.h>
-
 // node-osmium
 #include "node_osmium.hpp"
 #include "multipolygon_handler_wrap.hpp"

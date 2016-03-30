@@ -4,9 +4,7 @@
 // c++
 #include <memory>
 
-// v8/node
-#include "include_v8.hpp"
-#include <node_object_wrap.h>
+#include "include_nan.hpp"
 
 // osmium
 #include <osmium/memory/buffer.hpp>

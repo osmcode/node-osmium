@@ -31,7 +31,8 @@
     "package_name": "{node_abi}-{platform}-{arch}.tar.gz"
   },
   "dependencies": {
-    "node-pre-gyp": "~0.6.6"
+    "nan": "2.2.1",
+    "node-pre-gyp": "~0.6.24"
   },
   "bundledDependencies": [
     "node-pre-gyp"

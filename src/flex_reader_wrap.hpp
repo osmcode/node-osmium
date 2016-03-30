@@ -1,9 +1,7 @@
 #ifndef FLEX_READER_WRAP_HPP
 #define FLEX_READER_WRAP_HPP
 
-// v8/node
-#include "include_v8.hpp"
-#include <node_object_wrap.h>
+#include "include_nan.hpp"
 
 // osmium
 #include <osmium/io/any_input.hpp>

@@ -1,8 +1,7 @@
 #ifndef APPLY_HPP
 #define APPLY_HPP
 
-// v8/node
-#include "include_v8.hpp"
+#include "include_nan.hpp"
 
 namespace node_osmium {
 

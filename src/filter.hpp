@@ -2,8 +2,7 @@
 // c++
 #include <memory>
 
-// nodejs
-#include <node.h>
+#include "include_nan.hpp"
 
 // osmium
 #include <osmium/osm/entity_bits.hpp>

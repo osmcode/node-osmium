@@ -2,9 +2,8 @@
 // boost
 #include <boost/variant.hpp>
 
-// node
-#include <node.h>
-#include <node_buffer.h>
+// nan
+#include <nan.h>
 
 // osmium
 #include <osmium/io/input_iterator.hpp>

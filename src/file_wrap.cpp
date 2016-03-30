@@ -2,9 +2,6 @@
 // c++
 #include <exception>
 
-// node
-#include <node_buffer.h>
-
 // node-osmium
 #include "node_osmium.hpp"
 #include "file_wrap.hpp"

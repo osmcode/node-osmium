@@ -1,7 +1,4 @@
 
-// node
-#include <node.h>
-
 // node-osmium
 #include "osm_relation_wrap.hpp"
 
