@@ -6,11 +6,11 @@
 
 namespace node_osmium {
 
-    v8::Persistent<v8::FunctionTemplate> LocationHandlerWrap::constructor;
+    Nan::Persistent<v8::FunctionTemplate> LocationHandlerWrap::constructor;
 
     void LocationHandlerWrap::Initialize(v8::Handle<v8::Object> target) {
-        v8::HandleScope scope;
-        constructor = v8::Persistent<v8::FunctionTemplate>::New(v8::FunctionTemplate::New(LocationHandlerWrap::New));
+        Nan::HandleScope scope;
+        constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(LocationHandlerWrap::New));
         constructor->InstanceTemplate()->SetInternalFieldCount(1);
         constructor->SetClassName(symbol_LocationHandler);
         node::SetPrototypeMethod(constructor, "clear", clear);
@@ -19,49 +19,51 @@ namespace node_osmium {
         target->Set(symbol_LocationHandler, constructor->GetFunction());
     }
 
-    v8::Handle<v8::Value> LocationHandlerWrap::New(const v8::Arguments& args) {
-        v8::HandleScope scope;
-        if (!args.IsConstructCall()) {
-            return ThrowException(v8::Exception::Error(v8::String::New("Cannot call constructor as function, you need to use 'new' keyword")));
+    v8::Handle<v8::Value> LocationHandlerWrap::New(const v8::Arguments& info) {
+        Nan::HandleScope scope;
+        if (!info.IsConstructCall()) {
+            return ThrowException(v8::Exception::Error(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked()));
         }
 
         try {
             LocationHandlerWrap* location_handler_wrap;
-            if (args.Length() == 0) {
+            if (info.Length() == 0) {
                 location_handler_wrap = new LocationHandlerWrap("sparse_mem_array");
             } else {
-                if (args.Length() != 1) {
-                    return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a node cache type as string when creating a LocationHandler")));
+                if (info.Length() != 1) {
+                    return ThrowException(v8::Exception::TypeError(Nan::New("please provide a node cache type as string when creating a LocationHandler").ToLocalChecked()));
                 }
-                if (!args[0]->IsString()) {
-                    return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a node cache type as string when creating a LocationHandler")));
+                if (!info[0]->IsString()) {
+                    return ThrowException(v8::Exception::TypeError(Nan::New("please provide a node cache type as string when creating a LocationHandler").ToLocalChecked()));
                 }
-                v8::String::Utf8Value index_map_type { args[0] };
+                v8::String::Utf8Value index_map_type { info[0] };
                 location_handler_wrap = new LocationHandlerWrap(*index_map_type);
             }
-            location_handler_wrap->Wrap(args.This());
-            return args.This();
+            location_handler_wrap->Wrap(info.This());
+            return info.This();
         } catch (const std::exception& ex) {
-            return ThrowException(v8::Exception::TypeError(v8::String::New(ex.what())));
+            return ThrowException(v8::Exception::TypeError(Nan::New(ex.what())));
         }
     }
 
-    v8::Handle<v8::Value> LocationHandlerWrap::ignoreErrors(const v8::Arguments& args) {
+    v8::Handle<v8::Value> LocationHandlerWrap::ignoreErrors(const v8::Arguments& info) {
         INSTANCE_CHECK(LocationHandlerWrap, "location_handler", "ignoreErrors");
-        v8::HandleScope scope;
-        unwrap<LocationHandlerWrap>(args.This()).ignore_errors();
-        return scope.Close(v8::Undefined());
+        Nan::HandleScope scope;
+        unwrap<LocationHandlerWrap>(info.This()).ignore_errors();
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
-    v8::Handle<v8::Value> LocationHandlerWrap::clear(const v8::Arguments& args) {
+    v8::Handle<v8::Value> LocationHandlerWrap::clear(const v8::Arguments& info) {
         INSTANCE_CHECK(LocationHandlerWrap, "clear", "clear");
-        v8::HandleScope scope;
-        unwrap<LocationHandlerWrap>(args.This()).clear();
-        return scope.Close(v8::Undefined());
+        Nan::HandleScope scope;
+        unwrap<LocationHandlerWrap>(info.This()).clear();
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
-    v8::Handle<v8::Value> LocationHandlerWrap::stream_end(const v8::Arguments& args) {
-        return v8::Undefined();
+    v8::Handle<v8::Value> LocationHandlerWrap::stream_end(const v8::Arguments& info) {
+        return Nan::Undefined();
     }
 
 } // namespace node_osmium

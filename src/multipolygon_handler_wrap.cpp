@@ -6,38 +6,39 @@
 
 namespace node_osmium {
 
-    v8::Persistent<v8::FunctionTemplate> MultipolygonHandlerWrap::constructor;
+    Nan::Persistent<v8::FunctionTemplate> MultipolygonHandlerWrap::constructor;
 
     void MultipolygonHandlerWrap::Initialize(v8::Handle<v8::Object> target) {
-        v8::HandleScope scope;
-        constructor = v8::Persistent<v8::FunctionTemplate>::New(v8::FunctionTemplate::New(MultipolygonHandlerWrap::New));
+        Nan::HandleScope scope;
+        constructor = Nan::Persistent<v8::FunctionTemplate>::New(Nan::New(MultipolygonHandlerWrap::New));
         constructor->InstanceTemplate()->SetInternalFieldCount(1);
         constructor->SetClassName(symbol_MultipolygonHandler);
         node::SetPrototypeMethod(constructor, "end", stream_end);
         target->Set(symbol_MultipolygonHandler, constructor->GetFunction());
     }
 
-    v8::Handle<v8::Value> MultipolygonHandlerWrap::New(const v8::Arguments& args) {
-        if (args.Length() == 1 && args[0]->IsExternal()) {
-            v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(args[0]);
-            static_cast<MultipolygonHandlerWrap*>(ext->Value())->Wrap(args.This());
-            return args.This();
+    v8::Handle<v8::Value> MultipolygonHandlerWrap::New(const v8::Arguments& info) {
+        if (info.Length() == 1 && info[0]->IsExternal()) {
+            v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
+            static_cast<MultipolygonHandlerWrap*>(ext->Value())->Wrap(info.This());
+            return info.This();
         } else {
-            return ThrowException(v8::Exception::TypeError(v8::String::New("osmium.MultipolygonHandler cannot be created in Javascript")));
+            return ThrowException(v8::Exception::TypeError(Nan::New("osmium.MultipolygonHandler cannot be created in Javascript").ToLocalChecked()));
         }
     }
 
-    v8::Handle<v8::Value> MultipolygonHandlerWrap::stream_end(const v8::Arguments& args) {
+    v8::Handle<v8::Value> MultipolygonHandlerWrap::stream_end(const v8::Arguments& info) {
         INSTANCE_CHECK(MultipolygonHandlerWrap, "MultipolygonHandler", "end");
-        v8::HandleScope scope;
-        if (args.Length() != 0) {
-            return ThrowException(v8::Exception::TypeError(v8::String::New("end() doesn't take any parameters")));
+        Nan::HandleScope scope;
+        if (info.Length() != 0) {
+            return ThrowException(v8::Exception::TypeError(Nan::New("end() doesn't take any parameters").ToLocalChecked()));
         }
 
-        auto& handler = unwrap<MultipolygonHandlerWrap>(args.This());
+        auto& handler = unwrap<MultipolygonHandlerWrap>(info.This());
         handler.flush();
 
-        return scope.Close(v8::Undefined());
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
 } // namespace node_osmium

@@ -9,21 +9,21 @@
 
 namespace node_osmium {
 
-    class MultipolygonHandlerWrap : public node::ObjectWrap {
+    class MultipolygonHandlerWrap : public Nan::ObjectWrap {
 
         typedef osmium::area::MultipolygonCollector<osmium::area::Assembler>::HandlerPass2 handler_type;
         handler_type m_handler;
 
-        static v8::Handle<v8::Value> stream_end(const v8::Arguments& args);
+        static NAN_METHOD(stream_end);
 
     public:
 
-        static v8::Persistent<v8::FunctionTemplate> constructor;
+        static Nan::Persistent<v8::FunctionTemplate> constructor;
         static void Initialize(v8::Handle<v8::Object> target);
-        static v8::Handle<v8::Value> New(const v8::Arguments& args);
+        static NAN_METHOD(New);
 
         MultipolygonHandlerWrap(handler_type& handler) :
-            node::ObjectWrap(),
+            Nan::ObjectWrap(),
             m_handler(handler) {
         }
 

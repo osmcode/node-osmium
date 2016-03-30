@@ -27,7 +27,7 @@ namespace node_osmium {
     public:
 
         static void init_filters();
-        static v8::Handle<v8::Value> register_filter(const v8::Arguments& args);
+        static NAN_METHOD(register_filter);
         static const Filter& get_filter(size_t id);
 
         Filter();

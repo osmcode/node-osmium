@@ -16,24 +16,24 @@ namespace node_osmium {
     typedef osmium::index::map::Map<osmium::unsigned_object_id_type, osmium::Location> index_type;
     typedef osmium::handler::NodeLocationsForWays<index_type> location_handler_type;
 
-    class LocationHandlerWrap : public node::ObjectWrap {
+    class LocationHandlerWrap : public Nan::ObjectWrap {
 
         std::unique_ptr<index_type> m_index;
 
         std::unique_ptr<location_handler_type> m_this;
 
-        static v8::Handle<v8::Value> clear(const v8::Arguments& args);
-        static v8::Handle<v8::Value> ignoreErrors(const v8::Arguments& args);
-        static v8::Handle<v8::Value> stream_end(const v8::Arguments& args);
+        static NAN_METHOD(clear);
+        static NAN_METHOD(ignoreErrors);
+        static NAN_METHOD(stream_end);
 
     public:
 
-        static v8::Persistent<v8::FunctionTemplate> constructor;
+        static Nan::Persistent<v8::FunctionTemplate> constructor;
         static void Initialize(v8::Handle<v8::Object> target);
-        static v8::Handle<v8::Value> New(const v8::Arguments& args);
+        static NAN_METHOD(New);
 
         LocationHandlerWrap(const std::string& cache_type) :
-            ObjectWrap(),
+            Nan::ObjectWrap(),
             m_index(osmium::index::MapFactory<osmium::unsigned_object_id_type, osmium::Location>::instance().create_map(cache_type)),
             m_this(new location_handler_type(*m_index)) {
         }

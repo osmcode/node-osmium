@@ -9,22 +9,22 @@
 
 namespace node_osmium {
 
-    class MultipolygonCollectorWrap : public node::ObjectWrap {
+    class MultipolygonCollectorWrap : public Nan::ObjectWrap {
 
-        static v8::Handle<v8::Value> read_relations(const v8::Arguments& args);
-        static v8::Handle<v8::Value> handler(const v8::Arguments& args);
+        static NAN_METHOD(read_relations);
+        static NAN_METHOD(handler);
 
         osmium::area::Assembler::config_type m_assembler_config;
         osmium::area::MultipolygonCollector<osmium::area::Assembler> m_collector;
 
     public:
 
-        static v8::Persistent<v8::FunctionTemplate> constructor;
+        static Nan::Persistent<v8::FunctionTemplate> constructor;
         static void Initialize(v8::Handle<v8::Object> target);
-        static v8::Handle<v8::Value> New(const v8::Arguments& args);
+        static NAN_METHOD(New);
 
         MultipolygonCollectorWrap() :
-            node::ObjectWrap(),
+            Nan::ObjectWrap(),
             m_assembler_config(),
             m_collector(m_assembler_config) {
         }

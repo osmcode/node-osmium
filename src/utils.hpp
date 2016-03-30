@@ -20,22 +20,22 @@ namespace osmium {
 // This will crash any C++ function that expects a certain type of object. With
 // this macro we can check whether we have the right kind of object.
 #define INSTANCE_CHECK(cpp_class, js_class, method) \
-if (!cpp_class::constructor->HasInstance(args.This())) { \
-    return ThrowException(v8::Exception::TypeError(v8::String::New("You can only call " method "() on an osmium." js_class ))); \
+if (!cpp_class::constructor->HasInstance(info.This())) { \
+    return ThrowException(v8::Exception::TypeError(Nan::New("You can only call " method "() on an osmium." js_class ).ToLocalChecked())); \
 }
 
 namespace node_osmium {
 
     template<class T>
-    auto unwrap(const v8::Local<v8::Object>& object) -> decltype(node::ObjectWrap::Unwrap<T>(object)->get()) {
-        return node::ObjectWrap::Unwrap<T>(object)->get();
+    auto unwrap(const v8::Local<v8::Object>& object) -> decltype(Nan::ObjectWrap::Unwrap<T>(object)->get()) {
+        return Nan::ObjectWrap::Unwrap<T>(object)->get();
     }
 
     template<class T, class... Args>
-    v8::Local<v8::Object> new_external(Args&&... args) {
-        v8::HandleScope scope;
-        v8::Handle<v8::Value> ext = v8::External::New(new T(std::forward<Args>(args)...));
-        return scope.Close(T::constructor->GetFunction()->NewInstance(1, &ext));
+    v8::Local<v8::Object> new_external(Args&&... info) {
+        Nan::EscapableHandleScope scope;
+        v8::Handle<v8::Value> ext = Nan::New(new T(std::forward<Args>(info)...));
+        return scope.Escape(T::constructor->GetFunction()->NewInstance(1, &ext));
     }
 
     v8::Handle<v8::Value> create_js_box(const osmium::Box& box);

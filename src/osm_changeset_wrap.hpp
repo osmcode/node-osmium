@@ -18,26 +18,26 @@ namespace node_osmium {
 
     class OSMChangesetWrap : public OSMEntityWrap {
 
-        static v8::Handle<v8::Value> get_type(v8::Local<v8::String> property, const v8::AccessorInfo& info) {
-            return symbol_changeset;
+        static NAN_GETTER(get_type) {
+            info.GetReturnValue().Set(Nan::New(symbol_changeset));
         }
 
-        static v8::Handle<v8::Value> get_id(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_uid(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_user(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_num_changes(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_created_at(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_closed_at(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_open(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_closed(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_bounds(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> tags(const v8::Arguments& args);
+        static NAN_GETTER(get_id);
+        static NAN_GETTER(get_uid);
+        static NAN_GETTER(get_user);
+        static NAN_GETTER(get_num_changes);
+        static NAN_GETTER(get_created_at);
+        static NAN_GETTER(get_closed_at);
+        static NAN_GETTER(get_open);
+        static NAN_GETTER(get_closed);
+        static NAN_GETTER(get_bounds);
+        static NAN_METHOD(tags);
 
     public:
 
-        static v8::Persistent<v8::FunctionTemplate> constructor;
+        static Nan::Persistent<v8::FunctionTemplate> constructor;
         static void Initialize(v8::Handle<v8::Object> target);
-        static v8::Handle<v8::Value> New(const v8::Arguments& args);
+        static NAN_METHOD(New);
 
         static const osmium::Changeset& wrapped(const v8::Local<v8::Object>& object) {
             return static_cast<const osmium::Changeset&>(unwrap<OSMEntityWrap>(object));

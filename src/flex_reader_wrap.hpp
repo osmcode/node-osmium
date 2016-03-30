@@ -17,23 +17,23 @@ namespace node_osmium {
 
     typedef osmium::experimental::FlexReader<location_handler_type> flex_reader_type;
 
-    class FlexReaderWrap : public node::ObjectWrap {
+    class FlexReaderWrap : public Nan::ObjectWrap {
 
-        static v8::Handle<v8::Value> header(const v8::Arguments& args);
-        static v8::Handle<v8::Value> close(const v8::Arguments& args);
-        static v8::Handle<v8::Value> read(const v8::Arguments& args);
-        static v8::Handle<v8::Value> read_all(const v8::Arguments& args);
+        static NAN_METHOD(header);
+        static NAN_METHOD(close);
+        static NAN_METHOD(read);
+        static NAN_METHOD(read_all);
 
         flex_reader_type m_this;
 
     public:
 
-        static v8::Persistent<v8::FunctionTemplate> constructor;
+        static Nan::Persistent<v8::FunctionTemplate> constructor;
         static void Initialize(v8::Handle<v8::Object> target);
-        static v8::Handle<v8::Value> New(const v8::Arguments& args);
+        static NAN_METHOD(New);
 
         FlexReaderWrap(const osmium::io::File& file, location_handler_type& location_handler, osmium::osm_entity_bits::type entities) :
-            ObjectWrap(),
+            Nan::ObjectWrap(),
             m_this(file, location_handler, entities) {
         }
 

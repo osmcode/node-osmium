@@ -15,40 +15,40 @@ namespace osmium {
 
 namespace node_osmium {
 
-    class OSMObjectWrap : public OSMEntityWrap {
+    class OSMWrappedObject : public OSMEntityWrap {
 
-        static v8::Handle<v8::Value> get_id(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_version(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_changeset(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_visible(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_timestamp(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_uid(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> get_user(v8::Local<v8::String> property, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> tags(const v8::Arguments& args);
+        static NAN_GETTER(get_id);
+        static NAN_GETTER(get_version);
+        static NAN_GETTER(get_changeset);
+        static NAN_GETTER(get_visible);
+        static NAN_GETTER(get_timestamp);
+        static NAN_GETTER(get_uid);
+        static NAN_GETTER(get_user);
+        static NAN_METHOD(tags);
 
     public:
 
-        static v8::Persistent<v8::FunctionTemplate> constructor;
+        static Nan::Persistent<v8::FunctionTemplate> constructor;
         static void Initialize(v8::Handle<v8::Object> target);
-        static v8::Handle<v8::Value> New(const v8::Arguments& args);
+        static NAN_METHOD(New);
 
         static const osmium::OSMObject& wrapped(const v8::Local<v8::Object>& object) {
             return static_cast<const osmium::OSMObject&>(unwrap<OSMEntityWrap>(object));
         }
 
-        OSMObjectWrap() :
+        OSMWrappedObject() :
             OSMEntityWrap() {
         }
 
-        OSMObjectWrap(const osmium::OSMEntity& entity) :
+        OSMWrappedObject(const osmium::OSMEntity& entity) :
             OSMEntityWrap(entity) {
         }
 
     protected:
 
-        virtual ~OSMObjectWrap() = default;
+        virtual ~OSMWrappedObject() = default;
 
-    }; // class OSMObjectWrap
+    }; // class OSMWrappedObject
 
 } // namespace node_osmium
 

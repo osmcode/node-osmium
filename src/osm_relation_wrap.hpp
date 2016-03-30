@@ -17,31 +17,31 @@ namespace osmium {
 
 namespace node_osmium {
 
-    class OSMRelationWrap : public OSMObjectWrap {
+    class OSMRelationWrap : public OSMWrappedObject {
 
-        static v8::Handle<v8::Value> get_type(v8::Local<v8::String> property, const v8::AccessorInfo& info) {
-            return symbol_relation;
+        static NAN_GETTER(get_type) {
+            info.GetReturnValue().Set(Nan::New(symbol_relation));
         }
 
-        static v8::Handle<v8::Value> get_members_count(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info);
-        static v8::Handle<v8::Value> members(const v8::Arguments& args);
+        static NAN_GETTER(get_members_count);
+        static NAN_METHOD(members);
 
     public:
 
-        static v8::Persistent<v8::FunctionTemplate> constructor;
+        static Nan::Persistent<v8::FunctionTemplate> constructor;
         static void Initialize(v8::Handle<v8::Object> target);
-        static v8::Handle<v8::Value> New(const v8::Arguments& args);
+        static NAN_METHOD(New);
 
         static const osmium::Relation& wrapped(const v8::Local<v8::Object>& object) {
             return static_cast<const osmium::Relation&>(unwrap<OSMEntityWrap>(object));
         }
 
         OSMRelationWrap() :
-            OSMObjectWrap() {
+            OSMWrappedObject() {
         }
 
         OSMRelationWrap(const osmium::OSMEntity& entity) :
-            OSMObjectWrap(entity) {
+            OSMWrappedObject(entity) {
         }
 
     private:

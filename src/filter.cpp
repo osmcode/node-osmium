@@ -18,18 +18,19 @@ namespace node_osmium {
         all_filters.emplace_back(new Filter());
     }
 
-    v8::Handle<v8::Value> Filter::register_filter(const v8::Arguments& args) {
-        v8::HandleScope scope;
+    v8::Handle<v8::Value> Filter::register_filter(const v8::Arguments& info) {
+        Nan::HandleScope scope;
 
-        if (args.Length() == 1 && args[0]->IsObject()) {
-            auto object = args[0]->ToObject();
+        if (info.Length() == 1 && info[0]->IsObject()) {
+            auto object = info[0]->ToObject();
             // XXX check that object is of class Filter
             Filter::all_filters.emplace_back(new Filter(object));
             assert(Filter::all_filters.size() < std::numeric_limits<int32_t>::max());
-            return scope.Close(v8::Integer::New(static_cast<int32_t>(Filter::all_filters.size() - 1)));
+            info.GetReturnValue().Set(Nan::New(static_cast<int32_t>(Filter::all_filters.size() - 1)));
+            return;
         }
 
-        return ThrowException(v8::Exception::Error(v8::String::New("registering filter failed")));
+        return ThrowException(v8::Exception::Error(Nan::New("registering filter failed").ToLocalChecked()));
     }
 
     const Filter& Filter::get_filter(size_t id) {
