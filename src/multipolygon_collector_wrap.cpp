@@ -1,7 +1,4 @@
 
-// node
-#include <node_buffer.h>
-
 // node-osmium
 #include "node_osmium.hpp"
 #include "multipolygon_collector_wrap.hpp"
@@ -14,85 +11,95 @@
 
 namespace node_osmium {
 
-    v8::Persistent<v8::FunctionTemplate> MultipolygonCollectorWrap::constructor;
+    Nan::Persistent<v8::FunctionTemplate> MultipolygonCollectorWrap::constructor;
 
-    void MultipolygonCollectorWrap::Initialize(v8::Handle<v8::Object> target) {
-        v8::HandleScope scope;
-        constructor = v8::Persistent<v8::FunctionTemplate>::New(v8::FunctionTemplate::New(MultipolygonCollectorWrap::New));
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_MultipolygonCollector);
-        node::SetPrototypeMethod(constructor, "read_relations", read_relations);
-        node::SetPrototypeMethod(constructor, "handler", handler);
-        target->Set(symbol_MultipolygonCollector, constructor->GetFunction());
+    void MultipolygonCollectorWrap::Initialize(v8::Local<v8::Object> target) {
+        Nan::HandleScope scope;
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(MultipolygonCollectorWrap::New);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_MultipolygonCollector));
+        Nan::SetPrototypeMethod(lcons, "read_relations", read_relations);
+        Nan::SetPrototypeMethod(lcons, "handler", handler);
+        target->Set(Nan::New(symbol_MultipolygonCollector), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
-    v8::Handle<v8::Value> MultipolygonCollectorWrap::New(const v8::Arguments& args) {
-        v8::HandleScope scope;
-
-        if (!args.IsConstructCall()) {
-            return ThrowException(v8::Exception::Error(v8::String::New("Cannot call constructor as function, you need to use 'new' keyword")));
+    NAN_METHOD(MultipolygonCollectorWrap::New) {
+        if (!info.IsConstructCall()) {
+            Nan::ThrowError(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked());
+            return;
         }
 
-        if (args.Length() != 0) {
-            return ThrowException(v8::Exception::TypeError(v8::String::New("MultipolygonCollector is constructed without arguments")));
+        if (info.Length() != 0) {
+            Nan::ThrowTypeError(Nan::New("MultipolygonCollector is constructed without arguments").ToLocalChecked());
+            return;
         }
 
         try {
             MultipolygonCollectorWrap* multipolygon_collector_wrap = new MultipolygonCollectorWrap();
-            multipolygon_collector_wrap->Wrap(args.This());
-            return args.This();
+            multipolygon_collector_wrap->Wrap(info.This());
+            info.GetReturnValue().Set(info.This());
+            return;
         } catch (const std::exception& e) {
-            return ThrowException(v8::Exception::TypeError(v8::String::New(e.what())));
+            Nan::ThrowTypeError(Nan::New(e.what()).ToLocalChecked());
+            return;
         }
 
-        return scope.Close(v8::Undefined());
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
-    v8::Handle<v8::Value> MultipolygonCollectorWrap::read_relations(const v8::Arguments& args) {
+    NAN_METHOD(MultipolygonCollectorWrap::read_relations) {
         INSTANCE_CHECK(MultipolygonCollectorWrap, "MultipolygonCollector", "read_relations");
-        v8::HandleScope scope;
-        if (args.Length() != 1 || !args[0]->IsObject()) {
-            return ThrowException(v8::Exception::Error(v8::String::New("call MultipolygonCollector.read_relation() with BasicReader or Buffer object")));
+        if (info.Length() != 1 || !info[0]->IsObject()) {
+            Nan::ThrowError(Nan::New("call MultipolygonCollector.read_relation() with BasicReader or Buffer object").ToLocalChecked());
+            return;
         }
         try {
-            if (BasicReaderWrap::constructor->HasInstance(args[0]->ToObject())) {
-                osmium::io::Reader& reader = unwrap<BasicReaderWrap>(args[0]->ToObject());
-                unwrap<MultipolygonCollectorWrap>(args.This()).read_relations(reader);
-            } else if (BufferWrap::constructor->HasInstance(args[0]->ToObject())) {
-                osmium::memory::Buffer& buffer = unwrap<BufferWrap>(args[0]->ToObject());
-                unwrap<MultipolygonCollectorWrap>(args.This()).read_relations(buffer.begin(), buffer.end());
+            if (Nan::New(BasicReaderWrap::constructor)->HasInstance(info[0]->ToObject())) {
+                osmium::io::Reader& reader = unwrap<BasicReaderWrap>(info[0]->ToObject());
+                unwrap<MultipolygonCollectorWrap>(info.This()).read_relations(reader);
+            } else if (Nan::New(BufferWrap::constructor)->HasInstance(info[0]->ToObject())) {
+                osmium::memory::Buffer& buffer = unwrap<BufferWrap>(info[0]->ToObject());
+                unwrap<MultipolygonCollectorWrap>(info.This()).read_relations(buffer.begin(), buffer.end());
             } else {
-                return ThrowException(v8::Exception::Error(v8::String::New("call MultipolygonCollector.read_relation() with BasicReader or Buffer object")));
+                Nan::ThrowError(Nan::New("call MultipolygonCollector.read_relation() with BasicReader or Buffer object").ToLocalChecked());
+                return;
             }
         } catch (const std::exception& e) {
             std::string msg("osmium error: ");
             msg += e.what();
-            return ThrowException(v8::Exception::Error(v8::String::New(msg.c_str())));
+            Nan::ThrowError(Nan::New(msg).ToLocalChecked());
+            return;
         }
-        return scope.Close(v8::Undefined());
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
-    v8::Handle<v8::Value> MultipolygonCollectorWrap::handler(const v8::Arguments& args) {
+    NAN_METHOD(MultipolygonCollectorWrap::handler) {
         INSTANCE_CHECK(MultipolygonCollectorWrap, "MultipolygonCollector", "handler");
-        v8::HandleScope scope;
-        if (args.Length() != 1 || !args[0]->IsObject() || !JSHandler::constructor->HasInstance(args[0]->ToObject())) {
-            return ThrowException(v8::Exception::Error(v8::String::New("call MultipolygonCollector.handler() with Handler object")));
+        if (info.Length() != 1 || !info[0]->IsObject() || !Nan::New(JSHandler::constructor)->HasInstance(info[0]->ToObject())) {
+            Nan::ThrowError(Nan::New("call MultipolygonCollector.handler() with Handler object").ToLocalChecked());
+            return;
         }
         try {
-            JSHandler& handler = unwrap<JSHandler>(args[0]->ToObject());
-            auto& mc_handler = unwrap<MultipolygonCollectorWrap>(args.This()).handler([&handler](const osmium::memory::Buffer& area_buffer) {
+            JSHandler& handler = unwrap<JSHandler>(info[0]->ToObject());
+            auto& mc_handler = unwrap<MultipolygonCollectorWrap>(info.This()).handler([&handler](const osmium::memory::Buffer& area_buffer) {
                 for (const osmium::OSMEntity& entity : area_buffer) {
                     handler.dispatch_entity(entity);
                 }
             });
-            return scope.Close(new_external<MultipolygonHandlerWrap>(mc_handler));
+            info.GetReturnValue().Set(new_external<MultipolygonHandlerWrap>(mc_handler));
+            return;
 
         } catch (const std::exception& e) {
             std::string msg("osmium error: ");
             msg += e.what();
-            return ThrowException(v8::Exception::Error(v8::String::New(msg.c_str())));
+            Nan::ThrowError(Nan::New(msg).ToLocalChecked());
+            return;
         }
-        return scope.Close(v8::Undefined());
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
 } // namespace node_osmium

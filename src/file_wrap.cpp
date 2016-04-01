@@ -2,67 +2,70 @@
 // c++
 #include <exception>
 
-// node
-#include <node_buffer.h>
-
 // node-osmium
 #include "node_osmium.hpp"
 #include "file_wrap.hpp"
 
 namespace node_osmium {
 
-    v8::Persistent<v8::FunctionTemplate> FileWrap::constructor;
+    Nan::Persistent<v8::FunctionTemplate> FileWrap::constructor;
 
-    void FileWrap::Initialize(v8::Handle<v8::Object> target) {
-        v8::HandleScope scope;
-        constructor = v8::Persistent<v8::FunctionTemplate>::New(v8::FunctionTemplate::New(FileWrap::New));
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_File);
-        target->Set(symbol_File, constructor->GetFunction());
+    void FileWrap::Initialize(v8::Local<v8::Object> target) {
+        Nan::HandleScope scope;
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(FileWrap::New);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_File));
+        target->Set(Nan::New(symbol_File), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
-    v8::Handle<v8::Value> FileWrap::New(const v8::Arguments& args) {
-        v8::HandleScope scope;
-
-        if (!args.IsConstructCall()) {
-            return ThrowException(v8::Exception::Error(v8::String::New("Cannot call constructor as function, you need to use 'new' keyword")));
+    NAN_METHOD(FileWrap::New) {
+        if (!info.IsConstructCall()) {
+            Nan::ThrowError(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked());
+            return;
         }
 
-        if (args.Length() == 0 || args.Length() > 2) {
-            return ThrowException(v8::Exception::TypeError(v8::String::New("File is constructed with one or two arguments: filename or node.Buffer and optional format")));
+        if (info.Length() == 0 || info.Length() > 2) {
+            Nan::ThrowTypeError(Nan::New("File is constructed with one or two arguments: filename or node.Buffer and optional format").ToLocalChecked());
+            return;
         }
 
         std::string format;
-        if (args.Length() == 2) {
-            if (!args[1]->IsString()) {
-                return ThrowException(v8::Exception::TypeError(v8::String::New("second argument to File constructor (format) must be a string")));
+        if (info.Length() == 2) {
+            if (!info[1]->IsString()) {
+                Nan::ThrowTypeError(Nan::New("second argument to File constructor (format) must be a string").ToLocalChecked());
+                return;
             }
-            v8::String::Utf8Value format_string { args[1] };
+            v8::String::Utf8Value format_string { info[1] };
             format = *format_string;
         }
 
         try {
             osmium::io::File file;
 
-            if (args[0]->IsString()) {
-                v8::String::Utf8Value filename { args[0] };
+            if (info[0]->IsString()) {
+                v8::String::Utf8Value filename { info[0] };
                 file = osmium::io::File(*filename, format);
-            } else if (args[0]->IsObject() && node::Buffer::HasInstance(args[0]->ToObject())) {
-                auto source = args[0]->ToObject();
+            } else if (info[0]->IsObject() && node::Buffer::HasInstance(info[0]->ToObject())) {
+                auto source = info[0]->ToObject();
                 file = osmium::io::File(node::Buffer::Data(source), node::Buffer::Length(source), format);
             } else {
-                return ThrowException(v8::Exception::TypeError(v8::String::New("first argument to File constructor must be a string (filename) or node.Buffer")));
+                Nan::ThrowTypeError(Nan::New("first argument to File constructor must be a string (filename) or node.Buffer").ToLocalChecked());
+                return;
             }
 
             file.check();
             FileWrap* file_wrap = new FileWrap(std::move(file));
-            file_wrap->Wrap(args.This());
-            return args.This();
+            file_wrap->Wrap(info.This());
+            info.GetReturnValue().Set(info.This());
+            return;
         } catch (const std::exception& e) {
-            return ThrowException(v8::Exception::TypeError(v8::String::New(e.what())));
+            Nan::ThrowTypeError(Nan::New(e.what()).ToLocalChecked());
+            return;
         }
 
-        return scope.Close(v8::Undefined());
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
 } // namespace node_osmium

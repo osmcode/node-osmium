@@ -2,8 +2,7 @@
 // c++
 #include <memory>
 
-// nodejs
-#include <node.h>
+#include "include_nan.hpp"
 
 // osmium
 #include <osmium/osm/entity_bits.hpp>
@@ -28,11 +27,11 @@ namespace node_osmium {
     public:
 
         static void init_filters();
-        static v8::Handle<v8::Value> register_filter(const v8::Arguments& args);
+        static NAN_METHOD(register_filter);
         static const Filter& get_filter(size_t id);
 
         Filter();
-        Filter(v8::Handle<v8::Object> object);
+        Filter(v8::Local<v8::Object> object);
 
         bool match(const osmium::OSMEntity& entity) const;
 

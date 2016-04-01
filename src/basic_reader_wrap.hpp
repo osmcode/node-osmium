@@ -1,9 +1,7 @@
 #ifndef BASIC_READER_WRAP_HPP
 #define BASIC_READER_WRAP_HPP
 
-// v8/node
-#include "include_v8.hpp"
-#include <node_object_wrap.h>
+#include "include_nan.hpp"
 
 // osmium
 #include <osmium/io/any_input.hpp>
@@ -14,23 +12,23 @@
 
 namespace node_osmium {
 
-    class BasicReaderWrap : public node::ObjectWrap {
+    class BasicReaderWrap : public Nan::ObjectWrap {
 
-        static v8::Handle<v8::Value> header(const v8::Arguments& args);
-        static v8::Handle<v8::Value> close(const v8::Arguments& args);
-        static v8::Handle<v8::Value> read(const v8::Arguments& args);
-        static v8::Handle<v8::Value> read_all(const v8::Arguments& args);
+        static NAN_METHOD(header);
+        static NAN_METHOD(close);
+        static NAN_METHOD(read);
+        static NAN_METHOD(read_all);
 
         osmium::io::Reader m_this;
 
     public:
 
-        static v8::Persistent<v8::FunctionTemplate> constructor;
-        static void Initialize(v8::Handle<v8::Object> target);
-        static v8::Handle<v8::Value> New(const v8::Arguments& args);
+        static Nan::Persistent<v8::FunctionTemplate> constructor;
+        static void Initialize(v8::Local<v8::Object> target);
+        static NAN_METHOD(New);
 
         BasicReaderWrap(const osmium::io::File& file, osmium::osm_entity_bits::type entities) :
-            ObjectWrap(),
+            Nan::ObjectWrap(),
             m_this(file, entities) {
         }
 

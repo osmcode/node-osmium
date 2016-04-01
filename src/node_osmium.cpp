@@ -1,7 +1,4 @@
 
-// node
-#include <node.h>
-
 // osmium
 #include <osmium/geom/wkb.hpp>
 #include <osmium/geom/wkt.hpp>
@@ -28,91 +25,90 @@
 
 namespace node_osmium {
 
-    v8::Persistent<v8::Object> module;
+    Nan::Persistent<v8::Object> module;
     osmium::geom::WKBFactory<> wkb_factory;
     osmium::geom::WKTFactory<> wkt_factory;
 
-    v8::Persistent<v8::String> symbol_OSMEntity;
-    v8::Persistent<v8::String> symbol_OSMObject;
+    Nan::Persistent<v8::String> symbol_OSMEntity;
+    Nan::Persistent<v8::String> symbol_OSMObject;
 
-    v8::Persistent<v8::String> symbol_Node;
-    v8::Persistent<v8::String> symbol_node;
+    Nan::Persistent<v8::String> symbol_Node;
+    Nan::Persistent<v8::String> symbol_node;
 
-    v8::Persistent<v8::String> symbol_Way;
-    v8::Persistent<v8::String> symbol_way;
+    Nan::Persistent<v8::String> symbol_Way;
+    Nan::Persistent<v8::String> symbol_way;
 
-    v8::Persistent<v8::String> symbol_Relation;
-    v8::Persistent<v8::String> symbol_relation;
-    v8::Persistent<v8::String> symbol_type;
-    v8::Persistent<v8::String> symbol_ref;
-    v8::Persistent<v8::String> symbol_role;
+    Nan::Persistent<v8::String> symbol_Relation;
+    Nan::Persistent<v8::String> symbol_relation;
+    Nan::Persistent<v8::String> symbol_type;
+    Nan::Persistent<v8::String> symbol_ref;
+    Nan::Persistent<v8::String> symbol_role;
 
-    v8::Persistent<v8::String> symbol_Area;
-    v8::Persistent<v8::String> symbol_area;
+    Nan::Persistent<v8::String> symbol_Area;
+    Nan::Persistent<v8::String> symbol_area;
 
-    v8::Persistent<v8::String> symbol_Changeset;
-    v8::Persistent<v8::String> symbol_changeset;
+    Nan::Persistent<v8::String> symbol_Changeset;
+    Nan::Persistent<v8::String> symbol_changeset;
 
-    v8::Persistent<v8::String> symbol_Coordinates;
-    v8::Persistent<v8::String> symbol_Box;
+    Nan::Persistent<v8::String> symbol_Coordinates;
+    Nan::Persistent<v8::String> symbol_Box;
 
-    v8::Persistent<v8::String> symbol_generator;
-    v8::Persistent<v8::String> symbol_bounds;
+    Nan::Persistent<v8::String> symbol_generator;
+    Nan::Persistent<v8::String> symbol_bounds;
 
-    v8::Persistent<v8::String> symbol_Buffer;
-    v8::Persistent<v8::String> symbol_File;
-    v8::Persistent<v8::String> symbol_Handler;
-    v8::Persistent<v8::String> symbol_LocationHandler;
-    v8::Persistent<v8::String> symbol_MultipolygonCollector;
-    v8::Persistent<v8::String> symbol_MultipolygonHandler;
-    v8::Persistent<v8::String> symbol_BasicReader;
-    v8::Persistent<v8::String> symbol_FlexReader;
+    Nan::Persistent<v8::String> symbol_Buffer;
+    Nan::Persistent<v8::String> symbol_File;
+    Nan::Persistent<v8::String> symbol_Handler;
+    Nan::Persistent<v8::String> symbol_LocationHandler;
+    Nan::Persistent<v8::String> symbol_MultipolygonCollector;
+    Nan::Persistent<v8::String> symbol_MultipolygonHandler;
+    Nan::Persistent<v8::String> symbol_BasicReader;
+    Nan::Persistent<v8::String> symbol_FlexReader;
 
-    v8::Persistent<v8::Object> the_Node;
-    v8::Persistent<v8::Object> the_Way;
-    v8::Persistent<v8::Object> the_Relation;
-    v8::Persistent<v8::Object> the_Area;
-    v8::Persistent<v8::Object> the_Changeset;
+    Nan::Persistent<v8::Object> the_Node;
+    Nan::Persistent<v8::Object> the_Way;
+    Nan::Persistent<v8::Object> the_Relation;
+    Nan::Persistent<v8::Object> the_Area;
+    Nan::Persistent<v8::Object> the_Changeset;
 
     extern "C" {
-        static void start(v8::Handle<v8::Object> target) {
-            v8::HandleScope scope;
-            module = v8::Persistent<v8::Object>::New(target);
+        static void start(v8::Local<v8::Object> target) {
+            Nan::HandleScope scope;
+            module.Reset(target.As<v8::Object>());
 
-            node::SetMethod(target, "apply_", node_osmium::apply);
-            node::SetMethod(target, "register_filter", node_osmium::Filter::register_filter);
-
-            symbol_OSMEntity       = NODE_PSYMBOL("OSMEntity");
-            symbol_OSMObject       = NODE_PSYMBOL("OSMObject");
-            symbol_Node            = NODE_PSYMBOL("Node");
-            symbol_node            = NODE_PSYMBOL("node");
-            symbol_Way             = NODE_PSYMBOL("Way");
-            symbol_way             = NODE_PSYMBOL("way");
-            symbol_Relation        = NODE_PSYMBOL("Relation");
-            symbol_relation        = NODE_PSYMBOL("relation");
-            symbol_type            = NODE_PSYMBOL("type");
-            symbol_ref             = NODE_PSYMBOL("ref");
-            symbol_role            = NODE_PSYMBOL("role");
-            symbol_Area            = NODE_PSYMBOL("Area");
-            symbol_area            = NODE_PSYMBOL("area");
-            symbol_Changeset       = NODE_PSYMBOL("Changeset");
-            symbol_changeset       = NODE_PSYMBOL("changeset");
-            symbol_Coordinates     = NODE_PSYMBOL("Coordinates");
-            symbol_Box             = NODE_PSYMBOL("Box");
-            symbol_generator       = NODE_PSYMBOL("generator");
-            symbol_bounds          = NODE_PSYMBOL("bounds");
-
-            symbol_Buffer                = NODE_PSYMBOL("Buffer");
-            symbol_File                  = NODE_PSYMBOL("File");
-            symbol_Handler               = NODE_PSYMBOL("Handler");
-            symbol_LocationHandler       = NODE_PSYMBOL("LocationHandler");
-            symbol_MultipolygonCollector = NODE_PSYMBOL("MultipolygonCollector");
-            symbol_MultipolygonHandler   = NODE_PSYMBOL("MultipolygonHandler");
-            symbol_BasicReader           = NODE_PSYMBOL("BasicReader");
-            symbol_FlexReader            = NODE_PSYMBOL("FlexReader");
+            Nan::SetMethod(target, "apply_", node_osmium::apply);
+            Nan::SetMethod(target, "register_filter", node_osmium::Filter::register_filter);
+            
+            symbol_OSMEntity.Reset(Nan::New("OSMEntity").ToLocalChecked());
+            symbol_OSMObject.Reset(Nan::New("OSMObject").ToLocalChecked());
+            symbol_Node.Reset(Nan::New("Node").ToLocalChecked());
+            symbol_node.Reset(Nan::New("node").ToLocalChecked());
+            symbol_Way.Reset(Nan::New("Way").ToLocalChecked());
+            symbol_way.Reset(Nan::New("way").ToLocalChecked());
+            symbol_Relation.Reset(Nan::New("Relation").ToLocalChecked());
+            symbol_relation.Reset(Nan::New("relation").ToLocalChecked());
+            symbol_type.Reset(Nan::New("type").ToLocalChecked());
+            symbol_ref.Reset(Nan::New("ref").ToLocalChecked());
+            symbol_role.Reset(Nan::New("role").ToLocalChecked());
+            symbol_Area.Reset(Nan::New("Area").ToLocalChecked());
+            symbol_area.Reset(Nan::New("area").ToLocalChecked());
+            symbol_Changeset.Reset(Nan::New("Changeset").ToLocalChecked());
+            symbol_changeset.Reset(Nan::New("changeset").ToLocalChecked());
+            symbol_Coordinates.Reset(Nan::New("Coordinates").ToLocalChecked());
+            symbol_Box.Reset(Nan::New("Box").ToLocalChecked());
+            symbol_generator.Reset(Nan::New("generator").ToLocalChecked());
+            symbol_bounds.Reset(Nan::New("bounds").ToLocalChecked());
+            symbol_Buffer.Reset(Nan::New("Buffer").ToLocalChecked());
+            symbol_File.Reset(Nan::New("File").ToLocalChecked());
+            symbol_Handler.Reset(Nan::New("Handler").ToLocalChecked());
+            symbol_LocationHandler.Reset(Nan::New("LocationHandler").ToLocalChecked());
+            symbol_MultipolygonCollector.Reset(Nan::New("MultipolygonCollector").ToLocalChecked());
+            symbol_MultipolygonHandler.Reset(Nan::New("MultipolygonHandler").ToLocalChecked());
+            symbol_BasicReader.Reset(Nan::New("BasicReader").ToLocalChecked());
+            symbol_FlexReader.Reset(Nan::New("FlexReader").ToLocalChecked());
 
             node_osmium::OSMEntityWrap::Initialize(target);
-            node_osmium::OSMObjectWrap::Initialize(target);
+            node_osmium::OSMWrappedObject::Initialize(target);
             node_osmium::OSMNodeWrap::Initialize(target);
             node_osmium::OSMWayWrap::Initialize(target);
             node_osmium::OSMRelationWrap::Initialize(target);
@@ -129,11 +125,11 @@ namespace node_osmium {
 
             Filter::init_filters();
 
-            the_Node      = v8::Persistent<v8::Object>::New(new_external<OSMNodeWrap>());
-            the_Way       = v8::Persistent<v8::Object>::New(new_external<OSMWayWrap>());
-            the_Relation  = v8::Persistent<v8::Object>::New(new_external<OSMRelationWrap>());
-            the_Area      = v8::Persistent<v8::Object>::New(new_external<OSMAreaWrap>());
-            the_Changeset = v8::Persistent<v8::Object>::New(new_external<OSMChangesetWrap>());
+            the_Node.Reset(new_external<OSMNodeWrap>());
+            the_Way.Reset(new_external<OSMWayWrap>());
+            the_Relation.Reset(new_external<OSMRelationWrap>());
+            the_Area.Reset(new_external<OSMAreaWrap>());
+            the_Changeset.Reset(new_external<OSMChangesetWrap>());
         }
     }
 

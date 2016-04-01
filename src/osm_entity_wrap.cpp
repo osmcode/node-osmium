@@ -5,23 +5,26 @@
 
 namespace node_osmium {
 
-    v8::Persistent<v8::FunctionTemplate> OSMEntityWrap::constructor;
+    Nan::Persistent<v8::FunctionTemplate> OSMEntityWrap::constructor;
 
-    void OSMEntityWrap::Initialize(v8::Handle<v8::Object> target) {
-        v8::HandleScope scope;
-        constructor = v8::Persistent<v8::FunctionTemplate>::New(v8::FunctionTemplate::New(OSMEntityWrap::New));
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_OSMEntity);
-        target->Set(symbol_OSMEntity, constructor->GetFunction());
+    void OSMEntityWrap::Initialize(v8::Local<v8::Object> target) {
+        Nan::HandleScope scope;
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMEntityWrap::New);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_OSMEntity));
+        target->Set(Nan::New(symbol_OSMEntity), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
-    v8::Handle<v8::Value> OSMEntityWrap::New(const v8::Arguments& args) {
-        if (args.Length() == 1 && args[0]->IsExternal()) {
-            v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(args[0]);
-            static_cast<OSMEntityWrap*>(ext->Value())->Wrap(args.This());
-            return args.This();
+    NAN_METHOD(OSMEntityWrap::New) {
+        if (info.Length() == 1 && info[0]->IsExternal()) {
+            v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
+            static_cast<OSMEntityWrap*>(ext->Value())->Wrap(info.This());
+            info.GetReturnValue().Set(info.This());
+            return;
         } else {
-            return ThrowException(v8::Exception::TypeError(v8::String::New("osmium.OSMEntity cannot be created in Javascript")));
+            Nan::ThrowTypeError(Nan::New("osmium.OSMEntity cannot be created in Javascript").ToLocalChecked());
+            return;
         }
     }
 

@@ -2,10 +2,6 @@
 // c++
 #include <string>
 
-// node
-#include <node.h>
-#include <node_object_wrap.h>
-
 // osmium
 #include <osmium/osm/object.hpp>
 
@@ -21,168 +17,156 @@
 
 namespace node_osmium {
 
-    v8::Persistent<v8::FunctionTemplate> JSHandler::constructor;
-    v8::Persistent<v8::String> JSHandler::symbol_tagged_nodes_only;
+    Nan::Persistent<v8::FunctionTemplate> JSHandler::constructor;
 
-    void JSHandler::Initialize(v8::Handle<v8::Object> target) {
-        v8::HandleScope scope;
-        constructor = v8::Persistent<v8::FunctionTemplate>::New(v8::FunctionTemplate::New(JSHandler::New));
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_Handler);
-        node::SetPrototypeMethod(constructor, "on", on);
-        node::SetPrototypeMethod(constructor, "options", options);
-        node::SetPrototypeMethod(constructor, "end", stream_end);
-        target->Set(symbol_Handler, constructor->GetFunction());
+    void JSHandler::Initialize(v8::Local<v8::Object> target) {
+        Nan::HandleScope scope;
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(JSHandler::New);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_Handler));
+        Nan::SetPrototypeMethod(lcons, "on", on);
+        Nan::SetPrototypeMethod(lcons, "options", options);
+        Nan::SetPrototypeMethod(lcons, "end", stream_end);
+        target->Set(Nan::New(symbol_Handler), lcons->GetFunction());
+        constructor.Reset(lcons);
 
-        symbol_tagged_nodes_only = NODE_PSYMBOL("tagged_nodes_only");
     }
 
     JSHandler::JSHandler() :
-        ObjectWrap(),
+        Nan::ObjectWrap(),
         node_callback_for_tagged_only(false) {
     }
 
     JSHandler::~JSHandler() {
-        init_cb.Dispose();
+        init_cb.Reset();
 
-        before_nodes_cb.Dispose();
-        node_cb.Dispose();
-        after_nodes_cb.Dispose();
+        before_nodes_cb.Reset();
+        node_cb.Reset();
+        after_nodes_cb.Reset();
 
-        before_ways_cb.Dispose();
-        way_cb.Dispose();
-        after_ways_cb.Dispose();
+        before_ways_cb.Reset();
+        way_cb.Reset();
+        after_ways_cb.Reset();
 
-        before_relations_cb.Dispose();
-        relation_cb.Dispose();
-        after_relations_cb.Dispose();
+        before_relations_cb.Reset();
+        relation_cb.Reset();
+        after_relations_cb.Reset();
 
-        area_cb.Dispose();
+        area_cb.Reset();
 
-        before_changesets_cb.Dispose();
-        changeset_cb.Dispose();
-        after_changesets_cb.Dispose();
+        before_changesets_cb.Reset();
+        changeset_cb.Reset();
+        after_changesets_cb.Reset();
 
-        done_cb.Dispose();
+        done_cb.Reset();
     }
 
-    v8::Handle<v8::Value> JSHandler::New(const v8::Arguments& args) {
-        v8::HandleScope scope;
-        if (!args.IsConstructCall()) {
-            return ThrowException(v8::Exception::Error(v8::String::New("Cannot call constructor as function, you need to use 'new' keyword")));
+    NAN_METHOD(JSHandler::New) {
+        if (!info.IsConstructCall()) {
+            Nan::ThrowError(Nan::New("Cannot call constructor as function, you need to use 'new' keyword").ToLocalChecked());
+            return;
         }
-        if (args[0]->IsExternal()) {
-            v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(args[0]);
+        if (info[0]->IsExternal()) {
+            v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
             void* ptr = ext->Value();
             JSHandler* b =  static_cast<JSHandler*>(ptr);
-            b->Wrap(args.This());
-            return args.This();
+            b->Wrap(info.This());
+            info.GetReturnValue().Set(info.This());
+            return;
         } else {
             JSHandler* jshandler = new JSHandler();
-            jshandler->Wrap(args.This());
-            return args.This();
+            jshandler->Wrap(info.This());
+            info.GetReturnValue().Set(info.This());
+            return;
         }
-        return scope.Close(v8::Undefined());
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
-    v8::Handle<v8::Value> JSHandler::options(const v8::Arguments& args) {
+    NAN_METHOD(JSHandler::options) {
         INSTANCE_CHECK(JSHandler, "handler", "options");
-        v8::HandleScope scope;
-        if (args.Length() != 1 || !args[0]->IsObject()) {
-            return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a single object as parameter")));
+        if (info.Length() != 1 || !info[0]->IsObject()) {
+            Nan::ThrowTypeError(Nan::New("please provide a single object as parameter").ToLocalChecked());
+            return;
         }
 
-        v8::Local<v8::Value> tagged_nodes_only = args[0]->ToObject()->Get(symbol_tagged_nodes_only);
+        v8::Local<v8::Value> tagged_nodes_only = info[0]->ToObject()->Get(Nan::New("tagged_nodes_only").ToLocalChecked());
         if (tagged_nodes_only->IsBoolean()) {
-            unwrap<JSHandler>(args.This()).node_callback_for_tagged_only = tagged_nodes_only->BooleanValue();
+            unwrap<JSHandler>(info.This()).node_callback_for_tagged_only = tagged_nodes_only->BooleanValue();
         }
 
-        return scope.Close(v8::Undefined());
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
-    v8::Handle<v8::Value> JSHandler::on(const v8::Arguments& args) {
+    NAN_METHOD(JSHandler::on) {
         INSTANCE_CHECK(JSHandler, "handler", "on");
-        v8::HandleScope scope;
-        if (args.Length() != 2 || !args[0]->IsString() || !args[1]->IsFunction()) {
-            return ThrowException(v8::Exception::TypeError(v8::String::New("please provide an event name and callback function")));
+        if (info.Length() != 2 || !info[0]->IsString() || !info[1]->IsFunction()) {
+            Nan::ThrowTypeError(Nan::New("please provide an event name and callback function").ToLocalChecked());
+            return;
         }
-        v8::String::Utf8Value callback_name_string { args[0] };
+        v8::String::Utf8Value callback_name_string { info[0] };
         std::string callback_name = *callback_name_string;
-        v8::Local<v8::Function> callback = v8::Local<v8::Function>::Cast(args[1]);
+        v8::Local<v8::Function> callback = v8::Local<v8::Function>::Cast(info[1]);
         if (callback->IsNull() || callback->IsUndefined()) {
-            return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a valid callback function for second arg")));
+            Nan::ThrowTypeError(Nan::New("please provide a valid callback function for second arg").ToLocalChecked());
+            return;
         }
 
-        JSHandler& handler = unwrap<JSHandler>(args.This());
+        JSHandler& handler = unwrap<JSHandler>(info.This());
         if (callback_name == "node") {
-            handler.node_cb.Dispose();
-            handler.node_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.node_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "way") {
-            handler.way_cb.Dispose();
-            handler.way_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.way_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "relation") {
-            handler.relation_cb.Dispose();
-            handler.relation_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.relation_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "area") {
-            handler.area_cb.Dispose();
-            handler.area_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.area_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "changeset") {
-            handler.changeset_cb.Dispose();
-            handler.changeset_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.changeset_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "init") {
-            handler.init_cb.Dispose();
-            handler.init_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.init_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "before_nodes") {
-            handler.before_nodes_cb.Dispose();
-            handler.before_nodes_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.before_nodes_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "after_nodes") {
-            handler.after_nodes_cb.Dispose();
-            handler.after_nodes_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.after_nodes_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "before_ways") {
-            handler.before_ways_cb.Dispose();
-            handler.before_ways_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.before_ways_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "after_ways") {
-            handler.after_ways_cb.Dispose();
-            handler.after_ways_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.after_ways_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "before_relations") {
-            handler.before_relations_cb.Dispose();
-            handler.before_relations_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.before_relations_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "after_relations") {
-            handler.after_relations_cb.Dispose();
-            handler.after_relations_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.after_relations_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "before_changesets") {
-            handler.before_changesets_cb.Dispose();
-            handler.before_changesets_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.before_changesets_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "after_changesets") {
-            handler.after_changesets_cb.Dispose();
-            handler.after_changesets_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.after_changesets_cb.Reset(callback.As<v8::Function>());
         } else if (callback_name == "done") {
-            handler.done_cb.Dispose();
-            handler.done_cb = v8::Persistent<v8::Function>::New(callback);
+            handler.done_cb.Reset(callback.As<v8::Function>());
         } else {
-            return ThrowException(v8::Exception::RangeError(v8::String::New("unknown callback name as first argument")));
+            Nan::ThrowRangeError(Nan::New("unknown callback name as first argument").ToLocalChecked());
+            return;
         }
 
-        return scope.Close(v8::Undefined());
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
     template <class TWrapped>
-    void call_callback_with_entity(const v8::Persistent<v8::Function>& function, const osmium::OSMEntity& entity) {
+    void call_callback_with_entity(const Nan::Persistent<v8::Function>& function, const osmium::OSMEntity& entity) {
         if (function.IsEmpty()) {
             return;
         }
-
-        v8::HandleScope scope;
         v8::Local<v8::Value> argv[1] = { new_external<TWrapped>(entity) };
-        function->Call(v8::Context::GetCurrent()->Global(), 1, argv);
+        Nan::New(function)->Call(Nan::GetCurrentContext()->Global(), 1, argv);
     }
 
-    void call_callback(const v8::Persistent<v8::Function>& function) {
+    void call_callback(const Nan::Persistent<v8::Function>& function) {
         if (function.IsEmpty()) {
             return;
         }
-
-        function->Call(v8::Context::GetCurrent()->Global(), 0, nullptr);
+        Nan::New(function)->Call(Nan::GetCurrentContext()->Global(), 0, nullptr);
     }
 
     void JSHandler::dispatch_entity(const osmium::OSMEntity& entity) const {
@@ -257,17 +241,18 @@ namespace node_osmium {
         call_callback(done_cb);
     }
 
-    v8::Handle<v8::Value> JSHandler::stream_end(const v8::Arguments& args) {
+    NAN_METHOD(JSHandler::stream_end) {
         INSTANCE_CHECK(JSHandler, "handler", "end");
-        v8::HandleScope scope;
-        if (args.Length() != 0) {
-            return ThrowException(v8::Exception::TypeError(v8::String::New("end() doesn't take any parameters")));
+        if (info.Length() != 0) {
+            Nan::ThrowTypeError(Nan::New("end() doesn't take any parameters").ToLocalChecked());
+            return;
         }
 
-        JSHandler& handler = unwrap<JSHandler>(args.This());
+        JSHandler& handler = unwrap<JSHandler>(info.This());
         call_callback(handler.done_cb);
 
-        return scope.Close(v8::Undefined());
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
 } // namespace node_osmium

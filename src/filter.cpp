@@ -18,18 +18,18 @@ namespace node_osmium {
         all_filters.emplace_back(new Filter());
     }
 
-    v8::Handle<v8::Value> Filter::register_filter(const v8::Arguments& args) {
-        v8::HandleScope scope;
-
-        if (args.Length() == 1 && args[0]->IsObject()) {
-            auto object = args[0]->ToObject();
+    NAN_METHOD(Filter::register_filter) {
+        if (info.Length() == 1 && info[0]->IsObject()) {
+            auto object = info[0]->ToObject();
             // XXX check that object is of class Filter
             Filter::all_filters.emplace_back(new Filter(object));
             assert(Filter::all_filters.size() < std::numeric_limits<int32_t>::max());
-            return scope.Close(v8::Integer::New(static_cast<int32_t>(Filter::all_filters.size() - 1)));
+            info.GetReturnValue().Set(Nan::New(static_cast<int32_t>(Filter::all_filters.size() - 1)));
+            return;
         }
 
-        return ThrowException(v8::Exception::Error(v8::String::New("registering filter failed")));
+        Nan::ThrowError(Nan::New("registering filter failed").ToLocalChecked());
+        return;
     }
 
     const Filter& Filter::get_filter(size_t id) {
@@ -71,14 +71,14 @@ namespace node_osmium {
         m_tagged_entity_bits(osmium::osm_entity_bits::nothing) {
     }
 
-    Filter::Filter(v8::Handle<v8::Object> object) :
+    Filter::Filter(v8::Local<v8::Object> object) :
         m_entity_bits(osmium::osm_entity_bits::nothing),
         m_tagged_entity_bits(osmium::osm_entity_bits::nothing) {
-        setup_filter(v8::Array::Cast(*object->Get(NODE_PSYMBOL("_node"))),      osmium::item_type::node);
-        setup_filter(v8::Array::Cast(*object->Get(NODE_PSYMBOL("_way"))),       osmium::item_type::way);
-        setup_filter(v8::Array::Cast(*object->Get(NODE_PSYMBOL("_relation"))),  osmium::item_type::relation);
-        setup_filter(v8::Array::Cast(*object->Get(NODE_PSYMBOL("_changeset"))), osmium::item_type::changeset);
-        setup_filter(v8::Array::Cast(*object->Get(NODE_PSYMBOL("_area"))),      osmium::item_type::area);
+        setup_filter(v8::Array::Cast(*object->Get(Nan::New("_node").ToLocalChecked())),      osmium::item_type::node);
+        setup_filter(v8::Array::Cast(*object->Get(Nan::New("_way").ToLocalChecked())),       osmium::item_type::way);
+        setup_filter(v8::Array::Cast(*object->Get(Nan::New("_relation").ToLocalChecked())),  osmium::item_type::relation);
+        setup_filter(v8::Array::Cast(*object->Get(Nan::New("_changeset").ToLocalChecked())), osmium::item_type::changeset);
+        setup_filter(v8::Array::Cast(*object->Get(Nan::New("_area").ToLocalChecked())),      osmium::item_type::area);
     }
 
     bool Filter::match(const osmium::OSMEntity& entity) const {

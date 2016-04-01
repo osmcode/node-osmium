@@ -5,27 +5,25 @@
 #include <memory>
 #include <string>
 
-// v8/node
-#include "include_v8.hpp"
-#include <node_object_wrap.h>
+#include "include_nan.hpp"
 
 // osmium
 #include <osmium/io/file.hpp>
 
 namespace node_osmium {
 
-    class FileWrap : public node::ObjectWrap {
+    class FileWrap : public Nan::ObjectWrap {
 
         osmium::io::File m_this;
 
     public:
 
-        static v8::Persistent<v8::FunctionTemplate> constructor;
-        static void Initialize(v8::Handle<v8::Object> target);
-        static v8::Handle<v8::Value> New(const v8::Arguments& args);
+        static Nan::Persistent<v8::FunctionTemplate> constructor;
+        static void Initialize(v8::Local<v8::Object> target);
+        static NAN_METHOD(New);
 
         FileWrap(osmium::io::File&& file) :
-            node::ObjectWrap(),
+            Nan::ObjectWrap(),
             m_this(std::move(file)) {
         }
 

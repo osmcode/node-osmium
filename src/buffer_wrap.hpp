@@ -4,33 +4,31 @@
 // c++
 #include <memory>
 
-// v8/node
-#include "include_v8.hpp"
-#include <node_object_wrap.h>
+#include "include_nan.hpp"
 
 // osmium
 #include <osmium/memory/buffer.hpp>
 
 namespace node_osmium {
 
-    class BufferWrap : public node::ObjectWrap {
+    class BufferWrap : public Nan::ObjectWrap {
 
         osmium::memory::Buffer m_this;
         osmium::memory::Buffer::iterator m_iterator;
 
-        static v8::Handle<v8::Value> clear(const v8::Arguments& args);
-        static v8::Handle<v8::Value> next(const v8::Arguments& args);
-        static v8::Handle<v8::Value> filter_point_in_time(const v8::Arguments& args);
-        static v8::Handle<v8::Value> create_node_buffer(const v8::Arguments& args);
+        static NAN_METHOD(clear);
+        static NAN_METHOD(next);
+        static NAN_METHOD(filter_point_in_time);
+        static NAN_METHOD(create_node_buffer);
 
     public:
 
-        static v8::Persistent<v8::FunctionTemplate> constructor;
-        static void Initialize(v8::Handle<v8::Object> target);
-        static v8::Handle<v8::Value> New(const v8::Arguments& args);
+        static Nan::Persistent<v8::FunctionTemplate> constructor;
+        static void Initialize(v8::Local<v8::Object> target);
+        static NAN_METHOD(New);
 
         BufferWrap(osmium::memory::Buffer&& buffer) :
-            ObjectWrap(),
+            Nan::ObjectWrap(),
             m_this(std::move(buffer)),
             m_iterator() {
             if (m_this) {

@@ -5,73 +5,75 @@
 
 namespace node_osmium {
 
-    v8::Persistent<v8::FunctionTemplate> OSMObjectWrap::constructor;
+    Nan::Persistent<v8::FunctionTemplate> OSMWrappedObject::constructor;
 
-    void OSMObjectWrap::Initialize(v8::Handle<v8::Object> target) {
-        v8::HandleScope scope;
-        constructor = v8::Persistent<v8::FunctionTemplate>::New(v8::FunctionTemplate::New(OSMObjectWrap::New));
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_OSMObject);
-        auto attributes = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
-        set_accessor(constructor, "id", get_id, attributes);
-        set_accessor(constructor, "version", get_version, attributes);
-        set_accessor(constructor, "changeset", get_changeset, attributes);
-        set_accessor(constructor, "visible", get_visible, attributes);
-        set_accessor(constructor, "timestamp_seconds_since_epoch", get_timestamp, attributes);
-        set_accessor(constructor, "uid", get_uid, attributes);
-        set_accessor(constructor, "user", get_user, attributes);
-        node::SetPrototypeMethod(constructor, "tags", tags);
-        target->Set(symbol_OSMObject, constructor->GetFunction());
+    void OSMWrappedObject::Initialize(v8::Local<v8::Object> target) {
+        Nan::HandleScope scope;
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMWrappedObject::New);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_OSMObject));
+        ATTR(lcons, "id", get_id);
+        ATTR(lcons, "version", get_version);
+        ATTR(lcons, "changeset", get_changeset);
+        ATTR(lcons, "visible", get_visible);
+        ATTR(lcons, "timestamp_seconds_since_epoch", get_timestamp);
+        ATTR(lcons, "uid", get_uid);
+        ATTR(lcons, "user", get_user);
+        Nan::SetPrototypeMethod(lcons, "tags", tags);
+        target->Set(Nan::New(symbol_OSMObject), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
-    v8::Handle<v8::Value> OSMObjectWrap::New(const v8::Arguments& args) {
-        if (args.Length() == 1 && args[0]->IsExternal()) {
-            v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(args[0]);
-            static_cast<OSMObjectWrap*>(ext->Value())->Wrap(args.This());
-            return args.This();
+    NAN_METHOD(OSMWrappedObject::New) {
+        if (info.Length() == 1 && info[0]->IsExternal()) {
+            v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
+            static_cast<OSMWrappedObject*>(ext->Value())->Wrap(info.This());
+            info.GetReturnValue().Set(info.This());
+            return;
         } else {
-            return ThrowException(v8::Exception::TypeError(v8::String::New("osmium.OSMObject cannot be created in Javascript")));
+            Nan::ThrowTypeError(Nan::New("osmium.OSMObject cannot be created in Javascript").ToLocalChecked());
+            return;
         }
     }
 
-    v8::Handle<v8::Value> OSMObjectWrap::tags(const v8::Arguments& args) {
-        INSTANCE_CHECK(OSMObjectWrap, "Object", "tags");
-        return OSMEntityWrap::tags_impl<osmium::OSMObject>(args);
+    NAN_METHOD(OSMWrappedObject::tags) {
+        INSTANCE_CHECK(OSMWrappedObject, "Object", "tags");
+        return OSMEntityWrap::tags_impl<osmium::OSMObject>(info);
     }
 
-    v8::Handle<v8::Value> OSMObjectWrap::get_id(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
-        v8::HandleScope scope;
-        return scope.Close(v8::Number::New(wrapped(info.This()).id()));
+    NAN_GETTER(OSMWrappedObject::get_id) {
+        info.GetReturnValue().Set(Nan::New<v8::Number>(wrapped(info.This()).id()));
+        return;
     }
 
-    v8::Handle<v8::Value> OSMObjectWrap::get_version(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
-        v8::HandleScope scope;
-        return scope.Close(v8::Uint32::New(wrapped(info.This()).version()));
+    NAN_GETTER(OSMWrappedObject::get_version) {
+        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).version()));
+        return;
     }
 
-    v8::Handle<v8::Value> OSMObjectWrap::get_changeset(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
-        v8::HandleScope scope;
-        return scope.Close(v8::Uint32::New(wrapped(info.This()).changeset()));
+    NAN_GETTER(OSMWrappedObject::get_changeset) {
+        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).changeset()));
+        return;
     }
 
-    v8::Handle<v8::Value> OSMObjectWrap::get_visible(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
-        v8::HandleScope scope;
-        return scope.Close(v8::Boolean::New(wrapped(info.This()).visible()));
+    NAN_GETTER(OSMWrappedObject::get_visible) {
+        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).visible()));
+        return;
     }
 
-    v8::Handle<v8::Value> OSMObjectWrap::get_timestamp(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
-        v8::HandleScope scope;
-        return scope.Close(v8::Uint32::New(uint32_t(wrapped(info.This()).timestamp())));
+    NAN_GETTER(OSMWrappedObject::get_timestamp) {
+        info.GetReturnValue().Set(Nan::New(uint32_t(wrapped(info.This()).timestamp())));
+        return;
     }
 
-    v8::Handle<v8::Value> OSMObjectWrap::get_uid(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
-        v8::HandleScope scope;
-        return scope.Close(v8::Uint32::New(wrapped(info.This()).uid()));
+    NAN_GETTER(OSMWrappedObject::get_uid) {
+        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).uid()));
+        return;
     }
 
-    v8::Handle<v8::Value> OSMObjectWrap::get_user(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
-        v8::HandleScope scope;
-        return scope.Close(v8::String::New(wrapped(info.This()).user()));
+    NAN_GETTER(OSMWrappedObject::get_user) {
+        info.GetReturnValue().Set(Nan::New(wrapped(info.This()).user()).ToLocalChecked());
+        return;
     }
 
 } // namespace node_osmium

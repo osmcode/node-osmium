@@ -1,9 +1,7 @@
 #ifndef HANDLER_HPP
 #define HANDLER_HPP
 
-// v8/node
-#include "include_v8.hpp"
-#include <node_object_wrap.h>
+#include "include_nan.hpp"
 
 // osmium
 namespace osmium {
@@ -12,43 +10,43 @@ namespace osmium {
 
 namespace node_osmium {
 
-    class JSHandler : public node::ObjectWrap {
+    class JSHandler : public Nan::ObjectWrap {
 
-        static v8::Persistent<v8::String> symbol_tagged_nodes_only;
+        static Nan::Persistent<v8::String> symbol_tagged_nodes_only;
 
         bool node_callback_for_tagged_only;
 
-        v8::Persistent<v8::Function> init_cb;
+        Nan::Persistent<v8::Function> init_cb;
 
-        v8::Persistent<v8::Function> before_nodes_cb;
-        v8::Persistent<v8::Function> node_cb;
-        v8::Persistent<v8::Function> after_nodes_cb;
+        Nan::Persistent<v8::Function> before_nodes_cb;
+        Nan::Persistent<v8::Function> node_cb;
+        Nan::Persistent<v8::Function> after_nodes_cb;
 
-        v8::Persistent<v8::Function> before_ways_cb;
-        v8::Persistent<v8::Function> way_cb;
-        v8::Persistent<v8::Function> after_ways_cb;
+        Nan::Persistent<v8::Function> before_ways_cb;
+        Nan::Persistent<v8::Function> way_cb;
+        Nan::Persistent<v8::Function> after_ways_cb;
 
-        v8::Persistent<v8::Function> before_relations_cb;
-        v8::Persistent<v8::Function> relation_cb;
-        v8::Persistent<v8::Function> after_relations_cb;
+        Nan::Persistent<v8::Function> before_relations_cb;
+        Nan::Persistent<v8::Function> relation_cb;
+        Nan::Persistent<v8::Function> after_relations_cb;
 
-        v8::Persistent<v8::Function> area_cb;
+        Nan::Persistent<v8::Function> area_cb;
 
-        v8::Persistent<v8::Function> before_changesets_cb;
-        v8::Persistent<v8::Function> changeset_cb;
-        v8::Persistent<v8::Function> after_changesets_cb;
+        Nan::Persistent<v8::Function> before_changesets_cb;
+        Nan::Persistent<v8::Function> changeset_cb;
+        Nan::Persistent<v8::Function> after_changesets_cb;
 
-        v8::Persistent<v8::Function> done_cb;
+        Nan::Persistent<v8::Function> done_cb;
 
-        static v8::Handle<v8::Value> on(const v8::Arguments& args);
-        static v8::Handle<v8::Value> options(const v8::Arguments& args);
-        static v8::Handle<v8::Value> stream_end(const v8::Arguments& args);
+        static NAN_METHOD(on);
+        static NAN_METHOD(options);
+        static NAN_METHOD(stream_end);
 
     public:
 
-        static v8::Persistent<v8::FunctionTemplate> constructor;
-        static void Initialize(v8::Handle<v8::Object> target);
-        static v8::Handle<v8::Value> New(const v8::Arguments& args);
+        static Nan::Persistent<v8::FunctionTemplate> constructor;
+        static void Initialize(v8::Local<v8::Object> target);
+        static NAN_METHOD(New);
 
         JSHandler();
 

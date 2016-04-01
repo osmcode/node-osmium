@@ -1,8 +1,4 @@
 
-// node
-#include <node_buffer.h>
-#include <node_version.h>
-
 // osmium
 #include <osmium/geom/wkb.hpp>
 #include <osmium/geom/wkt.hpp>
@@ -12,99 +8,99 @@
 
 namespace node_osmium {
 
-    extern v8::Persistent<v8::Object> module;
+    extern Nan::Persistent<v8::Object> module;
     extern osmium::geom::WKBFactory<> wkb_factory;
     extern osmium::geom::WKTFactory<> wkt_factory;
 
-    v8::Persistent<v8::FunctionTemplate> OSMNodeWrap::constructor;
+    Nan::Persistent<v8::FunctionTemplate> OSMNodeWrap::constructor;
 
-    void OSMNodeWrap::Initialize(v8::Handle<v8::Object> target) {
-        v8::HandleScope scope;
-        constructor = v8::Persistent<v8::FunctionTemplate>::New(v8::FunctionTemplate::New(OSMNodeWrap::New));
-        constructor->Inherit(OSMObjectWrap::constructor);
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_Node);
-        node::SetPrototypeMethod(constructor, "wkb", wkb);
-        node::SetPrototypeMethod(constructor, "wkt", wkt);
-        auto attributes = static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontDelete);
-        set_accessor(constructor, "type", get_type, attributes);
-        set_accessor(constructor, "location", get_coordinates, attributes);
-        set_accessor(constructor, "coordinates", get_coordinates, attributes);
-        set_accessor(constructor, "lon", get_lon, attributes);
-        set_accessor(constructor, "lat", get_lat, attributes);
-        target->Set(symbol_Node, constructor->GetFunction());
+    void OSMNodeWrap::Initialize(v8::Local<v8::Object> target) {
+        Nan::HandleScope scope;
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMNodeWrap::New);
+        lcons->Inherit(Nan::New(OSMWrappedObject::constructor));
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_Node));
+        Nan::SetPrototypeMethod(lcons, "wkb", wkb);
+        Nan::SetPrototypeMethod(lcons, "wkt", wkt);
+        ATTR(lcons, "type", get_type);
+        ATTR(lcons, "location", get_coordinates);
+        ATTR(lcons, "coordinates", get_coordinates);
+        ATTR(lcons, "lon", get_lon);
+        ATTR(lcons, "lat", get_lat);
+        target->Set(Nan::New(symbol_Node), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
-    v8::Handle<v8::Value> OSMNodeWrap::New(const v8::Arguments& args) {
-        if (args.Length() == 1 && args[0]->IsExternal()) {
-            v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(args[0]);
-            static_cast<OSMNodeWrap*>(ext->Value())->Wrap(args.This());
-            return args.This();
+    NAN_METHOD(OSMNodeWrap::New) {
+        if (info.Length() == 1 && info[0]->IsExternal()) {
+            v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
+            static_cast<OSMNodeWrap*>(ext->Value())->Wrap(info.This());
+            info.GetReturnValue().Set(info.This());
+            return;
         } else {
-            return ThrowException(v8::Exception::TypeError(v8::String::New("osmium.Node cannot be created in Javascript")));
+            Nan::ThrowTypeError(Nan::New("osmium.Node cannot be created in Javascript").ToLocalChecked());
+            return;
         }
     }
 
-    v8::Handle<v8::Value> OSMNodeWrap::get_coordinates(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
-        v8::HandleScope scope;
-
-        auto cf = module->Get(symbol_Coordinates);
+    NAN_GETTER(OSMNodeWrap::get_coordinates) {
+        auto cf = Nan::New(module)->Get(Nan::New(symbol_Coordinates));
         assert(cf->IsFunction());
 
         const osmium::Location& location = wrapped(info.This()).location();
         if (!location) {
-            return scope.Close(v8::Local<v8::Function>::Cast(cf)->NewInstance());
+            info.GetReturnValue().Set(v8::Local<v8::Function>::Cast(cf)->NewInstance());
+            return;
         }
 
-        v8::Local<v8::Value> lon = v8::Number::New(location.lon_without_check());
-        v8::Local<v8::Value> lat = v8::Number::New(location.lat_without_check());
+        v8::Local<v8::Value> lon = Nan::New(location.lon_without_check());
+        v8::Local<v8::Value> lat = Nan::New(location.lat_without_check());
         v8::Local<v8::Value> argv[2] = { lon, lat };
-        return scope.Close(v8::Local<v8::Function>::Cast(cf)->NewInstance(2, argv));
+        info.GetReturnValue().Set(v8::Local<v8::Function>::Cast(cf)->NewInstance(2, argv));
+        return;
     }
 
-    v8::Handle<v8::Value> OSMNodeWrap::get_lon(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
-        v8::HandleScope scope;
+    NAN_GETTER(OSMNodeWrap::get_lon) {
         try {
-            return scope.Close(v8::Number::New(wrapped(info.This()).location().lon()));
+            info.GetReturnValue().Set(Nan::New(wrapped(info.This()).location().lon()));
+            return;
         } catch (osmium::invalid_location&) {
-            return scope.Close(v8::Undefined());
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
         }
     }
 
-    v8::Handle<v8::Value> OSMNodeWrap::get_lat(v8::Local<v8::String> /* property */, const v8::AccessorInfo& info) {
-        v8::HandleScope scope;
+    NAN_GETTER(OSMNodeWrap::get_lat) {
         try {
-            return scope.Close(v8::Number::New(wrapped(info.This()).location().lat()));
+            info.GetReturnValue().Set(Nan::New(wrapped(info.This()).location().lat()));
+            return;
         } catch (osmium::invalid_location&) {
-            return scope.Close(v8::Undefined());
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
         }
     }
 
-    v8::Handle<v8::Value> OSMNodeWrap::wkb(const v8::Arguments& args) {
+    NAN_METHOD(OSMNodeWrap::wkb) {
         INSTANCE_CHECK(OSMNodeWrap, "Node", "wkb");
-        v8::HandleScope scope;
-
         try {
-            std::string wkb { wkb_factory.create_point(wrapped(args.This())) };
-#if NODE_VERSION_AT_LEAST(0, 10, 0)
-            return scope.Close(node::Buffer::New(wkb.data(), wkb.size())->handle_);
-#else
-            return scope.Close(node::Buffer::New(const_cast<char*>(wkb.data()), wkb.size())->handle_);
-#endif
+            std::string wkb { wkb_factory.create_point(wrapped(info.This())) };
+            info.GetReturnValue().Set(Nan::CopyBuffer(wkb.data(), wkb.size()).ToLocalChecked());
+            return;
         } catch (std::runtime_error& e) {
-            return ThrowException(v8::Exception::Error(v8::String::New(e.what())));
+            Nan::ThrowError(Nan::New(e.what()).ToLocalChecked());
+            return;
         }
     }
 
-    v8::Handle<v8::Value> OSMNodeWrap::wkt(const v8::Arguments& args) {
+    NAN_METHOD(OSMNodeWrap::wkt) {
         INSTANCE_CHECK(OSMNodeWrap, "Node", "wkt");
-        v8::HandleScope scope;
-
         try {
-            std::string wkt { wkt_factory.create_point(wrapped(args.This())) };
-            return scope.Close(v8::String::New(wkt.c_str()));
+            std::string wkt { wkt_factory.create_point(wrapped(info.This())) };
+            info.GetReturnValue().Set(Nan::New(wkt).ToLocalChecked());
+            return;
         } catch (std::runtime_error& e) {
-            return ThrowException(v8::Exception::Error(v8::String::New(e.what())));
+            Nan::ThrowError(Nan::New(e.what()).ToLocalChecked());
+            return;
         }
     }
 

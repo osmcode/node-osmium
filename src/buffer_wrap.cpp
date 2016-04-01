@@ -1,9 +1,6 @@
 
 #include <algorithm>
 
-// node
-#include <node_buffer.h>
-
 // osmium
 #include <osmium/diff_iterator.hpp>
 
@@ -20,64 +17,66 @@
 
 namespace node_osmium {
 
-    v8::Persistent<v8::FunctionTemplate> BufferWrap::constructor;
+    Nan::Persistent<v8::FunctionTemplate> BufferWrap::constructor;
 
-    void BufferWrap::Initialize(v8::Handle<v8::Object> target) {
-        v8::HandleScope scope;
-        constructor = v8::Persistent<v8::FunctionTemplate>::New(v8::FunctionTemplate::New(BufferWrap::New));
-        constructor->InstanceTemplate()->SetInternalFieldCount(1);
-        constructor->SetClassName(symbol_Buffer);
-        node::SetPrototypeMethod(constructor, "clear", clear);
-        node::SetPrototypeMethod(constructor, "next", next);
-        node::SetPrototypeMethod(constructor, "filter_point_in_time", filter_point_in_time);
-        node::SetPrototypeMethod(constructor, "create_node_buffer", create_node_buffer);
-        target->Set(symbol_Buffer, constructor->GetFunction());
+    void BufferWrap::Initialize(v8::Local<v8::Object> target) {
+        Nan::HandleScope scope;
+        v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(BufferWrap::New);
+        lcons->InstanceTemplate()->SetInternalFieldCount(1);
+        lcons->SetClassName(Nan::New(symbol_Buffer));
+        Nan::SetPrototypeMethod(lcons, "clear", clear);
+        Nan::SetPrototypeMethod(lcons, "next", next);
+        Nan::SetPrototypeMethod(lcons, "filter_point_in_time", filter_point_in_time);
+        Nan::SetPrototypeMethod(lcons, "create_node_buffer", create_node_buffer);
+        target->Set(Nan::New(symbol_Buffer), lcons->GetFunction());
+        constructor.Reset(lcons);
     }
 
-    v8::Handle<v8::Value> BufferWrap::New(const v8::Arguments& args) {
-        if (args.Length() == 1 && args[0]->IsExternal()) {
-            v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(args[0]);
-            static_cast<BufferWrap*>(ext->Value())->Wrap(args.This());
-            return args.This();
-        } else if (args.Length() == 1 && args[0]->IsObject()) {
-            auto obj = args[0]->ToObject();
+    NAN_METHOD(BufferWrap::New) {
+        if (info.Length() == 1 && info[0]->IsExternal()) {
+            v8::Local<v8::External> ext = v8::Local<v8::External>::Cast(info[0]);
+            static_cast<BufferWrap*>(ext->Value())->Wrap(info.This());
+            info.GetReturnValue().Set(info.This());
+            return;
+        } else if (info.Length() == 1 && info[0]->IsObject()) {
+            auto obj = info[0]->ToObject();
             if (node::Buffer::HasInstance(obj)) {
                 try {
                     osmium::memory::Buffer buffer(reinterpret_cast<unsigned char*>(node::Buffer::Data(obj)), node::Buffer::Length(obj));
                     BufferWrap* buffer_wrap = new BufferWrap(std::move(buffer));
-                    buffer_wrap->Wrap(args.This());
+                    buffer_wrap->Wrap(info.This());
 
                     // Store the node::Buffer in the new osmium::Buffer object
                     // so the node::Buffer doesn't go away if it goes out of scope
                     // outside this function.
-                    args.This()->Set(NODE_PSYMBOL("_data"), obj);
-
-                    return args.This();
+                    info.This()->Set(Nan::New("_data").ToLocalChecked(), obj);
+                    info.GetReturnValue().Set(info.This());
+                    return;
                 } catch (std::exception const& ex) {
-                    return ThrowException(v8::Exception::TypeError(v8::String::New(ex.what())));
+                    Nan::ThrowTypeError(Nan::New(ex.what()).ToLocalChecked());
+                    return;
                 }
             }
         }
-        return ThrowException(v8::Exception::TypeError(v8::String::New("osmium.Buffer takes a single argument, a node::Buffer")));
+        Nan::ThrowTypeError(Nan::New("osmium.Buffer takes a single argument, a node::Buffer").ToLocalChecked());
+        return;
     }
 
-    v8::Handle<v8::Value> BufferWrap::clear(const v8::Arguments& args) {
+    NAN_METHOD(BufferWrap::clear) {
         INSTANCE_CHECK(BufferWrap, "Buffer", "clear");
-        BufferWrap* buffer_wrap = node::ObjectWrap::Unwrap<BufferWrap>(args.This());
+        BufferWrap* buffer_wrap = Nan::ObjectWrap::Unwrap<BufferWrap>(info.This());
         buffer_wrap->m_this = std::move(osmium::memory::Buffer());
         buffer_wrap->m_iterator = buffer_wrap->m_this.end();
-        return v8::Undefined();
+        info.GetReturnValue().Set(Nan::Undefined());
     }
 
-    v8::Handle<v8::Value> BufferWrap::next(const v8::Arguments& args) {
+    NAN_METHOD(BufferWrap::next) {
         INSTANCE_CHECK(BufferWrap, "Buffer", "next");
-        BufferWrap* buffer_wrap = node::ObjectWrap::Unwrap<BufferWrap>(args.This());
-
-        v8::HandleScope scope;
+        BufferWrap* buffer_wrap = Nan::ObjectWrap::Unwrap<BufferWrap>(info.This());
 
         int filter_id = 0;
-        if (args.Length() == 1 && args[0]->IsInt32()) {
-            filter_id = args[0]->ToInt32()->Value();
+        if (info.Length() == 1 && info[0]->IsInt32()) {
+            filter_id = info[0]->ToInt32()->Value();
         }
 
         while (buffer_wrap->m_iterator != buffer_wrap->m_this.end()) {
@@ -87,24 +86,29 @@ namespace node_osmium {
             if (Filter::get_filter(filter_id).match(entity)) {
                 switch (entity.type()) {
                     case osmium::item_type::node: {
-                        node::ObjectWrap::Unwrap<OSMNodeWrap>(the_Node)->set(entity);
-                        return scope.Close(the_Node);
+                        Nan::ObjectWrap::Unwrap<OSMNodeWrap>(Nan::New(the_Node))->set(entity);
+                        info.GetReturnValue().Set(Nan::New(the_Node));
+                        return;
                     }
                     case osmium::item_type::way: {
-                        node::ObjectWrap::Unwrap<OSMWayWrap>(the_Way)->set(entity);
-                        return scope.Close(the_Way);
+                        Nan::ObjectWrap::Unwrap<OSMWayWrap>(Nan::New(the_Way))->set(entity);
+                        info.GetReturnValue().Set(Nan::New(the_Way));
+                        return;
                     }
                     case osmium::item_type::relation: {
-                        node::ObjectWrap::Unwrap<OSMRelationWrap>(the_Relation)->set(entity);
-                        return scope.Close(the_Relation);
+                        Nan::ObjectWrap::Unwrap<OSMRelationWrap>(Nan::New(the_Relation))->set(entity);
+                        info.GetReturnValue().Set(Nan::New(the_Relation));
+                        return;
                     }
                     case osmium::item_type::area: {
-                        node::ObjectWrap::Unwrap<OSMAreaWrap>(the_Area)->set(entity);
-                        return scope.Close(the_Area);
+                        Nan::ObjectWrap::Unwrap<OSMAreaWrap>(Nan::New(the_Area))->set(entity);
+                        info.GetReturnValue().Set(Nan::New(the_Area));
+                        return;
                     }
                     case osmium::item_type::changeset: {
-                        node::ObjectWrap::Unwrap<OSMChangesetWrap>(the_Changeset)->set(entity);
-                        return scope.Close(the_Changeset);
+                        Nan::ObjectWrap::Unwrap<OSMChangesetWrap>(Nan::New(the_Changeset))->set(entity);
+                        info.GetReturnValue().Set(Nan::New(the_Changeset));
+                        return;
                     }
                     default:
                         assert(false);
@@ -113,28 +117,29 @@ namespace node_osmium {
             }
         }
 
-        return scope.Close(v8::Undefined());
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
-    v8::Handle<v8::Value> BufferWrap::filter_point_in_time(const v8::Arguments& args) {
+    NAN_METHOD(BufferWrap::filter_point_in_time) {
         INSTANCE_CHECK(BufferWrap, "Buffer", "filter_point_in_time");
-        v8::HandleScope scope;
-        if (args.Length() != 1) {
-            return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a point in time as first and only argument")));
+        if (info.Length() != 1) {
+            Nan::ThrowTypeError(Nan::New("please provide a point in time as first and only argument").ToLocalChecked());
+            return;
         }
 
         osmium::Timestamp point_in_time;
-        if (args[0]->IsInt32()) {
-            point_in_time = args[0]->Int32Value();
-        } else if (args[0]->IsString()) {
-            v8::String::Utf8Value time_string { args[0] };
+        if (info[0]->IsInt32()) {
+            point_in_time = info[0]->Int32Value();
+        } else if (info[0]->IsString()) {
+            v8::String::Utf8Value time_string { info[0] };
             point_in_time = osmium::Timestamp(*time_string);
-        } else if (args[0]->IsDate()) {
-            point_in_time = osmium::Timestamp(static_cast<int32_t>(v8::Date::Cast(*args[0])->NumberValue() / 1000));
+        } else if (info[0]->IsDate()) {
+            point_in_time = osmium::Timestamp(static_cast<int32_t>(v8::Date::Cast(*info[0])->NumberValue() / 1000));
         }
 
         typedef osmium::DiffIterator<osmium::memory::Buffer::t_iterator<osmium::OSMObject>> diff_iterator;
-        osmium::memory::Buffer& buffer = unwrap<BufferWrap>(args.This());
+        osmium::memory::Buffer& buffer = unwrap<BufferWrap>(info.This());
         osmium::memory::Buffer fbuffer(buffer.committed(), osmium::memory::Buffer::auto_grow::yes);
         {
             auto dbegin = diff_iterator(buffer.begin<osmium::OSMObject>(), buffer.end<osmium::OSMObject>());
@@ -148,35 +153,36 @@ namespace node_osmium {
             });
         }
 
-        return scope.Close(new_external<BufferWrap>(std::move(fbuffer)));
+        info.GetReturnValue().Set(new_external<BufferWrap>(std::move(fbuffer)));
+        return;
     }
 
-    v8::Handle<v8::Value> BufferWrap::create_node_buffer(const v8::Arguments& args) {
+    NAN_METHOD(BufferWrap::create_node_buffer) {
         INSTANCE_CHECK(BufferWrap, "Buffer", "create_node_buffer");
-        osmium::memory::Buffer& buffer = unwrap<BufferWrap>(args.This());
+        osmium::memory::Buffer& buffer = unwrap<BufferWrap>(info.This());
 
         if (!buffer) {
-            return v8::Undefined();
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
         }
 
-        v8::HandleScope scope;
-
         int length = buffer.committed();
-        node::Buffer* slow_buffer = node::Buffer::New(length);
+        v8::Local<v8::Object> slow_buffer = Nan::NewBuffer(length).ToLocalChecked();
         std::copy_n(buffer.data(), length, node::Buffer::Data(slow_buffer));
 
-        v8::Local<v8::Object> global = v8::Context::GetCurrent()->Global();
+        v8::Local<v8::Object> global = Nan::GetCurrentContext()->Global();
 
         v8::Local<v8::Function> buffer_constructor =
-            v8::Local<v8::Function>::Cast(global->Get(v8::String::New("Buffer")));
+            v8::Local<v8::Function>::Cast(global->Get(Nan::New("Buffer").ToLocalChecked()));
 
-        v8::Handle<v8::Value> constructor_args[3] = {
-            slow_buffer->handle_,
-            v8::Integer::New(length),
-            v8::Integer::New(0)
+        v8::Local<v8::Value> constructor_info[3] = {
+            slow_buffer,
+            Nan::New(length),
+            Nan::New(0)
         };
 
-        return scope.Close(buffer_constructor->NewInstance(3, constructor_args));
+        info.GetReturnValue().Set(buffer_constructor->NewInstance(3, constructor_info));
+        return;
     }
 
 

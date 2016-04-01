@@ -2,9 +2,8 @@
 // boost
 #include <boost/variant.hpp>
 
-// node
-#include <node.h>
-#include <node_buffer.h>
+// nan
+#include <nan.h>
 
 // osmium
 #include <osmium/io/input_iterator.hpp>
@@ -110,11 +109,11 @@ namespace node_osmium {
     typedef boost::variant<location_handler_type&, JSHandler&, osmium::area::MultipolygonCollector<osmium::area::Assembler>::HandlerPass2&> some_handler_type;
 
     template <class TIter>
-    v8::Handle<v8::Value> apply_iterator(TIter it, TIter end, std::vector<some_handler_type>& handlers) {
+    v8::Local<v8::Value> apply_iterator(TIter it, TIter end, std::vector<some_handler_type>& handlers) {
         struct javascript_error {};
 
-        v8::HandleScope scope;
-        v8::TryCatch trycatch;
+        Nan::EscapableHandleScope scope;
+        Nan::TryCatch trycatch;
         try {
             osmium::item_type last_type = osmium::item_type::undefined;
 
@@ -149,66 +148,74 @@ namespace node_osmium {
             }
         } catch (const javascript_error&) {
             trycatch.ReThrow();
-        } catch (const std::exception& e) {
-            std::string msg("osmium error: ");
-            msg += e.what();
-            return ThrowException(v8::Exception::Error(v8::String::New(msg.c_str())));
         }
-        return scope.Close(v8::Undefined());
+        return scope.Escape(Nan::Undefined());
     }
 
-    v8::Handle<v8::Value> apply(const v8::Arguments& args) {
-        v8::HandleScope scope;
-
-        if (args.Length() > 0 && args[0]->IsObject()) {
+    NAN_METHOD(apply) {
+        if (info.Length() > 0 && info[0]->IsObject()) {
             std::vector<some_handler_type> handlers;
 
-            for (int i=1; i != args.Length(); ++i) {
-                if (!args[i]->IsObject()) {
-                    return ThrowException(v8::Exception::TypeError(v8::String::New("please provide handler objects as second and further parameters to apply()")));
+            for (int i=1; i != info.Length(); ++i) {
+                if (!info[i]->IsObject()) {
+                    Nan::ThrowTypeError(Nan::New("please provide handler objects as second and further parameters to apply()").ToLocalChecked());
+                    return;
                 }
-                auto obj = args[i]->ToObject();
-                if (JSHandler::constructor->HasInstance(obj)) {
+                auto obj = info[i]->ToObject();
+                if (Nan::New(JSHandler::constructor)->HasInstance(obj)) {
                     handlers.push_back(unwrap<JSHandler>(obj));
-                } else if (LocationHandlerWrap::constructor->HasInstance(obj)) {
+                } else if (Nan::New(LocationHandlerWrap::constructor)->HasInstance(obj)) {
                     handlers.push_back(unwrap<LocationHandlerWrap>(obj));
-                } else if (MultipolygonHandlerWrap::constructor->HasInstance(obj)) {
+                } else if (Nan::New(MultipolygonHandlerWrap::constructor)->HasInstance(obj)) {
                     handlers.push_back(unwrap<MultipolygonHandlerWrap>(obj));
                 }
             }
 
-            auto source = args[0]->ToObject();
-            if (BasicReaderWrap::constructor->HasInstance(source)) {
-                osmium::io::Reader& reader = unwrap<BasicReaderWrap>(source);
+            try {
+                auto source = info[0]->ToObject();
+                if (Nan::New(BasicReaderWrap::constructor)->HasInstance(source)) {
+                    osmium::io::Reader& reader = unwrap<BasicReaderWrap>(source);
 
-                if (reader.eof()) {
-                    return ThrowException(v8::Exception::Error(v8::String::New("apply() called on a reader that has reached EOF")));
+                    if (reader.eof()) {
+                        Nan::ThrowError(Nan::New("apply() called on a reader that has reached EOF").ToLocalChecked());
+                        return;
+                    }
+
+                    typedef osmium::io::InputIterator<osmium::io::Reader, osmium::OSMEntity> input_iterator;
+
+                    info.GetReturnValue().Set(apply_iterator(input_iterator{reader}, input_iterator{}, handlers));
+                    return;
+                } else if (Nan::New(FlexReaderWrap::constructor)->HasInstance(source)) {
+                    flex_reader_type& reader = unwrap<FlexReaderWrap>(source);
+
+                    if (reader.eof()) {
+                        Nan::ThrowError(Nan::New("apply() called on a reader that has reached EOF").ToLocalChecked());
+                        return;
+                    }
+
+                    typedef osmium::io::InputIterator<flex_reader_type, osmium::OSMEntity> input_iterator;
+
+                    info.GetReturnValue().Set(apply_iterator(input_iterator{reader}, input_iterator{}, handlers));
+                    return;
+                } else if (Nan::New(BufferWrap::constructor)->HasInstance(source)) {
+                    osmium::memory::Buffer& buffer = unwrap<BufferWrap>(source);
+                    info.GetReturnValue().Set(apply_iterator(buffer.begin(), buffer.end(), handlers));
+                    return;
+                } else if (node::Buffer::HasInstance(source)) {
+                    osmium::memory::Buffer buffer(reinterpret_cast<unsigned char*>(node::Buffer::Data(source)), node::Buffer::Length(source));
+
+                    info.GetReturnValue().Set(apply_iterator(buffer.begin<osmium::OSMEntity>(), buffer.end<osmium::OSMEntity>(), handlers));
+                    return;
                 }
-
-                typedef osmium::io::InputIterator<osmium::io::Reader, osmium::OSMEntity> input_iterator;
-
-                return scope.Close(apply_iterator(input_iterator{reader}, input_iterator{}, handlers));
-            } else if (FlexReaderWrap::constructor->HasInstance(source)) {
-                flex_reader_type& reader = unwrap<FlexReaderWrap>(source);
-
-                if (reader.eof()) {
-                    return ThrowException(v8::Exception::Error(v8::String::New("apply() called on a reader that has reached EOF")));
-                }
-
-                typedef osmium::io::InputIterator<flex_reader_type, osmium::OSMEntity> input_iterator;
-
-                return scope.Close(apply_iterator(input_iterator{reader}, input_iterator{}, handlers));
-            } else if (BufferWrap::constructor->HasInstance(source)) {
-                osmium::memory::Buffer& buffer = unwrap<BufferWrap>(source);
-                return scope.Close(apply_iterator(buffer.begin(), buffer.end(), handlers));
-            } else if (node::Buffer::HasInstance(source)) {
-                osmium::memory::Buffer buffer(reinterpret_cast<unsigned char*>(node::Buffer::Data(source)), node::Buffer::Length(source));
-
-                return scope.Close(apply_iterator(buffer.begin<osmium::OSMEntity>(), buffer.end<osmium::OSMEntity>(), handlers));
+            } catch (const std::exception& e) {
+                std::string msg("osmium error: ");
+                msg += e.what();
+                Nan::ThrowError(Nan::New(msg).ToLocalChecked());
+                return;
             }
         }
 
-        return ThrowException(v8::Exception::TypeError(v8::String::New("please provide a BasicReader, FlexReader or Buffer object as first parameter")));
+        Nan::ThrowTypeError(Nan::New("please provide a BasicReader, FlexReader or Buffer object as first parameter").ToLocalChecked());
     }
 
 } // namespace node_osmium
