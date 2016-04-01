@@ -43,7 +43,7 @@ install:
   - echo %LODEPSDIR%
   - dir %LODEPSDIR%
   - SET LIBOSMIUM_VERSION=
-  - FOR /F "tokens=*" %%i in ('node -e "console.log(require(\'./package.json\').libosmium_version)"') DO SET LIBOSMIUM_VERSION=%%i
+  - FOR /F "tokens=*" %%i in ('node -e "console.log(require(""./package.json"").libosmium_version)"') DO SET LIBOSMIUM_VERSION=%%i
   - git clone --depth=1 --branch=%LIBOSMIUM_VERSION% https://github.com/osmcode/libosmium.git ../libosmium
 
 build_script:
