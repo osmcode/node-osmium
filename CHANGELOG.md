@@ -12,6 +12,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+## [0.5.0] - 2016-03-31
+
+### Added
+
+ - Support for node v4 and v5 (now ported to use Nan@2.2.1)
+
+### Changed
+
+- Updated to libosmium 2.6.1
+
+
 ## [0.4.5] - 2016-02-10
 
 ### Changed
