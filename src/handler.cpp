@@ -159,15 +159,14 @@ namespace node_osmium {
             return;
         }
         v8::Local<v8::Value> argv[1] = { new_external<TWrapped>(entity) };
-        Nan::MakeCallback(Nan::GetCurrentContext()->Global(), Nan::New(function), 1, argv);
+        Nan::New(function)->Call(Nan::GetCurrentContext()->Global(), 1, argv);
     }
 
     void call_callback(const Nan::Persistent<v8::Function>& function) {
         if (function.IsEmpty()) {
             return;
         }
-
-        Nan::MakeCallback(Nan::GetCurrentContext()->Global(), Nan::New(function), 0, nullptr);
+        Nan::New(function)->Call(Nan::GetCurrentContext()->Global(), 0, nullptr);
     }
 
     void JSHandler::dispatch_entity(const osmium::OSMEntity& entity) const {
