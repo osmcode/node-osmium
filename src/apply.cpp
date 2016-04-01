@@ -148,10 +148,6 @@ namespace node_osmium {
             }
         } catch (const javascript_error&) {
             trycatch.ReThrow();
-        } catch (const std::exception& e) {
-            std::string msg("osmium error: ");
-            msg += e.what();
-            Nan::ThrowError(Nan::New(msg).ToLocalChecked());
         }
         return scope.Escape(Nan::Undefined());
     }
@@ -175,39 +171,46 @@ namespace node_osmium {
                 }
             }
 
-            auto source = info[0]->ToObject();
-            if (Nan::New(BasicReaderWrap::constructor)->HasInstance(source)) {
-                osmium::io::Reader& reader = unwrap<BasicReaderWrap>(source);
+            try {
+                auto source = info[0]->ToObject();
+                if (Nan::New(BasicReaderWrap::constructor)->HasInstance(source)) {
+                    osmium::io::Reader& reader = unwrap<BasicReaderWrap>(source);
 
-                if (reader.eof()) {
-                    Nan::ThrowError(Nan::New("apply() called on a reader that has reached EOF").ToLocalChecked());
+                    if (reader.eof()) {
+                        Nan::ThrowError(Nan::New("apply() called on a reader that has reached EOF").ToLocalChecked());
+                        return;
+                    }
+
+                    typedef osmium::io::InputIterator<osmium::io::Reader, osmium::OSMEntity> input_iterator;
+
+                    info.GetReturnValue().Set(apply_iterator(input_iterator{reader}, input_iterator{}, handlers));
+                    return;
+                } else if (Nan::New(FlexReaderWrap::constructor)->HasInstance(source)) {
+                    flex_reader_type& reader = unwrap<FlexReaderWrap>(source);
+
+                    if (reader.eof()) {
+                        Nan::ThrowError(Nan::New("apply() called on a reader that has reached EOF").ToLocalChecked());
+                        return;
+                    }
+
+                    typedef osmium::io::InputIterator<flex_reader_type, osmium::OSMEntity> input_iterator;
+
+                    info.GetReturnValue().Set(apply_iterator(input_iterator{reader}, input_iterator{}, handlers));
+                    return;
+                } else if (Nan::New(BufferWrap::constructor)->HasInstance(source)) {
+                    osmium::memory::Buffer& buffer = unwrap<BufferWrap>(source);
+                    info.GetReturnValue().Set(apply_iterator(buffer.begin(), buffer.end(), handlers));
+                    return;
+                } else if (node::Buffer::HasInstance(source)) {
+                    osmium::memory::Buffer buffer(reinterpret_cast<unsigned char*>(node::Buffer::Data(source)), node::Buffer::Length(source));
+
+                    info.GetReturnValue().Set(apply_iterator(buffer.begin<osmium::OSMEntity>(), buffer.end<osmium::OSMEntity>(), handlers));
                     return;
                 }
-
-                typedef osmium::io::InputIterator<osmium::io::Reader, osmium::OSMEntity> input_iterator;
-
-                info.GetReturnValue().Set(apply_iterator(input_iterator{reader}, input_iterator{}, handlers));
-                return;
-            } else if (Nan::New(FlexReaderWrap::constructor)->HasInstance(source)) {
-                flex_reader_type& reader = unwrap<FlexReaderWrap>(source);
-
-                if (reader.eof()) {
-                    Nan::ThrowError(Nan::New("apply() called on a reader that has reached EOF").ToLocalChecked());
-                    return;
-                }
-
-                typedef osmium::io::InputIterator<flex_reader_type, osmium::OSMEntity> input_iterator;
-
-                info.GetReturnValue().Set(apply_iterator(input_iterator{reader}, input_iterator{}, handlers));
-                return;
-            } else if (Nan::New(BufferWrap::constructor)->HasInstance(source)) {
-                osmium::memory::Buffer& buffer = unwrap<BufferWrap>(source);
-                info.GetReturnValue().Set(apply_iterator(buffer.begin(), buffer.end(), handlers));
-                return;
-            } else if (node::Buffer::HasInstance(source)) {
-                osmium::memory::Buffer buffer(reinterpret_cast<unsigned char*>(node::Buffer::Data(source)), node::Buffer::Length(source));
-
-                info.GetReturnValue().Set(apply_iterator(buffer.begin<osmium::OSMEntity>(), buffer.end<osmium::OSMEntity>(), handlers));
+            } catch (const std::exception& e) {
+                std::string msg("osmium error: ");
+                msg += e.what();
+                Nan::ThrowError(Nan::New(msg).ToLocalChecked());
                 return;
             }
         }
