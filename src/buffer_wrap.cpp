@@ -65,7 +65,7 @@ namespace node_osmium {
     NAN_METHOD(BufferWrap::clear) {
         INSTANCE_CHECK(BufferWrap, "Buffer", "clear");
         BufferWrap* buffer_wrap = Nan::ObjectWrap::Unwrap<BufferWrap>(info.This());
-        buffer_wrap->m_this = std::move(osmium::memory::Buffer());
+        buffer_wrap->m_this = osmium::memory::Buffer();
         buffer_wrap->m_iterator = buffer_wrap->m_this.end();
         info.GetReturnValue().Set(Nan::Undefined());
     }
