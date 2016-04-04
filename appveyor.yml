@@ -38,7 +38,7 @@ install:
   - SET PATH=%LODEPSDIR%\zlib\lib;%PATH%
   - SET PATH=%CD%;%PATH%;
   - ps: Start-FileDownload https://mapbox.s3.amazonaws.com/windows-builds/windows-build-deps/libosmium-deps-win-14.0-x64.7z -FileName lodeps.7z
-  - ps: Start-FileDownload "https://mapbox.s3.amazonaws.com/node-cpp11/v0.10.33/x64/node.exe"
+  - ps: Start-FileDownload "https://mapbox.s3.amazonaws.com/node-cpp11/v4.4.1/x64/node.exe"
   - 7z x lodeps.7z > nul
   - echo %LODEPSDIR%
   - dir %LODEPSDIR%
