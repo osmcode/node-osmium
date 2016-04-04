@@ -53,6 +53,9 @@
               "<!(echo %LODEPSDIR%)/expat/lib/libexpat.lib",
               "<!(echo %LODEPSDIR%)/zlib/lib/zlibwapi.lib",
               "<!(echo %LODEPSDIR%)/bzip2/lib/libbz2.lib"
+            ],
+            "defines": [
+              "NOMINMAX"
             ]
           },{
             "libraries": [
