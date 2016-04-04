@@ -13,7 +13,7 @@ C++ library.
 
 ## Depends
 
- - Node.js v0.10.x
+ - Node.js v0.10.x, v4.x, or v5.x (v5 and v5 supported only with node-osmium >= 0.5.x)
  - libosmium (https://github.com/osmcode/libosmium)
  - Mocha (http://visionmedia.github.io/mocha/, for tests)
 
