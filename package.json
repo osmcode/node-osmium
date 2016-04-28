@@ -35,9 +35,6 @@
     "nan": "2.2.1",
     "node-pre-gyp": "~0.6.24"
   },
-  "bundledDependencies": [
-    "node-pre-gyp"
-  ],
   "devDependencies": {
     "aws-sdk": "~2.1.26",
     "geojson-coords": "0.0.0",
@@ -53,6 +50,7 @@
   ],
   "scripts": {
     "prepublish": "npm ls",
+    "preinstall": "npm install node-pre-gyp",
     "install": "node-pre-gyp install --fallback-to-build",
     "test": "mocha -R spec --timeout 100000"
   }
