@@ -32,13 +32,13 @@
     "package_name": "{node_abi}-{platform}-{arch}.tar.gz"
   },
   "dependencies": {
-    "nan": "2.2.1",
-    "node-pre-gyp": "~0.6.24"
+    "nan": "~2.3.2",
+    "node-pre-gyp": "~0.6.26"
   },
   "devDependencies": {
-    "aws-sdk": "~2.1.26",
+    "aws-sdk": "2.x",
     "geojson-coords": "0.0.0",
-    "mocha": "1.x",
+    "mocha": "2.x",
     "osm-testdata": "1.0.0",
     "turf-difference": "^2.0.0",
     "wellknown": "^0.4.0"

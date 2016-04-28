@@ -10,6 +10,8 @@ C++ library.
 [![Build Status](https://secure.travis-ci.org/osmcode/node-osmium.png)](http://travis-ci.org/osmcode/node-osmium)
 [![Build status](https://ci.appveyor.com/api/projects/status/g0j361782j0h0cge?svg=true)](https://ci.appveyor.com/project/Mapbox/node-osmium)
 [![Coverage Status](https://coveralls.io/repos/osmcode/node-osmium/badge.svg?branch=coverage)](https://coveralls.io/r/osmcode/node-osmium?branch=coverage)
+[![Dependencies](https://david-dm.org/osmcode/node-osmium.png)](https://david-dm.org/osmcode/node-osmium)
+
 
 ## Depends
 
