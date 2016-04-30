@@ -298,9 +298,11 @@ relation.members();   // ==> Array of members
 relation.members(2);  // ==> Third member
 ```
 
-A member is currently an Array with three values: The type of the member
-('n', 'w', or 'r'), the ID of the member, and the role of the member. (This
-interface will probably change at some point.)
+A member is represented as an Object with three keys:
+
+1. `type` - te type of the member ('n', 'w', or 'r')
+2. `ref` - the ID of the member
+3. `role` - the role of the member
 
 If all you need is the number of members, use the `members_count` property of
 the relation object:
