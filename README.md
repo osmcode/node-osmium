@@ -1,16 +1,23 @@
 # node-osmium
 
-Fast and flexible Javascript library for working with OpenStreetMap data.
+Flexible Javascript library for working with OpenStreetMap data.
 
 Provides bindings to the [libosmium](https://github.com/osmcode/libosmium)
 C++ library.
 
 [![NPM](https://nodei.co/npm/osmium.png?downloads=true&downloadRank=true)](https://nodei.co/npm/osmium/)
-
 [![Build Status](https://secure.travis-ci.org/osmcode/node-osmium.png)](http://travis-ci.org/osmcode/node-osmium)
 [![Build status](https://ci.appveyor.com/api/projects/status/g0j361782j0h0cge?svg=true)](https://ci.appveyor.com/project/Mapbox/node-osmium)
 [![Coverage Status](https://coveralls.io/repos/osmcode/node-osmium/badge.svg?branch=coverage)](https://coveralls.io/r/osmcode/node-osmium?branch=coverage)
 [![Dependencies](https://david-dm.org/osmcode/node-osmium.png)](https://david-dm.org/osmcode/node-osmium)
+
+## Should you use node-osmium?
+
+If you want top performance use libosmium directly in C++. These node-osmium bindings, due to the expense of passing objects from C++ to Javascript, are much slower than working in C++ directly. Consider `node-osmium` only for small extracts and prototyping. For large extracts or planet processing we recommend not use these bindings and rather to use the [libosmium C++ API](http://docs.osmcode.org/libosmium-manual/).
+
+## Is node-osmium actively developed?
+
+@springmeyer and @joto are maintaining node-osmium but not actively adding features. We will consider pull requests adding features only when they come with very solid tests, add very clear value to the bindings, and seem easy to maintain.
 
 
 ## Depends
