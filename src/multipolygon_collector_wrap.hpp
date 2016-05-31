@@ -17,6 +17,12 @@ namespace node_osmium {
         osmium::area::Assembler::config_type m_assembler_config;
         osmium::area::MultipolygonCollector<osmium::area::Assembler> m_collector;
 
+        static osmium::area::Assembler::config_type default_assembler_config() noexcept {
+            osmium::area::Assembler::config_type config;
+            config.keep_type_tag = true;
+            return config;
+        }
+
     public:
 
         static Nan::Persistent<v8::FunctionTemplate> constructor;
@@ -25,7 +31,7 @@ namespace node_osmium {
 
         MultipolygonCollectorWrap() :
             Nan::ObjectWrap(),
-            m_assembler_config(),
+            m_assembler_config(default_assembler_config()),
             m_collector(m_assembler_config) {
         }
 
