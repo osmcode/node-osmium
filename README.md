@@ -73,10 +73,9 @@ Use `make VERBOSE=1` to output compiler calls used etc.
 
 ### Source build dependencies
 
- - Compiler that supports `-std=c++11` (>= clang++ 3.2 || >= g++ 4.8)
- - Boost >= 1.46 with development headers
- - OSM-Binary
- - Protocol buffers
+ - Compiler that supports `-std=c++11` (>= clang++ 3.4 || >= g++ 4.8)
+ - [libosmium](https://github.com/osmcode/libosmium)
+ - [Boost](http://www.boost.org/) >= 1.46 with development headers
  - zlib
 
 See also the dependency information for the Osmium library.
@@ -88,9 +87,7 @@ sudo apt-add-repository --yes ppa:chris-lea/node.js
 sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
 sudo apt-get -y update
 sudo apt-get -y install git gcc-4.8 g++-4.8 build-essential nodejs
-sudo apt-get -y install libboost-dev zlib1g-dev protobuf-compiler
-sudo apt-get -y install libprotobuf-lite7 libprotobuf-dev libexpat1-dev
-sudo apt-get -y install libsparsehash-dev
+sudo apt-get -y install libboost-dev zlib1g-dev libexpat1-dev libsparsehash-dev
 export CC=gcc-4.8
 export CXX=g++-4.8
 git clone https://github.com/scrosby/OSM-binary.git
@@ -131,3 +128,4 @@ or on [OFTC net IRC channel #osm-dev](https://wiki.openstreetmap.org/wiki/Irc).
 
  - Dane Springmeyer (dane@mapbox.com)
  - Jochen Topf (jochen@topf.org)
+
