@@ -339,26 +339,28 @@ the basis for the geometry functions described below.
 
 The `LocationHandler` can use different strategies for storing the node
 locations. Which strategy is the best depends on the size of the input file and
-the amount of main memory you have. Here are the available options:
+the amount of main memory you have. Here are some of the available options:
 
- * "sparsetable" (default) - use this for small (city) to medium (country) sized
-   data files.
- * "stlmap" - memory efficient for very small datasets, use for very small data
-   files (small cities) or when "sparsetable" is not available.
- * "array" - best memory efficiency for large countries and planet sized data
-   files. You will need main memory of size (8 bytes times the highest node ID),
-   for a planet thats currently on the order of 25 GByte main memory! Not
-   available on OSX!
- * "disk" - best memory efficiency for large countries and planet sized data
-   files, but uses hard disk instead of memory. Use for very large data files
-   if you are on OSX (and therefore can't use the "array" type) or if you don't
-   have enough main memory. Will, of course, be slow compared to the other
-   strategies.
+ * `sparse_mem_array` (default) - use this for small (city) to medium (country)
+   sized data files.
+ * `sparse_mmap_array` - a bit more efficient than `sparse_mem_array`, but only
+   available on Linux.
+ * `dense_mmap_array` - best memory efficiency for large countries and planet
+   sized data files. You will need main memory of size (8 bytes times the
+   highest node ID), for a planet thats currently on the order of 32 GByte main
+   memory! Only available on Linux.
+ * `sparse_disk_array` (default) - use this for small (city) to medium (country)
+   sized data files if you are short on memory.
+ * `dense_disk_array` - best memory efficiency for large countries and planet
+   sized data files, but uses hard disk instead of memory. Use for very large
+   data files if you are on OSX (and therefore can't use the "mmap" type) or
+   if you don't have enough main memory. Will, of course, be slow compared to
+   the other strategies.
 
 To set the strategy initialize the `LocationHandler` with its name:
 
 ```javascript
-var location_handler = new osmium.LocationHandler("array");
+var location_handler = new osmium.LocationHandler("dense_mmap_array");
 ```
 
 ## Geometry Functions
