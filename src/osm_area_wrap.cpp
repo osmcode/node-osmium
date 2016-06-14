@@ -109,15 +109,17 @@ namespace node_osmium {
         v8::Local<v8::Array> rings = Nan::New<v8::Array>(num_rings.first);
 
         int n = 0;
-        for (auto oit = area.cbegin<osmium::OuterRing>(); oit != area.cend<osmium::OuterRing>(); ++oit, ++n) {
-            unsigned array_size = 1u + std::distance(area.inner_ring_cbegin(oit), area.inner_ring_cend(oit));
+        for (const auto& outer_ring : area.outer_rings()) {
+            auto inner_rings_range = area.inner_rings(outer_ring);
+            unsigned array_size = 1u + inner_rings_range.size();
             v8::Local<v8::Array> ring = Nan::New<v8::Array>(array_size);
             int m = 0;
-            ring->Set(m++, get_coordinates(*oit));
-            for (auto iit = area.inner_ring_cbegin(oit); iit != area.inner_ring_cend(oit); ++iit) {
-                ring->Set(m++, get_coordinates(*iit));
+            ring->Set(m++, get_coordinates(outer_ring));
+            for (const auto& inner_ring : inner_rings_range) {
+                ring->Set(m++, get_coordinates(inner_ring));
             }
             rings->Set(n, ring);
+            ++n;
         }
 
         info.GetReturnValue().Set(rings);
