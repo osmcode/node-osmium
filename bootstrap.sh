@@ -9,15 +9,15 @@ function dep() {
 CXX=${CXX:-clang++}
 
 function all_deps() {
-    dep boost 1.59.0 &
-    dep expat 2.1.0 &
+    dep boost 1.61.0 &
+    dep expat 2.1.1 &
     dep bzip 1.0.6 &
     dep zlib system &
     dep sparsehash 2.0.2 &
     wait
 }
 
-MASON_VERSION="694d08c"
+MASON_VERSION="b709931"
 
 function setup_mason() {
     if [[ ! -d ./.mason ]]; then
@@ -27,7 +27,6 @@ function setup_mason() {
         echo "Updating to latest mason"
         (cd ./.mason && git fetch && git checkout ${MASON_VERSION})
     fi
-    export MASON_DIR=$(pwd)/.mason
     export MASON_HOME=$(pwd)/mason_packages/.link
     export PATH=$(pwd)/.mason:$PATH
     export CXX=${CXX:-clang++}
