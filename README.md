@@ -24,6 +24,7 @@ If you want top performance use libosmium directly in C++. These node-osmium bin
 
  - Node.js v0.10.x, v4.x, or v5.x (v4 and v5 supported only with node-osmium >= 0.5.x)
  - libosmium (https://github.com/osmcode/libosmium)
+ - protozero (https://github.com/mapbox/protozero)
  - Mocha (http://visionmedia.github.io/mocha/, for tests)
 
 ## Installing
