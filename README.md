@@ -13,18 +13,28 @@ C++ library.
 
 ## Should you use node-osmium?
 
-If you want top performance use libosmium directly in C++. These node-osmium bindings, due to the expense of passing objects from C++ to Javascript, are much slower than working in C++ directly. Consider `node-osmium` only for small extracts and prototyping. For large extracts or planet processing we recommend leveraging the [libosmium C++ API](http://docs.osmcode.org/libosmium-manual/) instead of using node-osmium.
+If you want top performance use libosmium directly in C++. These node-osmium
+bindings, due to the expense of passing objects from C++ to Javascript, are
+much slower than working in C++ directly. Consider `node-osmium` only for small
+extracts and prototyping. For large extracts or planet processing we recommend
+leveraging the [libosmium C++ API](http://docs.osmcode.org/libosmium-manual/)
+instead of using node-osmium.
 
 ## Is node-osmium actively developed?
 
-@springmeyer and @joto are maintaining node-osmium but not actively adding features. We will consider pull requests adding features only when they come with very solid tests, add very clear value to the bindings, and seem easy to maintain.
+@springmeyer and @joto are maintaining node-osmium but not actively adding
+features. We will consider pull requests adding features only when they come
+with very solid tests, add very clear value to the bindings, and seem easy to
+maintain.
 
 
 ## Depends
 
  - Node.js v0.10.x, v4.x, or v5.x (v4 and v5 supported only with node-osmium >= 0.5.x)
- - libosmium (https://github.com/osmcode/libosmium)
+ - libosmium (http://osmcode.org/libosmium, https://github.com/osmcode/libosmium)
  - protozero (https://github.com/mapbox/protozero)
+   (The protozero headers are included in the libosmium repository, so if you used
+    libosmium from git, protozero is already available.)
  - Mocha (http://visionmedia.github.io/mocha/, for tests)
 
 ## Installing
