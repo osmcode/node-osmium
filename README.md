@@ -22,7 +22,7 @@ If you want top performance use libosmium directly in C++. These node-osmium bin
 
 ## Depends
 
- - Node.js v0.10.x, v4.x, or v5.x (v5 and v5 supported only with node-osmium >= 0.5.x)
+ - Node.js v0.10.x, v4.x, or v5.x (v4 and v5 supported only with node-osmium >= 0.5.x)
  - libosmium (https://github.com/osmcode/libosmium)
  - Mocha (http://visionmedia.github.io/mocha/, for tests)
 
