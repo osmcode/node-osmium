@@ -32,7 +32,7 @@
     "package_name": "{node_abi}-{platform}-{arch}.tar.gz"
   },
   "dependencies": {
-    "nan": "~2.3.2",
+    "nan": "~2.4.0",
     "node-pre-gyp": "~0.6.26"
   },
   "devDependencies": {
