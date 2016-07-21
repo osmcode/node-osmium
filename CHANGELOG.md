@@ -12,11 +12,23 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+
+## [0.5.1] - 2016-07-21
+
+### Added
+
+- Support for node v6.
+
+### Changed
+
+- Updated to libosmium 2.7.2
+
+
 ## [0.5.0] - 2016-03-31
 
 ### Added
 
- - Support for node v4 and v5 (now ported to use Nan@2.2.1)
+- Support for node v4 and v5 (now ported to use Nan@2.2.1)
 
 ### Changed
 
@@ -86,7 +98,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Upgraded node-pre-gyp to 0.5.10
 
 [unreleased]: https://github.com/osmcode/libosmium/compare/v0.4.4...HEAD
+[0.5.1]: https://github.com/osmcode/libosmium/compare/v0.5.0...v0.5.1
+[0.5.0]: https://github.com/osmcode/libosmium/compare/v0.4.5...v0.5.0
+[0.4.5]: https://github.com/osmcode/libosmium/compare/v0.4.4...v0.4.5
 [0.4.4]: https://github.com/osmcode/libosmium/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/osmcode/libosmium/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/osmcode/libosmium/compare/v0.4.0...v0.4.2
 [0.4.0]: https://github.com/osmcode/libosmium/compare/v0.1.2...v0.4.0
+
