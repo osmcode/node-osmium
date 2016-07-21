@@ -45,9 +45,9 @@ matrix:
        compiler: clang
        env: NODE_VERSION="6"
      # Coverage
-     - os: linux
-       compiler: clang
-       env: NODE_VERSION="0.10.40" COVERAGE=true
+#     - os: linux
+#       compiler: clang
+#       env: NODE_VERSION="0.10.40" COVERAGE=true
      # OS X
      - os: osx
        osx_image: xcode7.3
