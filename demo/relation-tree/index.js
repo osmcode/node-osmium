@@ -41,10 +41,10 @@ function print_recurse(level, id) {
                 stream.write(indent(level+1) + "LOOP!\n");
             }
         } else {
+            relations[id][2] = 'done';
             relations[id][1].forEach(function(child) {
                 print_recurse(level+1, child);
             });
-            relations[id][2] = 'done';
         }
     } else {
         stream.write(" (incomplete)\n");
@@ -65,4 +65,5 @@ handler.on('done', function() {
 
 var reader = new osmium.BasicReader(input_filename);
 osmium.apply(reader, handler);
+handler.end();
 
