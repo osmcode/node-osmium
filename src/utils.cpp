@@ -49,6 +49,11 @@ namespace node_osmium {
             entities |= osmium::osm_entity_bits::relation;
         }
 
+        v8::Local<v8::Value> want_areas = options->Get(Nan::New(symbol_area));
+        if (want_areas->IsBoolean() && want_areas->BooleanValue()) {
+            entities |= osmium::osm_entity_bits::area;
+        }
+
         v8::Local<v8::Value> want_changesets = options->Get(Nan::New(symbol_changeset));
         if (want_changesets->IsBoolean() && want_changesets->BooleanValue()) {
             entities |= osmium::osm_entity_bits::changeset;
