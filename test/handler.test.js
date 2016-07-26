@@ -217,6 +217,7 @@ describe('handler', function() {
 
         var reader = new osmium.BasicReader(__dirname + "/data/winthrop.osm", { 'node': true, 'way': true });
         osmium.apply(reader, handler);
+        handler.end();
     });
 
     it('should be able to call two handlers one after the other', function() {

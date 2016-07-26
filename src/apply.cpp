@@ -104,7 +104,7 @@ namespace node_osmium {
             }
         }
 
-    }; // struct visitor_before_after
+    }; // struct visitor_before_after_type
 
     typedef boost::variant<location_handler_type&, JSHandler&, osmium::area::MultipolygonCollector<osmium::area::Assembler>::HandlerPass2&> some_handler_type;
 
