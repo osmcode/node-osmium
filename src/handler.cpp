@@ -158,6 +158,7 @@ namespace node_osmium {
         if (function.IsEmpty()) {
             return;
         }
+        Nan::HandleScope scope;
         v8::Local<v8::Value> argv[1] = { new_external<TWrapped>(entity) };
         Nan::New(function)->Call(Nan::GetCurrentContext()->Global(), 1, argv);
     }
@@ -166,35 +167,28 @@ namespace node_osmium {
         if (function.IsEmpty()) {
             return;
         }
+        Nan::HandleScope scope;
         Nan::New(function)->Call(Nan::GetCurrentContext()->Global(), 0, nullptr);
     }
 
     void JSHandler::dispatch_entity(const osmium::OSMEntity& entity) const {
         switch (entity.type()) {
             case osmium::item_type::node:
-                if (!node_cb.IsEmpty() && (!node_callback_for_tagged_only || !static_cast<const osmium::Node&>(entity).tags().empty())) {
+                if (!node_callback_for_tagged_only || !static_cast<const osmium::Node&>(entity).tags().empty()) {
                     call_callback_with_entity<OSMNodeWrap>(node_cb, entity);
                 }
                 break;
             case osmium::item_type::way:
-                if (!way_cb.IsEmpty()) {
-                    call_callback_with_entity<OSMWayWrap>(way_cb, entity);
-                }
+                call_callback_with_entity<OSMWayWrap>(way_cb, entity);
                 break;
             case osmium::item_type::relation:
-                if (!relation_cb.IsEmpty()) {
-                    call_callback_with_entity<OSMRelationWrap>(relation_cb, entity);
-                }
+                call_callback_with_entity<OSMRelationWrap>(relation_cb, entity);
                 break;
             case osmium::item_type::area:
-                if (!area_cb.IsEmpty()) {
-                    call_callback_with_entity<OSMAreaWrap>(area_cb, entity);
-                }
+                call_callback_with_entity<OSMAreaWrap>(area_cb, entity);
                 break;
             case osmium::item_type::changeset:
-                if (!changeset_cb.IsEmpty()) {
-                    call_callback_with_entity<OSMChangesetWrap>(changeset_cb, entity);
-                }
+                call_callback_with_entity<OSMChangesetWrap>(changeset_cb, entity);
                 break;
             default:
                 break;
