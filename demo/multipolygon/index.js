@@ -24,7 +24,11 @@ var handler = new osmium.Handler();
 handler.on('area', function(area) {
     var landuse = area.tags('landuse');
     if (landuse) {
-        stream.write('a' + area.id + ' ' + landuse + ' ' + (area.tags('name') || '') + ' ' +  area.wkt() + "\n");
+        try {
+            stream.write('a' + area.id + ' ' + landuse + ' ' + (area.tags('name') || '') + ' ' +  area.wkt() + "\n");
+        } catch(e) {
+            // ignore errors
+        }
     }
 });
 
