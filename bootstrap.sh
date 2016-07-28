@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -eu
+set -o pipefail
+
 function dep() {
     ./.mason/mason install $1 $2
     ./.mason/mason link $1 $2
@@ -47,3 +50,6 @@ function main() {
 }
 
 main
+
+set +eu
+set +o pipefail
