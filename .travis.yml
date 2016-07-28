@@ -75,6 +75,13 @@ env:
    - secure: bsD0VyN6F6+ratG/C2AB1GrbmaPGyvaAgjZXd7tsQPYl+TR3BT643T9GikgN5IJdbjVBOJDfSqk76g/UlfLl9bRnoybP8tJsZJhCyMYKyRNGJZBIOyEVe6j5FrcT5ejBO0EIGaw2fXwSkG92pg7CFQOAPkVNgcl/H0XNdMa3Q/8=
 
 before_install:
+ # workaround travis rvm bug
+ # https://github.com/travis-ci/travis-ci/issues/6307
+ # http://superuser.com/questions/1044130/why-am-i-having-how-can-i-fix-this-error-shell-session-update-command-not-f
+- |
+  if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+    rvm get head || true
+  fi
 - scripts/validate_tag.sh
 - if [[ $(uname -s) == 'Darwin' ]]; then brew uninstall --force node; fi;
 - source ./scripts/install_node.sh ${NODE_VERSION}
