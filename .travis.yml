@@ -22,7 +22,8 @@ addons:
     sources:
      - ubuntu-toolchain-r-test
     packages:
-     - libstdc++6
+     - pkg-config
+     - make
      - libstdc++-5-dev
 
 cache:
