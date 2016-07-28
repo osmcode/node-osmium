@@ -12,12 +12,11 @@ function dep() {
 CXX=${CXX:-clang++}
 
 function all_deps() {
-    dep boost 1.61.0 &
-    dep expat 2.1.1 &
-    dep bzip 1.0.6 &
-    dep zlib system &
-    dep sparsehash 2.0.2 &
-    wait
+    dep boost 1.61.0
+    dep expat 2.1.1
+    dep bzip2 1.0.6
+    dep zlib system
+    dep sparsehash 2.0.2
 }
 
 MASON_VERSION="b709931"
