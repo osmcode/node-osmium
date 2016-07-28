@@ -155,19 +155,19 @@ namespace node_osmium {
 
     template <class TWrapped>
     void call_callback_with_entity(const Nan::Persistent<v8::Function>& function, const osmium::OSMEntity& entity) {
+        Nan::HandleScope scope;
         if (function.IsEmpty()) {
             return;
         }
-        Nan::HandleScope scope;
         v8::Local<v8::Value> argv[1] = { new_external<TWrapped>(entity) };
         Nan::New(function)->Call(Nan::GetCurrentContext()->Global(), 1, argv);
     }
 
     void call_callback(const Nan::Persistent<v8::Function>& function) {
+        Nan::HandleScope scope;
         if (function.IsEmpty()) {
             return;
         }
-        Nan::HandleScope scope;
         Nan::New(function)->Call(Nan::GetCurrentContext()->Global(), 0, nullptr);
     }
 
