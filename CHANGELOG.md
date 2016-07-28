@@ -107,7 +107,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Upgraded node-pre-gyp to 0.5.10
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v0.4.4...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v0.5.2...HEAD
+[0.5.2]: https://github.com/osmcode/libosmium/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/osmcode/libosmium/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/osmcode/libosmium/compare/v0.4.5...v0.5.0
 [0.4.5]: https://github.com/osmcode/libosmium/compare/v0.4.4...v0.4.5
