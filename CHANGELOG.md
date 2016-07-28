@@ -12,6 +12,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+## [0.5.2] - 2016-07-28
+
+### Fixed
+
+- Now properly statically linking bz2 on linux (no longer accidentally depends on shared libbz2)
+- Fixed memory leak in handler which regressed in 0.5.0 (https://github.com/osmcode/node-osmium/issues/79)
+
+### Added
+
+- Add area support to object_to_entity_bits() function. (https://github.com/osmcode/node-osmium/pull/49)
 
 ## [0.5.1] - 2016-07-21
 
