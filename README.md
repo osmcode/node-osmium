@@ -10,6 +10,7 @@ C++ library.
 [![Coverage Status](https://coveralls.io/repos/osmcode/node-osmium/badge.svg?branch=coverage)](https://coveralls.io/r/osmcode/node-osmium?branch=coverage)
 [![Dependencies](https://david-dm.org/osmcode/node-osmium.png)](https://david-dm.org/osmcode/node-osmium)
 
+
 ## Should you use node-osmium?
 
 If you want top performance use libosmium directly in C++. These node-osmium
@@ -18,6 +19,7 @@ much slower than working in C++ directly. Consider `node-osmium` only for small
 extracts and prototyping. For large extracts or planet processing we recommend
 leveraging the [libosmium C++ API](http://docs.osmcode.org/libosmium-manual/)
 instead of using node-osmium.
+
 
 ## Is node-osmium actively developed?
 
@@ -29,12 +31,61 @@ maintain.
 
 ## Depends
 
- - Node.js v0.10.x, v4.x, or v5.x (v4 and v5 supported only with node-osmium >= 0.5.x)
- - libosmium (http://osmcode.org/libosmium, https://github.com/osmcode/libosmium)
- - protozero (https://github.com/mapbox/protozero)
-   (The protozero headers are included in the libosmium repository, so if you used
-    libosmium from git, protozero is already available.)
+ - Node.js v0.10.x, v4.x, v5.x, v6.x
+   (v4 and later supported only with node-osmium >= 0.5.x)
  - Mocha (http://visionmedia.github.io/mocha/, for tests)
+ - Compiler that supports `-std=c++11` (>= clang++ 3.6 || >= g++ 4.8)
+ - [libosmium](https://github.com/osmcode/libosmium)
+   (Debian/Ubuntu: libosmium2-dev)
+ - [protozero](https://github.com/mapbox/protozero)
+   This is included in the libosmium repository and might or might not
+   have been installed with it. See the libosmium README.
+   (Debian/Ubuntu: protozero)
+ - [Utfcpp](http://utfcpp.sourceforge.net/)
+   This is included in the libosmium repository and might or might not
+   have been installed with it. See the libosmium README.
+   (Debian/Ubuntu: libutfcpp-dev)
+ - [Boost](http://www.boost.org/) >= 1.55 with development headers
+   (Debian/Ubuntu: libboost-dev)
+ - [zlib](http://www.zlib.net/)
+   (Debian/Ubuntu: zlib1g-dev)
+ - [expat](http://expat.sourceforge.net/)
+   Debian/Ubuntu: libexpat1-dev
+
+See also the dependency information for the Osmium library.
+
+Set dependencies up on Ubuntu Precise (12.04) like:
+
+```shell
+sudo apt-add-repository --yes ppa:chris-lea/node.js
+sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
+sudo apt-get -y update
+sudo apt-get -y install git gcc-4.8 g++-4.8 build-essential nodejs
+sudo apt-get -y install libboost-dev zlib1g-dev libexpat1-dev libsparsehash-dev
+export CC=gcc-4.8
+export CXX=g++-4.8
+git clone https://github.com/scrosby/OSM-binary.git
+cd OSM-binary/src
+make && sudo make install
+```
+
+Set dependencies up on OS X like:
+
+```shell
+git clone https://github.com/mapnik/mapnik-packaging.git
+cd mapnik-packaging/osx
+export CXX11=true
+source MacOSX.sh
+./scripts/build_bzip2.sh
+./scripts/build_expat.sh
+./scripts/build_google_sparsetable.sh
+./scripts/build_boost.sh --with-test --with-program_options
+./scripts/build_protobuf.sh
+./scripts/build_osm-pbf.sh
+# NOTE: in the same terminal then run the build commands
+# Or from a different terminal re-run `source MacOSX.sh`
+```
+
 
 ## Installing
 
@@ -81,51 +132,12 @@ Use `make VERBOSE=1` to output compiler calls used etc.
     npm install mocha
     make test
 
-### Source build dependencies
-
- - Compiler that supports `-std=c++11` (>= clang++ 3.4 || >= g++ 4.8)
- - [libosmium](https://github.com/osmcode/libosmium)
- - [Boost](http://www.boost.org/) >= 1.46 with development headers
- - zlib
-
-See also the dependency information for the Osmium library.
-
-Set dependencies up on Ubuntu Precise (12.04) like:
-
-```shell
-sudo apt-add-repository --yes ppa:chris-lea/node.js
-sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
-sudo apt-get -y update
-sudo apt-get -y install git gcc-4.8 g++-4.8 build-essential nodejs
-sudo apt-get -y install libboost-dev zlib1g-dev libexpat1-dev libsparsehash-dev
-export CC=gcc-4.8
-export CXX=g++-4.8
-git clone https://github.com/scrosby/OSM-binary.git
-cd OSM-binary/src
-make && sudo make install
-```
-
-Set dependencies up on OS X like:
-
-```shell
-git clone https://github.com/mapnik/mapnik-packaging.git
-cd mapnik-packaging/osx
-export CXX11=true
-source MacOSX.sh
-./scripts/build_bzip2.sh
-./scripts/build_expat.sh
-./scripts/build_google_sparsetable.sh
-./scripts/build_boost.sh --with-test --with-program_options
-./scripts/build_protobuf.sh
-./scripts/build_osm-pbf.sh
-# NOTE: in the same terminal then run the build commands
-# Or from a different terminal re-run `source MacOSX.sh`
-```
 
 ## License
 
 node-osmium is available under the Boost Software License. See LICENSE.txt for
 details.
+
 
 ## Contact
 
@@ -133,6 +145,7 @@ Please open bug reports on https://github.com/osmcode/node-osmium/issues. You
 can ask questions on the
 [OSM developer mailing list](https://lists.openstreetmap.org/listinfo/dev)
 or on [OFTC net IRC channel #osm-dev](https://wiki.openstreetmap.org/wiki/Irc).
+
 
 ## Authors
 
