@@ -12,16 +12,28 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+
+## [0.5.3] - 2016-09-19
+
+### Changed
+
+- Using newest libosmium, version 2.9.0.
+
+
 ## [0.5.2] - 2016-07-28
 
 ### Fixed
 
-- Now properly statically linking bz2 on linux (no longer accidentally depends on shared libbz2)
-- Fixed memory leak in handler which regressed in 0.5.0 (https://github.com/osmcode/node-osmium/issues/79)
+- Now properly statically linking bz2 on linux (no longer accidentally depends
+  on shared libbz2)
+- Fixed memory leak in handler which regressed in 0.5.0.
+  (https://github.com/osmcode/node-osmium/issues/79)
 
 ### Added
 
-- Add area support to object_to_entity_bits() function. (https://github.com/osmcode/node-osmium/pull/49)
+- Add area support to `object_to_entity_bits()` function.
+  (https://github.com/osmcode/node-osmium/pull/49)
+
 
 ## [0.5.1] - 2016-07-21
 
@@ -107,7 +119,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Upgraded node-pre-gyp to 0.5.10
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v0.5.2...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v0.5.3...HEAD
+[0.5.3]: https://github.com/osmcode/libosmium/compare/v0.5.2...v0.5.3
 [0.5.2]: https://github.com/osmcode/libosmium/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/osmcode/libosmium/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/osmcode/libosmium/compare/v0.4.5...v0.5.0
