@@ -349,9 +349,9 @@ the amount of main memory you have. Here are some of the available options:
    sized data files. You will need main memory of size (8 bytes times the
    highest node ID), for a planet thats currently on the order of 32 GByte main
    memory! Only available on Linux.
- * `sparse_disk_array` (default) - use this for small (city) to medium (country)
+ * `sparse_file_array` (default) - use this for small (city) to medium (country)
    sized data files if you are short on memory.
- * `dense_disk_array` - best memory efficiency for large countries and planet
+ * `dense_file_array` - best memory efficiency for large countries and planet
    sized data files, but uses hard disk instead of memory. Use for very large
    data files if you are on OSX (and therefore can't use the "mmap" type) or
    if you don't have enough main memory. Will, of course, be slow compared to
