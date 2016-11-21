@@ -5,6 +5,7 @@
   "description": "Node.js bindings to Osmium",
   "url": "https://github.com/osmcode/node-osmium",
   "homepage": "http://osmcode.org/node-osmium",
+  "license": "BSL-1.0",
   "author": "Dane Springmeyer <springmeyer>",
   "contributors": [
     "Jochen Topf <joto>"
@@ -15,6 +16,7 @@
     "url": "https://github.com/osmcode/node-osmium/issues"
   },
   "keywords": [
+    "openstreetmap",
     "osmium",
     "osm",
     "pbf",
@@ -43,11 +45,6 @@
     "turf-difference": "^2.0.0",
     "wellknown": "^0.4.0"
   },
-  "licenses": [
-    {
-      "type": "Boost"
-    }
-  ],
   "scripts": {
     "prepublish": "npm ls",
     "preinstall": "npm install node-pre-gyp",
