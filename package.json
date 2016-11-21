@@ -1,6 +1,6 @@
 {
   "name": "osmium",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "libosmium_version": "v2.10.3",
   "description": "Node.js bindings to Osmium",
   "url": "https://github.com/osmcode/node-osmium",

@@ -13,6 +13,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 
+## [0.5.4] - 2016-11-21
+
+### Changed
+
+- Using newest libosmium, version 2.10.3.
+
+
 ## [0.5.3] - 2016-09-19
 
 ### Changed
@@ -119,7 +126,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Upgraded node-pre-gyp to 0.5.10
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v0.5.3...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v0.5.4...HEAD
+[0.5.4]: https://github.com/osmcode/libosmium/compare/v0.5.3...v0.5.4
 [0.5.3]: https://github.com/osmcode/libosmium/compare/v0.5.2...v0.5.3
 [0.5.2]: https://github.com/osmcode/libosmium/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/osmcode/libosmium/compare/v0.5.0...v0.5.1
