@@ -25,7 +25,7 @@ if (+process.versions.node.split('.')[0] != 0) {
 
 
     // Parse files from osm-testdata repository
-    var tests = ['1', '3', '7', '9'].reduce(function(tests, num) {
+    var tests = ['1', '3', '7'].reduce(function(tests, num) {
         fs.readdirSync(path.join(testData, num)).forEach(function(testId) {
             var folder = path.join(testData, num, testId);
 
