@@ -107,7 +107,7 @@ before_script:
   else
     make;
   fi;
-- nm lib/binding/osmium.node | grep "GLIBCXX_3.4.2[0-9]
+- nm lib/binding/osmium.node | grep "GLIBCXX_3.4.2[0-9]"
 - npm test
 - ./scripts/coverage.sh
 
