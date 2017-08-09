@@ -12,6 +12,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+## [0.5.5] - 2017-08-09
+
+### Changed
+
+- Now building binaries against libstdc++-4.8-dev (which avoids a dependency on >= GLIBCXX 3.4.20)
+    - Should work on >= ubuntu trusty  and amazon linux without needing to upgrade libstdc++
 
 ## [0.5.4] - 2016-11-21
 
