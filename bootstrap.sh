@@ -4,42 +4,35 @@ set -eu
 set -o pipefail
 
 function dep() {
-    ./.mason/mason install $1 $2
-    ./.mason/mason link $1 $2
+    ./mason/mason install $1 $2
+    ./mason/mason link $1 $2
 }
 
 # default to clang
 CXX=${CXX:-clang++}
 
 function all_deps() {
-    dep boost 1.61.0
-    dep expat 2.1.1
+    dep boost 1.63.0
+    dep expat 2.2.0
     dep bzip2 1.0.6
     dep zlib system
     dep sparsehash 2.0.2
 }
 
-MASON_VERSION="b709931"
+MASON_VERSION="0.14.1"
 
 function setup_mason() {
-    if [[ ! -d ./.mason ]]; then
-        git clone https://github.com/mapbox/mason.git ./.mason
-        (cd ./.mason && git checkout ${MASON_VERSION})
-    else
-        echo "Updating to latest mason"
-        (cd ./.mason && git fetch && git checkout ${MASON_VERSION})
-    fi
+    mkdir -p ./mason
+    curl -sSfL https://github.com/mapbox/mason/archive/v${MASON_VERSION}.tar.gz | tar --gunzip --extract --strip-components=1 --exclude="*md" --exclude="test*" --directory=./mason
+    export PATH=$(pwd)/mason:$PATH
     export MASON_HOME=$(pwd)/mason_packages/.link
-    export PATH=$(pwd)/.mason:$PATH
     export CXX=${CXX:-clang++}
     export CC=${CC:-clang}
 }
 
 function main() {
     setup_mason
-    if [[ ! -d ${MASON_HOME} ]]; then
-        all_deps
-    fi
+    all_deps
     export C_INCLUDE_PATH="${MASON_HOME}/include"
     export CPLUS_INCLUDE_PATH="${MASON_HOME}/include"
     export CXXFLAGS="-I${MASON_HOME}/include"
