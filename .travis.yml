@@ -24,7 +24,7 @@ addons:
     packages:
      - pkg-config
      - make
-     - libstdc++-5-dev
+     - libstdc++-4.8-dev
 
 cache:
   directories:
