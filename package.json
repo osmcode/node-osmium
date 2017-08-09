@@ -1,7 +1,7 @@
 {
   "name": "osmium",
-  "version": "0.5.5",
-  "libosmium_version": "v2.10.3",
+  "version": "0.5.6",
+  "libosmium_version": "v2.12.2",
   "description": "Node.js bindings to Osmium",
   "url": "https://github.com/osmcode/node-osmium",
   "homepage": "http://osmcode.org/node-osmium",
@@ -34,8 +34,8 @@
     "package_name": "{node_abi}-{platform}-{arch}.tar.gz"
   },
   "dependencies": {
-    "nan": "~2.4.0",
-    "node-pre-gyp": "~0.6.26"
+    "nan": "~2.6.2",
+    "node-pre-gyp": "~0.6.36"
   },
   "devDependencies": {
     "aws-sdk": "2.x",
