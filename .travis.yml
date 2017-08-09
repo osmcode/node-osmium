@@ -41,9 +41,6 @@ matrix:
        env: NODE_VERSION="4"
      - os: linux
        compiler: clang
-       env: NODE_VERSION="5"
-     - os: linux
-       compiler: clang
        env: NODE_VERSION="6"
      - os: linux
        compiler: clang
@@ -61,10 +58,6 @@ matrix:
        osx_image: xcode8
        compiler: clang
        env: NODE_VERSION="4"
-     - os: osx
-       osx_image: xcode8
-       compiler: clang
-       env: NODE_VERSION="5"
      - os: osx
        osx_image: xcode8
        compiler: clang
