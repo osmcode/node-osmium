@@ -34,8 +34,8 @@
     "package_name": "{node_abi}-{platform}-{arch}.tar.gz"
   },
   "dependencies": {
-    "nan": "~2.4.0",
-    "node-pre-gyp": "~0.6.26"
+    "nan": "~2.6.2",
+    "node-pre-gyp": "~0.6.36"
   },
   "devDependencies": {
     "aws-sdk": "2.x",
