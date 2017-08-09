@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Now building binaries against libstdc++-4.8-dev (which avoids a dependency on >= GLIBCXX 3.4.20)
     - Should work on >= ubuntu trusty  and amazon linux without needing to upgrade libstdc++
+- Added node v8 binaries
 
 ## [0.5.4] - 2016-11-21
 
