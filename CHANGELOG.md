@@ -18,7 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Upgraded to libosmium v2.12.2.
 - Upgraded to nan v2.6.2
-- Upgraded to node-pre-gy v0.6.36
+- Upgraded to node-pre-gyp v0.6.36
 - Upgraded to boost 1.63.0
 - Upgraded to expat 2.2.0
 - Now compiling with clang++ 4.0.1
