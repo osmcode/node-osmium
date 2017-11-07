@@ -17,7 +17,7 @@ If you want top performance use libosmium directly in C++. These node-osmium
 bindings, due to the expense of passing objects from C++ to Javascript, are
 much slower than working in C++ directly. Consider `node-osmium` only for small
 extracts and prototyping. For large extracts or planet processing we recommend
-leveraging the [libosmium C++ API](http://docs.osmcode.org/libosmium-manual/)
+leveraging the [libosmium C++ API](https://github.com/osmcode/libosmium)
 instead of using node-osmium.
 
 
