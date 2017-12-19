@@ -29,6 +29,7 @@
         "src/utils.cpp"
       ],
       "include_dirs": [
+          "../protozero/include/",
           "../libosmium/include/",
           "./src/",
           "<!(node -e \"require('nan')\")"
@@ -47,6 +48,7 @@
               '<!(echo %LODEPSDIR%)/bzip2/include',
               '<!(echo %LODEPSDIR%)/zlib/include',
               '<!(echo %LODEPSDIR%)/expat/include',
+              '<!(echo %LODEPSDIR%)/protozero/include',
             ],
             "libraries": [
               "Ws2_32.lib",

@@ -99,6 +99,7 @@ install:
      export PYTHONPATH=$(pwd)/mason_packages/.link/lib/python/site-packages;
    fi;
 - git clone --depth=1 --branch=$(node -e "console.log(require('./package.json').libosmium_version)") https://github.com/osmcode/libosmium.git ../libosmium
+- git clone --depth=1 --branch=$(node -e "console.log(require('./package.json').protozero_version)") https://github.com/mapbox/protozero.git ../protozero
 
 before_script:
 - if [[ ${COVERAGE} == true ]]; then

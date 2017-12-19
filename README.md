@@ -37,10 +37,8 @@ maintain.
  - Compiler that supports `-std=c++11` (>= clang++ 3.6 || >= g++ 4.8)
  - [libosmium](https://github.com/osmcode/libosmium) >= 2.10.3
    (Debian/Ubuntu: libosmium2-dev)
- - [protozero](https://github.com/mapbox/protozero) >= 1.4.5
-   This is included in the libosmium repository and might or might not
-   have been installed with it. See the libosmium README.
-   (Debian/Ubuntu: protozero)
+ - [protozero](https://github.com/mapbox/protozero) >= 1.5.1
+   (Debian/Ubuntu: libprotozero-dev)
  - [Utfcpp](http://utfcpp.sourceforge.net/)
    This is included in the libosmium repository and might or might not
    have been installed with it. See the libosmium README.
