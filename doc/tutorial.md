@@ -462,7 +462,7 @@ handler.on('area', function(area) {
 
 var mp = new osmium.MultipolygonCollector();
 
-var reader = new osmium.Reader(input_filename);
+var reader = new osmium.BasicReader(input_filename);
 mp.read_relations(reader);
 reader.close();
 
