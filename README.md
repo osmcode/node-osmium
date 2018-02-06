@@ -49,7 +49,8 @@ maintain.
  - [expat](http://expat.sourceforge.net/)
    Debian/Ubuntu: libexpat1-dev
 
-See also the dependency information for the Osmium library.
+If you have problems compiling, install the dependencies for libosmium first
+and make sure it works. Then you should be able to get node-osmium to compile.
 
 
 ## Installing
