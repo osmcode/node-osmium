@@ -1,6 +1,6 @@
 {
   "name": "osmium",
-  "version": "0.5.6",
+  "version": "0.5.6-testpublish1",
   "libosmium_version": "v2.12.2",
   "protozero_version": "v1.6.1",
   "description": "Node.js bindings to Osmium",
