@@ -60,8 +60,6 @@ env:
   global:
    - JOBS: 8
    - CLANG_VERSION: "4.0.1"
-   - secure: Ac0sNxaMmm/4NLJwjB5W74wNNrXH2cFz4qADJSJwGr+p78NVrp+3B70Nlffg6sf6sq57KeoQi5EbUNSa4fjLS2FqJJDr5U8cOA4nt5tPGm8cucdAyr4VCREEddtV4jfIcNN0/I/DKIK4d744SmpqomVYqTUFOVK8LOT4vAX3tTo=
-   - secure: bsD0VyN6F6+ratG/C2AB1GrbmaPGyvaAgjZXd7tsQPYl+TR3BT643T9GikgN5IJdbjVBOJDfSqk76g/UlfLl9bRnoybP8tJsZJhCyMYKyRNGJZBIOyEVe6j5FrcT5ejBO0EIGaw2fXwSkG92pg7CFQOAPkVNgcl/H0XNdMa3Q/8=
 
 before_install:
  # workaround travis rvm bug
