@@ -105,7 +105,7 @@ namespace node_osmium {
             Nan::ThrowTypeError(Nan::New("please provide an event name and callback function").ToLocalChecked());
             return;
         }
-        v8::String::Utf8Value callback_name_string { info[0] };
+        Nan::Utf8String callback_name_string { info[0] };
         std::string callback_name = *callback_name_string;
         v8::Local<v8::Function> callback = v8::Local<v8::Function>::Cast(info[1]);
         if (callback->IsNull() || callback->IsUndefined()) {

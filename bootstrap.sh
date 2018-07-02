@@ -12,18 +12,18 @@ function dep() {
 CXX=${CXX:-clang++}
 
 function all_deps() {
-    dep boost 1.63.0
-    dep expat 2.2.0
+    dep boost 1.66.0
+    dep expat 2.2.4
     dep bzip2 1.0.6
     dep zlib system
     dep sparsehash 2.0.2
 }
 
-MASON_VERSION="0.14.1"
+MASON_VERSION="v0.18.0"
 
 function setup_mason() {
     mkdir -p ./mason
-    curl -sSfL https://github.com/mapbox/mason/archive/v${MASON_VERSION}.tar.gz | tar --gunzip --extract --strip-components=1 --exclude="*md" --exclude="test*" --directory=./mason
+    curl -sSfL https://github.com/mapbox/mason/archive/${MASON_VERSION}.tar.gz | tar --gunzip --extract --strip-components=1 --exclude="*md" --exclude="test*" --directory=./mason
     export PATH=$(pwd)/mason:$PATH
     export MASON_HOME=$(pwd)/mason_packages/.link
     export CXX=${CXX:-clang++}

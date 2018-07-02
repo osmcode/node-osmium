@@ -42,6 +42,9 @@ matrix:
      - os: linux
        compiler: clang
        env: NODE_VERSION="8"
+     - os: linux
+       compiler: clang
+       env: NODE_VERSION="10"
      # OS X
      - os: osx
        osx_image: xcode8
@@ -55,11 +58,15 @@ matrix:
        osx_image: xcode8
        compiler: clang
        env: NODE_VERSION="8"
+     - os: osx
+       osx_image: xcode8
+       compiler: clang
+       env: NODE_VERSION="10"
 
 env:
   global:
    - JOBS: 8
-   - CLANG_VERSION: "4.0.1"
+   - CLANG_VERSION: "5.0.1"
 
 before_install:
  # workaround travis rvm bug

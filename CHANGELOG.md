@@ -12,6 +12,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+## [0.5.7] - 2018-07-01
+
+### Added
+
+- Now supporting node v10
+
+### Changed
+
+- Upgraded to libosmium v2.14.0.
+- Upgraded to nan v2.10.0
+- Upgraded to node-pre-gyp v0.10.1
+- Upgraded to boost 1.66.0
+- Upgraded to expat 2.2.4
+- Upgraded to clang++ 5.0.1
+
 ## [0.5.6] - 2017-08-09
 
 ### Changed
@@ -156,4 +171,3 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [0.4.3]: https://github.com/osmcode/libosmium/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/osmcode/libosmium/compare/v0.4.0...v0.4.2
 [0.4.0]: https://github.com/osmcode/libosmium/compare/v0.1.2...v0.4.0
-

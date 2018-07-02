@@ -1,4 +1,5 @@
 .mason
+mason
 mason_packages
 .*.swp
 .DS_Store

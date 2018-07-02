@@ -91,7 +91,7 @@ namespace node_osmium {
                     Nan::ThrowTypeError(Nan::New("call node_refs() without parameters or the index of the node you want").ToLocalChecked());
                     return;
                 }
-                uint32_t n = info[0]->ToUint32()->Value();
+                uint32_t n = info[0]->Uint32Value();
                 if (n < way.nodes().size()) {
                     info.GetReturnValue().Set(Nan::New<v8::Number>(way.nodes()[n].ref()));
                     return;
@@ -128,7 +128,9 @@ namespace node_osmium {
                         const osmium::Location location = node_ref.location();
                         if (location != last_location) {
                             v8::Local<v8::Value> argv[2] = { Nan::New(location.lon()), Nan::New<v8::Number>(location.lat()) };
-                            nodes->Set(i, v8::Local<v8::Function>::Cast(cf)->NewInstance(2, argv));
+                            Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(v8::Local<v8::Function>::Cast(cf), 2, argv);
+                            if (maybe_local.IsEmpty()) Nan::ThrowError("Could not create new Node instance");
+                            nodes->Set(i, maybe_local.ToLocalChecked()->ToObject());
                             ++i;
                             last_location = location;
                         }
@@ -149,12 +151,14 @@ namespace node_osmium {
                     Nan::ThrowTypeError(Nan::New("call node_coordinates() without parameters or the index of the node you want").ToLocalChecked());
                     return;
                 }
-                uint32_t n = info[0]->ToUint32()->Value();
+                uint32_t n = info[0]->Uint32Value();
                 if (n < way.nodes().size()) {
                     const osmium::Location location = way.nodes()[n].location();
                     if (location.valid()) {
                         v8::Local<v8::Value> argv[2] = { Nan::New(location.lon()), Nan::New<v8::Number>(location.lat()) };
-                        info.GetReturnValue().Set(v8::Local<v8::Function>::Cast(cf)->NewInstance(2, argv));
+                        Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(v8::Local<v8::Function>::Cast(cf), 2, argv);
+                        if (maybe_local.IsEmpty()) Nan::ThrowError("Could not create new Node instance");
+                        info.GetReturnValue().Set(maybe_local.ToLocalChecked()->ToObject());
                         return;
                     } else {
                         info.GetReturnValue().Set(Nan::Undefined());

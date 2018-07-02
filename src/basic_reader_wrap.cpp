@@ -55,7 +55,7 @@ namespace node_osmium {
                 read_which_entities = object_to_entity_bits(info[1]->ToObject());
             }
             if (info[0]->IsString()) {
-                v8::String::Utf8Value filename { info[0] };
+                Nan::Utf8String filename { info[0] };
                 osmium::io::File file(*filename);
                 BasicReaderWrap* reader_wrap = new BasicReaderWrap(file, read_which_entities);
                 reader_wrap->Wrap(info.This());

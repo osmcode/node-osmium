@@ -1,8 +1,8 @@
 {
   "name": "osmium",
-  "version": "0.5.6",
-  "libosmium_version": "v2.12.2",
-  "protozero_version": "v1.6.1",
+  "version": "0.5.7",
+  "libosmium_version": "v2.14.0",
+  "protozero_version": "v1.6.2",
   "description": "Node.js bindings to Osmium",
   "url": "https://github.com/osmcode/node-osmium",
   "homepage": "http://osmcode.org/node-osmium",
@@ -35,20 +35,18 @@
     "package_name": "{node_abi}-{platform}-{arch}.tar.gz"
   },
   "dependencies": {
-    "nan": "~2.6.2",
-    "node-pre-gyp": "~0.6.36"
+    "nan": "^2.10.0",
+    "node-pre-gyp": "^0.10.2"
   },
   "devDependencies": {
-    "aws-sdk": "2.x",
+    "aws-sdk": "^2.266.1",
     "geojson-coords": "0.0.0",
-    "mocha": "2.x",
-    "osm-testdata": "1.0.0",
+    "mocha": "^2.5.3",
+    "osm-testdata": "^1.0.0",
     "turf-difference": "^2.0.0",
-    "wellknown": "^0.4.0"
+    "wellknown": "^0.4.2"
   },
   "scripts": {
-    "prepublish": "npm ls",
-    "preinstall": "npm install node-pre-gyp",
     "install": "node-pre-gyp install --fallback-to-build",
     "test": "mocha -R spec --timeout 100000"
   }

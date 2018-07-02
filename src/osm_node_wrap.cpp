@@ -49,14 +49,18 @@ namespace node_osmium {
 
         const osmium::Location& location = wrapped(info.This()).location();
         if (!location) {
-            info.GetReturnValue().Set(v8::Local<v8::Function>::Cast(cf)->NewInstance());
+            Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(v8::Local<v8::Function>::Cast(cf));
+            if (maybe_local.IsEmpty()) Nan::ThrowError("Could not create new Buffer instance");
+            info.GetReturnValue().Set(maybe_local.ToLocalChecked()->ToObject());
             return;
         }
 
         v8::Local<v8::Value> lon = Nan::New(location.lon_without_check());
         v8::Local<v8::Value> lat = Nan::New(location.lat_without_check());
         v8::Local<v8::Value> argv[2] = { lon, lat };
-        info.GetReturnValue().Set(v8::Local<v8::Function>::Cast(cf)->NewInstance(2, argv));
+        Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(v8::Local<v8::Function>::Cast(cf),2,argv);
+        if (maybe_local.IsEmpty()) Nan::ThrowError("Could not create new Buffer instance");
+        info.GetReturnValue().Set(maybe_local.ToLocalChecked()->ToObject());
         return;
     }
 

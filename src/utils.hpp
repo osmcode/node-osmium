@@ -36,7 +36,10 @@ namespace node_osmium {
     v8::Local<v8::Object> new_external(Args&&... args) {
         Nan::EscapableHandleScope scope;
         v8::Handle<v8::Value> ext = Nan::New<v8::External>(new T(std::forward<Args>(args)...));
-        return scope.Escape(Nan::New(T::constructor)->GetFunction()->NewInstance(1, &ext));
+        Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(Nan::New(T::constructor)->GetFunction(), 1, &ext);
+        if (maybe_local.IsEmpty()) Nan::ThrowError("Could not create new Buffer instance");
+        return scope.Escape(maybe_local.ToLocalChecked()->ToObject());
+
     }
 
     v8::Local<v8::Value> create_js_box(const osmium::Box& box);

@@ -61,7 +61,7 @@ namespace node_osmium {
                     Nan::ThrowTypeError(Nan::New("call members() without parameters or the index of the member you want").ToLocalChecked());
                     return;
                 }
-                uint32_t n = info[0]->ToUint32()->Value();
+                uint32_t n = info[0]->Uint32Value();;
                 if (n < relation.members().size()) {
                     auto it = relation.members().begin();
                     std::advance(it, n);
@@ -86,4 +86,3 @@ namespace node_osmium {
     }
 
 } // namespace node_osmium
-
