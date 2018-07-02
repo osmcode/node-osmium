@@ -31,7 +31,7 @@ maintain.
 
 ## Depends
 
- - Node.js v4.x, v6.x, v8.x
+ - Node.js v4.x, v6.x, v8.x, v10.x
  - Mocha (http://mochajs.org/, for tests)
  - Compiler that supports `-std=c++11` (>= clang++ 3.6 || >= g++ 4.8)
  - [libosmium](https://github.com/osmcode/libosmium) >= 2.10.3
