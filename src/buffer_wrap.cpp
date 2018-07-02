@@ -76,7 +76,7 @@ namespace node_osmium {
 
         int filter_id = 0;
         if (info.Length() == 1 && info[0]->IsInt32()) {
-            filter_id = info[0]->ToInt32()->Value();
+            filter_id = info[0]->Int32Value();
         }
 
         while (buffer_wrap->m_iterator != buffer_wrap->m_this.end()) {
@@ -132,7 +132,7 @@ namespace node_osmium {
         if (info[0]->IsInt32()) {
             point_in_time = info[0]->Int32Value();
         } else if (info[0]->IsString()) {
-            v8::String::Utf8Value time_string { info[0] };
+            Nan::Utf8String time_string { info[0] };
             point_in_time = osmium::Timestamp(*time_string);
         } else if (info[0]->IsDate()) {
             point_in_time = osmium::Timestamp(static_cast<int32_t>(v8::Date::Cast(*info[0])->NumberValue() / 1000));
@@ -181,10 +181,11 @@ namespace node_osmium {
             Nan::New(0)
         };
 
-        info.GetReturnValue().Set(buffer_constructor->NewInstance(3, constructor_info));
+        Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(buffer_constructor, 3, constructor_info);
+        if (maybe_local.IsEmpty()) Nan::ThrowError("Could not create new Buffer instance");
+        info.GetReturnValue().Set(maybe_local.ToLocalChecked()->ToObject());
         return;
     }
 
 
 } // namespace node_osmium
-

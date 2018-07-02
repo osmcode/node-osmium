@@ -36,7 +36,7 @@ namespace node_osmium {
                 Nan::ThrowTypeError(Nan::New("second argument to File constructor (format) must be a string").ToLocalChecked());
                 return;
             }
-            v8::String::Utf8Value format_string { info[1] };
+            Nan::Utf8String format_string { info[1] };
             format = *format_string;
         }
 
@@ -44,7 +44,7 @@ namespace node_osmium {
             osmium::io::File file;
 
             if (info[0]->IsString()) {
-                v8::String::Utf8Value filename { info[0] };
+                Nan::Utf8String filename { info[0] };
                 file = osmium::io::File(*filename, format);
             } else if (info[0]->IsObject() && node::Buffer::HasInstance(info[0]->ToObject())) {
                 auto source = info[0]->ToObject();

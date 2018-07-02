@@ -39,7 +39,7 @@ namespace node_osmium {
                     Nan::ThrowTypeError(Nan::New("please provide a node cache type as string when creating a LocationHandler").ToLocalChecked());
                     return;
                 }
-                v8::String::Utf8Value index_map_type { info[0] };
+                Nan::Utf8String index_map_type { info[0] };
                 location_handler_wrap = new LocationHandlerWrap(*index_map_type);
             }
             location_handler_wrap->Wrap(info.This());

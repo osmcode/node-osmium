@@ -53,9 +53,9 @@ namespace node_osmium {
             v8::Local<v8::Value> value = key_value->Get(1);
 
             if (key->IsString()) {
-                v8::String::Utf8Value key_string { key };
+                Nan::Utf8String key_string { key };
                 if (value->IsString()) {
-                    v8::String::Utf8Value value_string { value };
+                    Nan::Utf8String value_string { value };
                     m_filters[static_cast<uint16_t>(item_type) - 1].add(true, *key_string, *value_string);
                 } else {
                     m_filters[static_cast<uint16_t>(item_type) - 1].add(true, *key_string);

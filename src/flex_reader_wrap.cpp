@@ -56,7 +56,7 @@ namespace node_osmium {
                 v8::Local<v8::Object> location_handler_obj = info[1]->ToObject();
                 location_handler_type& location_handler = unwrap<LocationHandlerWrap>(location_handler_obj);
                 if (info[0]->IsString()) {
-                    v8::String::Utf8Value filename { info[0] };
+                    Nan::Utf8String filename { info[0] };
                     osmium::io::File file(*filename);
                     FlexReaderWrap* reader_wrap = new FlexReaderWrap(file, location_handler, read_which_entities);
                     reader_wrap->Wrap(info.This());

@@ -39,7 +39,7 @@ namespace node_osmium {
                     if (!info[0]->IsString()) {
                         break;
                     }
-                    v8::String::Utf8Value key { info[0] };
+                    Nan::Utf8String key { info[0] };
                     const char* value = object.tags().get_value_by_key(*key);
                     if (value) {
                         info.GetReturnValue().Set(Nan::New(value).ToLocalChecked());

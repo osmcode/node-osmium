@@ -22,13 +22,22 @@ namespace node_osmium {
         assert(bf->IsFunction());
 
         v8::Local<v8::Value> argv_bl[2] = { Nan::New(box.bottom_left().lon()), Nan::New<v8::Number>(box.bottom_left().lat()) };
-        auto bottom_left = v8::Local<v8::Function>::Cast(cf)->NewInstance(2, argv_bl);
+
+        Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(v8::Local<v8::Function>::Cast(cf),2,argv_bl);
+        if (maybe_local.IsEmpty()) Nan::ThrowError("Could not create new Box instance");
+        auto bottom_left = maybe_local.ToLocalChecked()->ToObject();
 
         v8::Local<v8::Value> argv_tr[2] = { Nan::New(box.top_right().lon()), Nan::New<v8::Number>(box.top_right().lat()) };
-        auto top_right = v8::Local<v8::Function>::Cast(cf)->NewInstance(2, argv_tr);
+        Nan::MaybeLocal<v8::Object> maybe_local2 = Nan::NewInstance(v8::Local<v8::Function>::Cast(cf),2,argv_tr);
+        if (maybe_local2.IsEmpty()) Nan::ThrowError("Could not create new Box instance");
+        auto top_right = maybe_local2.ToLocalChecked()->ToObject();
 
         v8::Local<v8::Value> argv_box[2] = { bottom_left, top_right };
-        return scope.Escape(v8::Local<v8::Function>::Cast(bf)->NewInstance(2, argv_box));
+
+        Nan::MaybeLocal<v8::Object> maybe_local3 = Nan::NewInstance(v8::Local<v8::Function>::Cast(bf),2,argv_box);
+        if (maybe_local3.IsEmpty()) Nan::ThrowError("Could not create new Box instance");
+
+        return scope.Escape(maybe_local3.ToLocalChecked()->ToObject());
     }
 
     osmium::osm_entity_bits::type object_to_entity_bits(v8::Local<v8::Object> options) {
