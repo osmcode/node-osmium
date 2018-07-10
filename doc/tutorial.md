@@ -91,7 +91,7 @@ have to initialize the `osmium.File` first.
 ### Defining Which Object Types to Read
 
 OSM files usually contain nodes, ways, and/or relations. Some special OSM files
-can contain changelog entries. If you only want to read some of those object
+can contain changeset entries. If you only want to read some of those object
 types, you can specify which by adding an extra object parameter when
 initializing the Reader.
 
