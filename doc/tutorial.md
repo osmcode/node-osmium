@@ -226,7 +226,7 @@ been deleted. For normal OSM files it is always true, but if the file contains
 old versions of the OSM data ("history file") or is a "change file" (`.osc`),
 this attribute can be true or false.
 
-The same works for ways and relations. Changelog objects are different and not
+The same works for ways and relations. Changeset objects are different and not
 documented here.
 
 ### Accessing the Tags
