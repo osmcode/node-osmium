@@ -6,9 +6,9 @@ Provides bindings to the [libosmium](https://github.com/osmcode/libosmium)
 C++ library.
 
 [![NPM](https://nodei.co/npm/osmium.png?downloads=true&downloadRank=true)](https://nodei.co/npm/osmium/)
-[![Build Status](https://secure.travis-ci.org/osmcode/node-osmium.png)](http://travis-ci.org/osmcode/node-osmium)
+[![Build Status](https://api.travis-ci.org/osmcode/node-osmium.svg)](https://travis-ci.org/osmcode/node-osmium)
 [![Coverage Status](https://coveralls.io/repos/osmcode/node-osmium/badge.svg?branch=coverage)](https://coveralls.io/r/osmcode/node-osmium?branch=coverage)
-[![Dependencies](https://david-dm.org/osmcode/node-osmium.png)](https://david-dm.org/osmcode/node-osmium)
+[![Dependencies](https://david-dm.org/osmcode/node-osmium.svg)](https://david-dm.org/osmcode/node-osmium)
 
 
 ## Should you use node-osmium?
