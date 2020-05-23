@@ -48,6 +48,8 @@ maintain.
    (Debian/Ubuntu: zlib1g-dev)
  - [expat](http://expat.sourceforge.net/)
    Debian/Ubuntu: libexpat1-dev
+ - [sparsehash](https://github.com/sparsehash/sparsehash)
+   Debian/Ubuntu: libsparsehash-dev
 
 If you have problems compiling, install the dependencies for libosmium first
 and make sure it works. Then you should be able to get node-osmium to compile.
