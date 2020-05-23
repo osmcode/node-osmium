@@ -442,7 +442,7 @@ program using the GeoJSON function.
 OSM doesn't have a data type for areas or polygons. Instead areas are stored
 as closed ways (ie first node == last node) or relations tagged as
 `type=multipolygon`. Osmium can hide this complexity and create pseudo-objects
-called "Areass" that are either based on closed ways or on those multipoygon
+called "Areas" that are either based on closed ways or on those multipolygon
 relations. Usually OSM files have to be read twice to allow this, though. In
 the first pass, relations are read and prepared, in the second pass nodes and
 ways are read and everything is assembled. In addition to the `node`, `way`,
@@ -462,7 +462,7 @@ handler.on('area', function(area) {
 
 var mp = new osmium.MultipolygonCollector();
 
-var reader = new osmium.Reader(input_filename);
+var reader = new osmium.BasicReader(input_filename);
 mp.read_relations(reader);
 reader.close();
 
