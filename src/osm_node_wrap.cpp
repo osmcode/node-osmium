@@ -27,7 +27,7 @@ namespace node_osmium {
         ATTR(lcons, "coordinates", get_coordinates);
         ATTR(lcons, "lon", get_lon);
         ATTR(lcons, "lat", get_lat);
-        target->Set(Nan::New(symbol_Node), lcons->GetFunction());
+        Nan::Set(target, Nan::New(symbol_Node), Nan::GetFunction(lcons).ToLocalChecked());
         constructor.Reset(lcons);
     }
 
@@ -44,14 +44,14 @@ namespace node_osmium {
     }
 
     NAN_GETTER(OSMNodeWrap::get_coordinates) {
-        auto cf = Nan::New(module)->Get(Nan::New(symbol_Coordinates));
+        auto cf = Nan::Get(Nan::New(module), Nan::New(symbol_Coordinates)).ToLocalChecked();
         assert(cf->IsFunction());
 
         const osmium::Location& location = wrapped(info.This()).location();
         if (!location) {
             Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(v8::Local<v8::Function>::Cast(cf));
             if (maybe_local.IsEmpty()) Nan::ThrowError("Could not create new Buffer instance");
-            info.GetReturnValue().Set(maybe_local.ToLocalChecked()->ToObject());
+            info.GetReturnValue().Set(maybe_local.ToLocalChecked());
             return;
         }
 
@@ -60,7 +60,7 @@ namespace node_osmium {
         v8::Local<v8::Value> argv[2] = { lon, lat };
         Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(v8::Local<v8::Function>::Cast(cf),2,argv);
         if (maybe_local.IsEmpty()) Nan::ThrowError("Could not create new Buffer instance");
-        info.GetReturnValue().Set(maybe_local.ToLocalChecked()->ToObject());
+        info.GetReturnValue().Set(maybe_local.ToLocalChecked());
         return;
     }
 

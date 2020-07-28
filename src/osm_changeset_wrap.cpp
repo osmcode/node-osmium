@@ -27,7 +27,7 @@ namespace node_osmium {
         ATTR(lcons, "closed", get_closed);
         ATTR(lcons, "bounds", get_bounds);
         Nan::SetPrototypeMethod(lcons, "tags", tags);
-        target->Set(Nan::New(symbol_Changeset), lcons->GetFunction());
+        Nan::Set(target, Nan::New(symbol_Changeset), Nan::GetFunction(lcons).ToLocalChecked());
         constructor.Reset(lcons);
     }
 

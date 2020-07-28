@@ -30,7 +30,7 @@ namespace node_osmium {
                 case 0: {
                     v8::Local<v8::Object> tags = Nan::New<v8::Object>();
                     for (const auto& tag : object.tags()) {
-                        tags->Set(Nan::New(tag.key()).ToLocalChecked(), Nan::New(tag.value()).ToLocalChecked());
+                        Nan::Set(tags, Nan::New(tag.key()).ToLocalChecked(), Nan::New(tag.value()).ToLocalChecked());
                     }
                     info.GetReturnValue().Set(tags);
                     return;

@@ -32,7 +32,7 @@ namespace node_osmium {
         Nan::SetPrototypeMethod(lcons, "close", close);
         Nan::SetPrototypeMethod(lcons, "read", read);
         Nan::SetPrototypeMethod(lcons, "read_all", read_all);
-        target->Set(Nan::New(symbol_BasicReader), lcons->GetFunction());
+        Nan::Set(target, Nan::New(symbol_BasicReader), Nan::GetFunction(lcons).ToLocalChecked());
         constructor.Reset(lcons);
     }
 
@@ -52,7 +52,7 @@ namespace node_osmium {
                     Nan::ThrowTypeError(Nan::New("Second argument to BasicReader constructor must be object").ToLocalChecked());
                     return;
                 }
-                read_which_entities = object_to_entity_bits(info[1]->ToObject());
+                read_which_entities = object_to_entity_bits(info[1]->ToObject(Nan::GetCurrentContext()).ToLocalChecked());
             }
             if (info[0]->IsString()) {
                 Nan::Utf8String filename { info[0] };
@@ -61,8 +61,8 @@ namespace node_osmium {
                 reader_wrap->Wrap(info.This());
                 info.GetReturnValue().Set(info.This());
                 return;
-            } else if (info[0]->IsObject() && Nan::New(FileWrap::constructor)->HasInstance(info[0]->ToObject())) {
-                v8::Local<v8::Object> file_obj = info[0]->ToObject();
+            } else if (info[0]->IsObject() && Nan::New(FileWrap::constructor)->HasInstance(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())) {
+                v8::Local<v8::Object> file_obj = info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked();
                 BasicReaderWrap* reader_wrap = new BasicReaderWrap(unwrap<FileWrap>(file_obj), read_which_entities);
                 reader_wrap->Wrap(info.This());
                 info.GetReturnValue().Set(info.This());
@@ -83,16 +83,16 @@ namespace node_osmium {
         INSTANCE_CHECK(BasicReaderWrap, "BasicReader", "header");
         v8::Local<v8::Object> obj = Nan::New<v8::Object>();
         const osmium::io::Header& header = unwrap<BasicReaderWrap>(info.This()).header();
-        obj->Set(Nan::New(symbol_generator), Nan::New(header.get("generator")).ToLocalChecked());
+        Nan::Set(obj, Nan::New(symbol_generator), Nan::New(header.get("generator")).ToLocalChecked());
 
         auto bounds_array = Nan::New<v8::Array>(header.boxes().size());
 
         int i=0;
         for (const osmium::Box& box : header.boxes()) {
-            bounds_array->Set(i++, create_js_box(box));
+            Nan::Set(bounds_array, i++, create_js_box(box));
         }
 
-        obj->Set(Nan::New(symbol_bounds), bounds_array);
+        Nan::Set(obj, Nan::New(symbol_bounds), bounds_array);
         info.GetReturnValue().Set(obj);
         return;
     }
