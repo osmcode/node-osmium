@@ -4,7 +4,7 @@ mason_packages
 .*.swp
 .DS_Store
 berlin-latest.osm.pbf
-build
+/build
 check_reports
 includes.log
 iwyu.log

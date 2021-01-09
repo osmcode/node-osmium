@@ -1,0 +1,21 @@
+name: CI
+
+on: [ push, pull_request ]
+
+jobs:
+  ubuntu18:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/install
+      - uses: ./.github/actions/build
+      - uses: ./.github/actions/test
+
+  ubuntu20:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/install
+      - uses: ./.github/actions/build
+      - uses: ./.github/actions/test
+
