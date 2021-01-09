@@ -3,7 +3,7 @@
 #include <boost/variant.hpp>
 
 // nan
-#include <nan.h>
+#include "include_nan.hpp"
 
 // osmium
 #include <osmium/io/input_iterator.hpp>

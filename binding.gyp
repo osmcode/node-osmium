@@ -77,7 +77,7 @@
         "MACOSX_DEPLOYMENT_TARGET":"10.9"
       },
       "cflags_cc!": ["-fno-rtti", "-fno-exceptions"],
-      "cflags_cc" : ["-std=c++11", "-Wno-return-type"],
+      "cflags_cc" : ["-std=c++11", "-Wno-return-type", "-Wno-stringop-overflow"],
     },
     {
       "target_name": "action_after_build",
