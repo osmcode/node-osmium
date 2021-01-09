@@ -5,8 +5,9 @@ Flexible Javascript library for working with OpenStreetMap data.
 Provides bindings to the [libosmium](https://github.com/osmcode/libosmium)
 C++ library.
 
-[![NPM](https://nodei.co/npm/osmium.png?downloads=true&downloadRank=true)](https://nodei.co/npm/osmium/)
+[![NPM](https://nodei.co/npm/osmium.png?downloads=true&downloadRank=true)](https://www.npmjs.com/package/osmium)
 [![Build Status](https://api.travis-ci.org/osmcode/node-osmium.svg)](https://travis-ci.org/osmcode/node-osmium)
+[![CI](https://github.com/osmcode/node-osmium/workflows/CI/badge.svg?branch=master)](https://github.com/osmcode/node-osmium/actions)
 [![Coverage Status](https://coveralls.io/repos/osmcode/node-osmium/badge.svg?branch=coverage)](https://coveralls.io/r/osmcode/node-osmium?branch=coverage)
 [![Dependencies](https://david-dm.org/osmcode/node-osmium.svg)](https://david-dm.org/osmcode/node-osmium)
 
@@ -31,7 +32,7 @@ maintain.
 
 ## Depends
 
- - Node.js v4.x, v6.x, v8.x, v10.x
+ - Node.js v8.x, v10.x, v12.x, v14.x
  - Mocha (http://mochajs.org/, for tests)
  - Compiler that supports `-std=c++11` (>= clang++ 3.6 || >= g++ 4.8)
  - [libosmium](https://github.com/osmcode/libosmium) >= 2.10.3
@@ -39,8 +40,9 @@ maintain.
  - [protozero](https://github.com/mapbox/protozero) >= 1.5.1
    (Debian/Ubuntu: libprotozero-dev)
  - [Utfcpp](http://utfcpp.sourceforge.net/)
-   This is included in the libosmium repository and might or might not
-   have been installed with it. See the libosmium README.
+   Only needed for libosmium version < 2.14.1, included in the libosmium
+   repository and might or might not have been installed with it. See the
+   libosmium README.
    (Debian/Ubuntu: libutfcpp-dev)
  - [Boost](http://www.boost.org/) >= 1.55 with development headers
    (Debian/Ubuntu: libboost-dev)
