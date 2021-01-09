@@ -161,7 +161,7 @@ namespace node_osmium {
                     Nan::ThrowTypeError(Nan::New("please provide handler objects as second and further parameters to apply()").ToLocalChecked());
                     return;
                 }
-                auto obj = info[i]->ToObject();
+                auto obj = info[i]->ToObject(info.GetIsolate()->GetCurrentContext()).ToLocalChecked();
                 if (Nan::New(JSHandler::constructor)->HasInstance(obj)) {
                     handlers.push_back(unwrap<JSHandler>(obj));
                 } else if (Nan::New(LocationHandlerWrap::constructor)->HasInstance(obj)) {
@@ -172,7 +172,7 @@ namespace node_osmium {
             }
 
             try {
-                auto source = info[0]->ToObject();
+                auto source = info[0]->ToObject(info.GetIsolate()->GetCurrentContext()).ToLocalChecked();
                 if (Nan::New(BasicReaderWrap::constructor)->HasInstance(source)) {
                     osmium::io::Reader& reader = unwrap<BasicReaderWrap>(source);
 

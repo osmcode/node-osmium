@@ -26,7 +26,7 @@ namespace node_osmium {
         Nan::SetPrototypeMethod(lcons, "node_coordinates", node_coordinates);
         Nan::SetPrototypeMethod(lcons, "wkb", wkb);
         Nan::SetPrototypeMethod(lcons, "wkt", wkt);
-        target->Set(Nan::New(symbol_Way), lcons->GetFunction());
+        Nan::Set(target, Nan::New(symbol_Way), Nan::GetFunction(lcons).ToLocalChecked());
         constructor.Reset(lcons);
     }
 
@@ -80,7 +80,7 @@ namespace node_osmium {
                 v8::Local<v8::Array> nodes = Nan::New<v8::Array>(way.nodes().size());
                 int i = 0;
                 for (const auto& node_ref : way.nodes()) {
-                    nodes->Set(i, Nan::New<v8::Number>(node_ref.ref()));
+                    Nan::Set(nodes, i, Nan::New<v8::Number>(node_ref.ref()));
                     ++i;
                 }
                 info.GetReturnValue().Set(nodes);
@@ -91,7 +91,7 @@ namespace node_osmium {
                     Nan::ThrowTypeError(Nan::New("call node_refs() without parameters or the index of the node you want").ToLocalChecked());
                     return;
                 }
-                uint32_t n = info[0]->Uint32Value();
+                uint32_t n = Nan::To<uint32_t>(info[0]).ToChecked();
                 if (n < way.nodes().size()) {
                     info.GetReturnValue().Set(Nan::New<v8::Number>(way.nodes()[n].ref()));
                     return;
@@ -108,7 +108,7 @@ namespace node_osmium {
 
     NAN_METHOD(OSMWayWrap::node_coordinates) {
 
-        auto cf = Nan::New(module)->Get(Nan::New(symbol_Coordinates));
+        auto cf = Nan::Get(Nan::New(module), Nan::New(symbol_Coordinates)).ToLocalChecked();
         assert(cf->IsFunction());
 
         const osmium::Way& way = wrapped(info.This());
@@ -130,7 +130,7 @@ namespace node_osmium {
                             v8::Local<v8::Value> argv[2] = { Nan::New(location.lon()), Nan::New<v8::Number>(location.lat()) };
                             Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(v8::Local<v8::Function>::Cast(cf), 2, argv);
                             if (maybe_local.IsEmpty()) Nan::ThrowError("Could not create new Node instance");
-                            nodes->Set(i, maybe_local.ToLocalChecked()->ToObject());
+                            Nan::Set(nodes, i, maybe_local.ToLocalChecked());
                             ++i;
                             last_location = location;
                         }
@@ -151,14 +151,14 @@ namespace node_osmium {
                     Nan::ThrowTypeError(Nan::New("call node_coordinates() without parameters or the index of the node you want").ToLocalChecked());
                     return;
                 }
-                uint32_t n = info[0]->Uint32Value();
+                uint32_t n = Nan::To<uint32_t>(info[0]).ToChecked();
                 if (n < way.nodes().size()) {
                     const osmium::Location location = way.nodes()[n].location();
                     if (location.valid()) {
                         v8::Local<v8::Value> argv[2] = { Nan::New(location.lon()), Nan::New<v8::Number>(location.lat()) };
                         Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(v8::Local<v8::Function>::Cast(cf), 2, argv);
                         if (maybe_local.IsEmpty()) Nan::ThrowError("Could not create new Node instance");
-                        info.GetReturnValue().Set(maybe_local.ToLocalChecked()->ToObject());
+                        info.GetReturnValue().Set(maybe_local.ToLocalChecked());
                         return;
                     } else {
                         info.GetReturnValue().Set(Nan::Undefined());

@@ -14,7 +14,7 @@ namespace node_osmium {
         lcons->InstanceTemplate()->SetInternalFieldCount(1);
         lcons->SetClassName(Nan::New(symbol_MultipolygonHandler));
         Nan::SetPrototypeMethod(lcons, "end", stream_end);
-        target->Set(Nan::New(symbol_MultipolygonHandler), lcons->GetFunction());
+        Nan::Set(target, Nan::New(symbol_MultipolygonHandler), Nan::GetFunction(lcons).ToLocalChecked());
         constructor.Reset(lcons);
     }
 

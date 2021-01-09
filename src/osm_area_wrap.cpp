@@ -26,7 +26,7 @@ namespace node_osmium {
         Nan::SetPrototypeMethod(lcons, "wkb", wkb);
         Nan::SetPrototypeMethod(lcons, "wkt", wkt);
         Nan::SetPrototypeMethod(lcons, "coordinates", coordinates);
-        target->Set(Nan::New(symbol_Area), lcons->GetFunction());
+        Nan::Set(target, Nan::New(symbol_Area), Nan::GetFunction(lcons).ToLocalChecked());
         constructor.Reset(lcons);
     }
 
@@ -84,9 +84,9 @@ namespace node_osmium {
         for (const auto& node_ref : node_ref_list) {
             const osmium::Location location = node_ref.location();
             v8::Local<v8::Array> coordinates = Nan::New<v8::Array>(2);
-            coordinates->Set(0, Nan::New(location.lon()));
-            coordinates->Set(1, Nan::New(location.lat()));
-            locations->Set(i, coordinates);
+            Nan::Set(coordinates, 0, Nan::New(location.lon()));
+            Nan::Set(coordinates, 1, Nan::New(location.lat()));
+            Nan::Set(locations, i, coordinates);
             ++i;
         }
         return locations;
@@ -95,7 +95,7 @@ namespace node_osmium {
     NAN_METHOD(OSMAreaWrap::coordinates) {
         INSTANCE_CHECK(OSMAreaWrap, "Area", "coordinates");
 
-        v8::Local<v8::Value> cf = Nan::New(module)->Get(Nan::New(symbol_Coordinates));
+        v8::Local<v8::Value> cf = Nan::Get(Nan::New(module), Nan::New(symbol_Coordinates)).ToLocalChecked();
         assert(cf->IsFunction());
 
         const osmium::Area& area = wrapped(info.This());
@@ -114,11 +114,11 @@ namespace node_osmium {
             unsigned array_size = 1u + inner_rings_range.size();
             v8::Local<v8::Array> ring = Nan::New<v8::Array>(array_size);
             int m = 0;
-            ring->Set(m++, get_coordinates(outer_ring));
+            Nan::Set(ring, m++, get_coordinates(outer_ring));
             for (const auto& inner_ring : inner_rings_range) {
-                ring->Set(m++, get_coordinates(inner_ring));
+                Nan::Set(ring, m++, get_coordinates(inner_ring));
             }
-            rings->Set(n, ring);
+            Nan::Set(rings, n, ring);
             ++n;
         }
 

@@ -12,7 +12,7 @@ namespace node_osmium {
         v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(OSMEntityWrap::New);
         lcons->InstanceTemplate()->SetInternalFieldCount(1);
         lcons->SetClassName(Nan::New(symbol_OSMEntity));
-        target->Set(Nan::New(symbol_OSMEntity), lcons->GetFunction());
+        Nan::Set(target, Nan::New(symbol_OSMEntity), Nan::GetFunction(lcons).ToLocalChecked());
         constructor.Reset(lcons);
     }
 

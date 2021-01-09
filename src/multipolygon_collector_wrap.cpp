@@ -20,7 +20,7 @@ namespace node_osmium {
         lcons->SetClassName(Nan::New(symbol_MultipolygonCollector));
         Nan::SetPrototypeMethod(lcons, "read_relations", read_relations);
         Nan::SetPrototypeMethod(lcons, "handler", handler);
-        target->Set(Nan::New(symbol_MultipolygonCollector), lcons->GetFunction());
+        Nan::Set(target, Nan::New(symbol_MultipolygonCollector), Nan::GetFunction(lcons).ToLocalChecked());
         constructor.Reset(lcons);
     }
 
@@ -56,11 +56,11 @@ namespace node_osmium {
             return;
         }
         try {
-            if (Nan::New(BasicReaderWrap::constructor)->HasInstance(info[0]->ToObject())) {
-                osmium::io::Reader& reader = unwrap<BasicReaderWrap>(info[0]->ToObject());
+            if (Nan::New(BasicReaderWrap::constructor)->HasInstance(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())) {
+                osmium::io::Reader& reader = unwrap<BasicReaderWrap>(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked());
                 unwrap<MultipolygonCollectorWrap>(info.This()).read_relations(reader);
-            } else if (Nan::New(BufferWrap::constructor)->HasInstance(info[0]->ToObject())) {
-                osmium::memory::Buffer& buffer = unwrap<BufferWrap>(info[0]->ToObject());
+            } else if (Nan::New(BufferWrap::constructor)->HasInstance(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())) {
+                osmium::memory::Buffer& buffer = unwrap<BufferWrap>(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked());
                 unwrap<MultipolygonCollectorWrap>(info.This()).read_relations(buffer.begin(), buffer.end());
             } else {
                 Nan::ThrowError(Nan::New("call MultipolygonCollector.read_relation() with BasicReader or Buffer object").ToLocalChecked());
@@ -78,12 +78,12 @@ namespace node_osmium {
 
     NAN_METHOD(MultipolygonCollectorWrap::handler) {
         INSTANCE_CHECK(MultipolygonCollectorWrap, "MultipolygonCollector", "handler");
-        if (info.Length() != 1 || !info[0]->IsObject() || !Nan::New(JSHandler::constructor)->HasInstance(info[0]->ToObject())) {
+        if (info.Length() != 1 || !info[0]->IsObject() || !Nan::New(JSHandler::constructor)->HasInstance(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())) {
             Nan::ThrowError(Nan::New("call MultipolygonCollector.handler() with Handler object").ToLocalChecked());
             return;
         }
         try {
-            JSHandler& handler = unwrap<JSHandler>(info[0]->ToObject());
+            JSHandler& handler = unwrap<JSHandler>(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked());
             auto& mc_handler = unwrap<MultipolygonCollectorWrap>(info.This()).handler([&handler](const osmium::memory::Buffer& area_buffer) {
                 for (const osmium::OSMEntity& entity : area_buffer) {
                     handler.dispatch_entity(entity);

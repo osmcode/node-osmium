@@ -20,7 +20,7 @@ namespace node_osmium {
         ATTR(lcons, "uid", get_uid);
         ATTR(lcons, "user", get_user);
         Nan::SetPrototypeMethod(lcons, "tags", tags);
-        target->Set(Nan::New(symbol_OSMObject), lcons->GetFunction());
+        Nan::Set(target, Nan::New(symbol_OSMObject), Nan::GetFunction(lcons).ToLocalChecked());
         constructor.Reset(lcons);
     }
 

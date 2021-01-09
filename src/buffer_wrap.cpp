@@ -28,7 +28,7 @@ namespace node_osmium {
         Nan::SetPrototypeMethod(lcons, "next", next);
         Nan::SetPrototypeMethod(lcons, "filter_point_in_time", filter_point_in_time);
         Nan::SetPrototypeMethod(lcons, "create_node_buffer", create_node_buffer);
-        target->Set(Nan::New(symbol_Buffer), lcons->GetFunction());
+        Nan::Set(target, Nan::New(symbol_Buffer), lcons->GetFunction(target->CreationContext()).ToLocalChecked());
         constructor.Reset(lcons);
     }
 
@@ -39,7 +39,7 @@ namespace node_osmium {
             info.GetReturnValue().Set(info.This());
             return;
         } else if (info.Length() == 1 && info[0]->IsObject()) {
-            auto obj = info[0]->ToObject();
+            auto obj = info[0]->ToObject(info.GetIsolate()->GetCurrentContext()).ToLocalChecked();
             if (node::Buffer::HasInstance(obj)) {
                 try {
                     osmium::memory::Buffer buffer(reinterpret_cast<unsigned char*>(node::Buffer::Data(obj)), node::Buffer::Length(obj));
@@ -49,7 +49,7 @@ namespace node_osmium {
                     // Store the node::Buffer in the new osmium::Buffer object
                     // so the node::Buffer doesn't go away if it goes out of scope
                     // outside this function.
-                    info.This()->Set(Nan::New("_data").ToLocalChecked(), obj);
+                    Nan::Set(info.This(), Nan::New("_data").ToLocalChecked(), obj);
                     info.GetReturnValue().Set(info.This());
                     return;
                 } catch (std::exception const& ex) {
@@ -76,7 +76,7 @@ namespace node_osmium {
 
         int filter_id = 0;
         if (info.Length() == 1 && info[0]->IsInt32()) {
-            filter_id = info[0]->Int32Value();
+            filter_id = Nan::To<int32_t>(info[0]).ToChecked();
         }
 
         while (buffer_wrap->m_iterator != buffer_wrap->m_this.end()) {
@@ -130,12 +130,12 @@ namespace node_osmium {
 
         osmium::Timestamp point_in_time;
         if (info[0]->IsInt32()) {
-            point_in_time = info[0]->Int32Value();
+            point_in_time = Nan::To<int32_t>(info[0]).ToChecked();
         } else if (info[0]->IsString()) {
             Nan::Utf8String time_string { info[0] };
             point_in_time = osmium::Timestamp(*time_string);
         } else if (info[0]->IsDate()) {
-            point_in_time = osmium::Timestamp(static_cast<int32_t>(v8::Date::Cast(*info[0])->NumberValue() / 1000));
+            point_in_time = osmium::Timestamp(static_cast<int32_t>(v8::Date::Cast(*info[0])->NumberValue(info.GetIsolate()->GetCurrentContext()).FromJust() / 1000));
         }
 
         typedef osmium::DiffIterator<osmium::memory::Buffer::t_iterator<osmium::OSMObject>> diff_iterator;
@@ -173,7 +173,7 @@ namespace node_osmium {
         v8::Local<v8::Object> global = Nan::GetCurrentContext()->Global();
 
         v8::Local<v8::Function> buffer_constructor =
-            v8::Local<v8::Function>::Cast(global->Get(Nan::New("Buffer").ToLocalChecked()));
+            v8::Local<v8::Function>::Cast(Nan::Get(global, Nan::New("Buffer").ToLocalChecked()).ToLocalChecked());
 
         v8::Local<v8::Value> constructor_info[3] = {
             slow_buffer,
@@ -183,7 +183,7 @@ namespace node_osmium {
 
         Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(buffer_constructor, 3, constructor_info);
         if (maybe_local.IsEmpty()) Nan::ThrowError("Could not create new Buffer instance");
-        info.GetReturnValue().Set(maybe_local.ToLocalChecked()->ToObject());
+        info.GetReturnValue().Set(maybe_local.ToLocalChecked());
         return;
     }
 

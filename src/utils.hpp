@@ -35,10 +35,11 @@ namespace node_osmium {
     template<class T, class... Args>
     v8::Local<v8::Object> new_external(Args&&... args) {
         Nan::EscapableHandleScope scope;
-        v8::Handle<v8::Value> ext = Nan::New<v8::External>(new T(std::forward<Args>(args)...));
-        Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(Nan::New(T::constructor)->GetFunction(), 1, &ext);
+        v8::Local<v8::Value> ext = Nan::New<v8::External>(new T(std::forward<Args>(args)...));
+        v8::Local<v8::Function> f = Nan::GetFunction(Nan::New(T::constructor)).ToLocalChecked();
+        Nan::MaybeLocal<v8::Object> maybe_local = Nan::NewInstance(f, 1, &ext);
         if (maybe_local.IsEmpty()) Nan::ThrowError("Could not create new Buffer instance");
-        return scope.Escape(maybe_local.ToLocalChecked()->ToObject());
+        return scope.Escape(maybe_local.ToLocalChecked());
 
     }
 

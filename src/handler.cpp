@@ -27,7 +27,7 @@ namespace node_osmium {
         Nan::SetPrototypeMethod(lcons, "on", on);
         Nan::SetPrototypeMethod(lcons, "options", options);
         Nan::SetPrototypeMethod(lcons, "end", stream_end);
-        target->Set(Nan::New(symbol_Handler), lcons->GetFunction());
+        Nan::Set(target, Nan::New(symbol_Handler), Nan::GetFunction(lcons).ToLocalChecked());
         constructor.Reset(lcons);
 
     }
@@ -90,9 +90,9 @@ namespace node_osmium {
             return;
         }
 
-        v8::Local<v8::Value> tagged_nodes_only = info[0]->ToObject()->Get(Nan::New("tagged_nodes_only").ToLocalChecked());
+        v8::Local<v8::Value> tagged_nodes_only = info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked()->Get(Nan::GetCurrentContext(), Nan::New("tagged_nodes_only").ToLocalChecked()).ToLocalChecked();
         if (tagged_nodes_only->IsBoolean()) {
-            unwrap<JSHandler>(info.This()).node_callback_for_tagged_only = tagged_nodes_only->BooleanValue();
+            unwrap<JSHandler>(info.This()).node_callback_for_tagged_only = Nan::To<bool>(tagged_nodes_only).ToChecked();
         }
 
         info.GetReturnValue().Set(Nan::Undefined());
@@ -160,7 +160,7 @@ namespace node_osmium {
             return;
         }
         v8::Local<v8::Value> argv[1] = { new_external<TWrapped>(entity) };
-        Nan::New(function)->Call(Nan::GetCurrentContext()->Global(), 1, argv);
+        Nan::Call(Nan::New(function), Nan::GetCurrentContext()->Global(), 1, argv);
     }
 
     void call_callback(const Nan::Persistent<v8::Function>& function) {
@@ -168,7 +168,7 @@ namespace node_osmium {
         if (function.IsEmpty()) {
             return;
         }
-        Nan::New(function)->Call(Nan::GetCurrentContext()->Global(), 0, nullptr);
+        Nan::Call(Nan::New(function), Nan::GetCurrentContext()->Global(), 0, nullptr);
     }
 
     void JSHandler::dispatch_entity(const osmium::OSMEntity& entity) const {

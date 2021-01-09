@@ -15,7 +15,7 @@ namespace node_osmium {
         v8::Local<v8::FunctionTemplate> lcons = Nan::New<v8::FunctionTemplate>(FileWrap::New);
         lcons->InstanceTemplate()->SetInternalFieldCount(1);
         lcons->SetClassName(Nan::New(symbol_File));
-        target->Set(Nan::New(symbol_File), lcons->GetFunction());
+        Nan::Set(target, Nan::New(symbol_File), lcons->GetFunction(target->CreationContext()).ToLocalChecked());
         constructor.Reset(lcons);
     }
 
@@ -42,12 +42,11 @@ namespace node_osmium {
 
         try {
             osmium::io::File file;
-
             if (info[0]->IsString()) {
                 Nan::Utf8String filename { info[0] };
                 file = osmium::io::File(*filename, format);
-            } else if (info[0]->IsObject() && node::Buffer::HasInstance(info[0]->ToObject())) {
-                auto source = info[0]->ToObject();
+            } else if (info[0]->IsObject() && node::Buffer::HasInstance(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())) {
+                auto source = info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked();
                 file = osmium::io::File(node::Buffer::Data(source), node::Buffer::Length(source), format);
             } else {
                 Nan::ThrowTypeError(Nan::New("first argument to File constructor must be a string (filename) or node.Buffer").ToLocalChecked());

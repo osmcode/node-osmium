@@ -20,7 +20,7 @@ namespace node_osmium {
 
     NAN_METHOD(Filter::register_filter) {
         if (info.Length() == 1 && info[0]->IsObject()) {
-            auto object = info[0]->ToObject();
+            auto object = info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked();
             // XXX check that object is of class Filter
             Filter::all_filters.emplace_back(new Filter(object));
             assert(Filter::all_filters.size() < std::numeric_limits<int32_t>::max());
@@ -45,12 +45,12 @@ namespace node_osmium {
             m_entity_bits |= osmium::osm_entity_bits::from_item_type(item_type);
         }
         for (uint32_t i = 0; i < array->Length(); ++i) {
-            auto element = array->Get(i);
+            auto element = array->Get(Nan::GetCurrentContext(), i).ToLocalChecked();
             assert(element->IsArray());
             auto key_value = v8::Array::Cast(*element);
             assert(key_value->Length() == 2);
-            v8::Local<v8::Value> key = key_value->Get(0);
-            v8::Local<v8::Value> value = key_value->Get(1);
+            v8::Local<v8::Value> key = key_value->Get(Nan::GetCurrentContext(), 0).ToLocalChecked();
+            v8::Local<v8::Value> value = key_value->Get(Nan::GetCurrentContext(), 1).ToLocalChecked();
 
             if (key->IsString()) {
                 Nan::Utf8String key_string { key };
@@ -74,11 +74,11 @@ namespace node_osmium {
     Filter::Filter(v8::Local<v8::Object> object) :
         m_entity_bits(osmium::osm_entity_bits::nothing),
         m_tagged_entity_bits(osmium::osm_entity_bits::nothing) {
-        setup_filter(v8::Array::Cast(*object->Get(Nan::New("_node").ToLocalChecked())),      osmium::item_type::node);
-        setup_filter(v8::Array::Cast(*object->Get(Nan::New("_way").ToLocalChecked())),       osmium::item_type::way);
-        setup_filter(v8::Array::Cast(*object->Get(Nan::New("_relation").ToLocalChecked())),  osmium::item_type::relation);
-        setup_filter(v8::Array::Cast(*object->Get(Nan::New("_changeset").ToLocalChecked())), osmium::item_type::changeset);
-        setup_filter(v8::Array::Cast(*object->Get(Nan::New("_area").ToLocalChecked())),      osmium::item_type::area);
+        setup_filter(v8::Array::Cast(*object->Get(Nan::GetCurrentContext(), Nan::New("_node").ToLocalChecked()).ToLocalChecked()),      osmium::item_type::node);
+        setup_filter(v8::Array::Cast(*object->Get(Nan::GetCurrentContext(), Nan::New("_way").ToLocalChecked()).ToLocalChecked()),       osmium::item_type::way);
+        setup_filter(v8::Array::Cast(*object->Get(Nan::GetCurrentContext(), Nan::New("_relation").ToLocalChecked()).ToLocalChecked()),  osmium::item_type::relation);
+        setup_filter(v8::Array::Cast(*object->Get(Nan::GetCurrentContext(), Nan::New("_changeset").ToLocalChecked()).ToLocalChecked()), osmium::item_type::changeset);
+        setup_filter(v8::Array::Cast(*object->Get(Nan::GetCurrentContext(), Nan::New("_area").ToLocalChecked()).ToLocalChecked()),      osmium::item_type::area);
     }
 
     bool Filter::match(const osmium::OSMEntity& entity) const {
