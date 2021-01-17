@@ -10,7 +10,7 @@ var flat = require('geojson-coords');
 
 if (+process.versions.node.split('.')[0] != 0) {
 
-    var difference = require('turf-difference');
+    var difference = require('@turf/difference');
 
     var osmium = require('..');
 

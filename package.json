@@ -35,15 +35,15 @@
     "package_name": "{node_abi}-{platform}-{arch}.tar.gz"
   },
   "dependencies": {
-    "nan": "^2.10.0",
-    "node-pre-gyp": "^0.10.2"
+    "nan": "^2.14.2",
+    "node-pre-gyp": "^0.10.3"
   },
   "devDependencies": {
-    "aws-sdk": "^2.266.1",
+    "@turf/difference": "^6.2.0",
+    "aws-sdk": "^2.828.0",
     "geojson-coords": "0.0.0",
-    "mocha": "^2.5.3",
+    "mocha": "^7.2.0",
     "osm-testdata": "^1.0.0",
-    "turf-difference": "^2.0.0",
     "wellknown": "^0.4.2"
   },
   "scripts": {
