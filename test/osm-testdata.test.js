@@ -4,7 +4,6 @@ var assert = require('assert');
 
 var testData = require('osm-testdata');
 var wellknown = require('wellknown');
-var flat = require('geojson-coords');
 
 // jsts broke node v0.10.x support, so disable for now
 
@@ -18,7 +17,6 @@ if (+process.versions.node.split('.')[0] != 0) {
     // - they must have the same total number of coordinates
     // - a spatial difference operation should leave no remainder
     function areasEqual(geom1, geom2) {
-        // if (flat(geom1).length !== flat(geom2).length) return false;
         var diff = difference(geom1, geom2);
         return !diff;
     }

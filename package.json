@@ -41,7 +41,6 @@
   "devDependencies": {
     "@turf/difference": "^6.2.0",
     "aws-sdk": "^2.828.0",
-    "geojson-coords": "0.0.0",
     "mocha": "^7.2.0",
     "osm-testdata": "^1.0.0",
     "wellknown": "^0.4.2"
