@@ -24,7 +24,7 @@ instead of using node-osmium.
 
 ## Is node-osmium actively developed?
 
-@springmeyer and @joto are maintaining node-osmium but not actively adding
+@springmeyer and @joto are not actively maintaining node-osmium or adding
 features. We will consider pull requests adding features only when they come
 with very solid tests, add very clear value to the bindings, and seem easy to
 maintain.
