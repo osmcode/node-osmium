@@ -5,13 +5,6 @@ Flexible Javascript library for working with OpenStreetMap data.
 Provides bindings to the [libosmium](https://github.com/osmcode/libosmium)
 C++ library.
 
-[![NPM](https://nodei.co/npm/osmium.png?downloads=true&downloadRank=true)](https://www.npmjs.com/package/osmium)
-[![Build Status](https://api.travis-ci.org/osmcode/node-osmium.svg)](https://travis-ci.org/osmcode/node-osmium)
-[![CI](https://github.com/osmcode/node-osmium/workflows/CI/badge.svg?branch=master)](https://github.com/osmcode/node-osmium/actions)
-[![Coverage Status](https://coveralls.io/repos/osmcode/node-osmium/badge.svg?branch=coverage)](https://coveralls.io/r/osmcode/node-osmium?branch=coverage)
-[![Dependencies](https://david-dm.org/osmcode/node-osmium.svg)](https://david-dm.org/osmcode/node-osmium)
-
-
 ## Should you use node-osmium?
 
 If you want top performance use libosmium directly in C++. These node-osmium
@@ -24,11 +17,8 @@ instead of using node-osmium.
 
 ## Is node-osmium actively developed?
 
-@springmeyer and @joto are maintaining node-osmium but not actively adding
-features. We will consider pull requests adding features only when they come
-with very solid tests, add very clear value to the bindings, and seem easy to
-maintain.
-
+No. This repository is archived an no further work will be done. You can still
+fork this repository and keep working on it, though.
 
 ## Depends
 
